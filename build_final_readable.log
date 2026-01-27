@@ -1,0 +1,83 @@
+﻿   Γû▓ Next.js 15.5.9
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+npx : <w> [webpack.cache
+.PackFileCacheStrategy] 
+Serializing big strings 
+(187kiB) impacts 
+deserialization 
+performance (consider 
+using Buffer instead 
+and decode when needed)
+At line:1 char:1
++ npx next build 
+--debug > 
+build_final.log 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified  
+  : (<w> [webpack.ca.   
+ ..de when needed):S    
+tring) [], RemoteEx    
+ception
+    + FullyQualifiedErr 
+   orId : NativeComman  
+  dError
+ 
+ Γ£ô Compiled successfully in 42s
+   Linting and checking validity of types ...
+
+   We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+   The following mandatory changes were made to your tsconfig.json:
+
+   	- jsx was set to preserve (next.js implements its own optimized jsx transform)
+
+ Γ¿» ESLint: Cannot 
+find module 'C:\Users\gu
+igu\Downloads\RentClock\
+node_modules\eslint-conf
+ig-next\core-web-vitals'
+ imported from C:\Users\
+guigu\Downloads\RentCloc
+k\eslint.config.mjs Did 
+you mean to import "esli
+nt-config-next/core-web-
+vitals.js"?
+   Collecting page data ...
+   Generating static pages (0/10) ...
+Error occurred 
+prerendering page 
+"/_not-found". Read 
+more: https://nextjs.org
+/docs/messages/prerender
+-error
+Error: 
+@clerk/clerk-react: The 
+publishableKey passed 
+to Clerk is invalid. 
+You can get your 
+Publishable key at https
+://dashboard.clerk.com/l
+ast-active?path=api-keys
+. (key=pk_test_...)
+    at Object.throwInval
+idPublishableKeyError (C
+:\Users\guigu\Downloads\
+RentClock\.next\server\c
+hunks\132.js:12:1321)
+    at <unknown> (C:\Use
+rs\guigu\Downloads\RentC
+lock\.next\server\chunks
+\132.js:12:55982) {
+  digest: '1175706468'
+}
+Export encountered an 
+error on 
+/_not-found/page: 
+/_not-found, exiting 
+the build.
+ Γ¿» Next.js build 
+worker exited with 
+code: 1 and signal: null

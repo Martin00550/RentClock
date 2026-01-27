@@ -1,0 +1,49 @@
+import { LeaseTable } from "@/components/leases/lease-table";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
+import { supabaseAdmin } from "@/lib/supabase-admin";
+import { Lease } from "@/lib/types";
+import { redirect } from "next/navigation";
+
+
+export default async function LeasesPage() {
+    const { userId } = await auth();
+
+    if (!userId) {
+        redirect("/sign-in");
+    }
+
+    const { data: leases, error } = await supabaseAdmin
+        .from("leases")
+        .select("*")
+        .eq("user_id", userId);
+
+    if (error) {
+        console.error("Error fetching leases:", error);
+    }
+
+    const typedLeases = (leases as Lease[]) || [];
+
+    return (
+
+        <div className="flex flex-col gap-10">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Lease Portfolio</h1>
+                    <p className="text-slate-500 mt-2 text-lg">Manage all your active and upcoming lease agreements.</p>
+                </div>
+                <Link href="/ai-import">
+                    <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-6 h-12 rounded-xl font-bold shadow-lg shadow-slate-200 flex items-center gap-2 transition-all hover:scale-105">
+                        <Plus className="h-5 w-5" />
+                        Add New Lease
+                    </Button>
+                </Link>
+            </div>
+
+            <LeaseTable leases={typedLeases} />
+        </div>
+
+    );
+}

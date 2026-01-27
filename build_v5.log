@@ -1,0 +1,47 @@
+﻿   Γû▓ Next.js 15.5.9
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully in 7.1s
+   Linting and checking validity of types ...
+
+./app/leases/[id]/page.tsx
+22:17  Warning: '_id' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/10) ...
+   Generating static pages (2/10) 
+   Generating static pages (4/10) 
+   Generating static pages (7/10) 
+ Γ£ô Generating static pages (10/10)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+
+Redirects
+Γöî source: /:path+/
+Γö£ destination: /:path+
+Γöö permanent: true
+
+
+Route (app)                                 Size  First Load JS
+Γöî Γùï /                                    12.8 kB         127 kB
+Γö£ Γùï /_not-found                            127 B         102 kB
+Γö£ ╞Æ /api/inngest                           127 B         102 kB
+Γö£ Γùï /dashboard                           4.78 kB         119 kB
+Γö£ Γùï /leases                              4.93 kB         148 kB
+Γö£ ╞Æ /leases/[id]                         5.07 kB         119 kB
+Γö£ Γùï /leases/new                            46 kB         164 kB
+Γöö Γùï /settings                            7.77 kB         122 kB
++ First Load JS shared by all             102 kB
+  Γö£ chunks/255-cb395327542b56ef.js       45.9 kB
+  Γö£ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  Γöö other shared chunks (total)          2.03 kB
+
+
+╞Æ Middleware                             82.4 kB
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+

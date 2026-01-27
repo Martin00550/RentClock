@@ -1,0 +1,195 @@
+﻿   Γû▓ Next.js 15.5.9
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+npx : <w> [webpack.cache
+.PackFileCacheStrategy] 
+Serializing big strings 
+(187kiB) impacts 
+deserialization 
+performance (consider 
+using Buffer instead 
+and decode when needed)
+At line:1 char:1
++ npx next build 
+--debug > build_v3.log 
+2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified  
+  : (<w> [webpack.ca.   
+ ..de when needed):S    
+tring) [], RemoteEx    
+ception
+    + FullyQualifiedErr 
+   orId : NativeComman  
+  dError
+ 
+ Γ£ô Compiled successfully in 8.6s
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./app/leases/[id]/page.t
+sx
+12:5  Warning: 
+'FileText' is defined 
+but never used.  @typesc
+ript-eslint/no-unused-va
+rs
+13:5  Warning: 'MapPin' 
+is defined but never 
+used.  @typescript-eslin
+t/no-unused-vars
+24:13  Warning: 'id' is 
+assigned a value but 
+never used.  @typescript
+-eslint/no-unused-vars
+
+./app/page.tsx
+5:92  Warning: 
+'ChevronRight' is 
+defined but never used. 
+ @typescript-eslint/no-u
+nused-vars
+5:131  Warning: 
+'MessageSquare' is 
+defined but never used. 
+ @typescript-eslint/no-u
+nused-vars
+69:17  Error: `"` can 
+be escaped with 
+`&quot;`, `&ldquo;`, 
+`&#34;`, `&rdquo;`.  rea
+ct/no-unescaped-entities
+69:84  Error: `"` can 
+be escaped with 
+`&quot;`, `&ldquo;`, 
+`&#34;`, `&rdquo;`.  rea
+ct/no-unescaped-entities
+76:17  Warning: Using 
+`<img>` could result in 
+slower LCP and higher 
+bandwidth. Consider 
+using `<Image />` from 
+`next/image` or a 
+custom image loader to 
+automatically optimize 
+images. This may incur 
+additional usage or 
+cost from your 
+provider. See: https://n
+extjs.org/docs/messages/
+no-img-element  @next/ne
+xt/no-img-element
+
+./components/dashboard/c
+ritical-dates.tsx
+13:16  Warning: 
+'FileText' is defined 
+but never used.  @typesc
+ript-eslint/no-unused-va
+rs
+
+./components/dashboard/s
+idebar.tsx
+11:5  Warning: 'Search' 
+is defined but never 
+used.  @typescript-eslin
+t/no-unused-vars
+12:5  Warning: 'User' 
+is defined but never 
+used.  @typescript-eslin
+t/no-unused-vars
+13:5  Warning: 'LogOut' 
+is defined but never 
+used.  @typescript-eslin
+t/no-unused-vars
+14:5  Warning: 'Clock' 
+is defined but never 
+used.  @typescript-eslin
+t/no-unused-vars
+17:10  Warning: 
+'SignOutButton' is 
+defined but never used. 
+ @typescript-eslint/no-u
+nused-vars
+37:91  Error: `'` can 
+be escaped with 
+`&apos;`, `&lsquo;`, 
+`&#39;`, `&rsquo;`.  rea
+ct/no-unescaped-entities
+
+./components/leases/leas
+e-notice-pdf.tsx
+3:50  Warning: 
+'PDFViewer' is defined 
+but never used.  @typesc
+ript-eslint/no-unused-va
+rs
+
+./components/leases/leas
+e-table.tsx
+13:10  Warning: 'Mail' 
+is defined but never 
+used.  @typescript-eslin
+t/no-unused-vars
+13:16  Warning: 
+'FileText' is defined 
+but never used.  @typesc
+ript-eslint/no-unused-va
+rs
+13:26  Warning: 'Clock' 
+is defined but never 
+used.  @typescript-eslin
+t/no-unused-vars
+13:33  Warning: 
+'CalendarDays' is 
+defined but never used. 
+ @typescript-eslint/no-u
+nused-vars
+
+./components/settings/se
+ttings-content.tsx
+4:29  Warning: 
+'CardHeader' is defined 
+but never used.  @typesc
+ript-eslint/no-unused-va
+rs
+4:41  Warning: 
+'CardTitle' is defined 
+but never used.  @typesc
+ript-eslint/no-unused-va
+rs
+9:5  Warning: 
+'CreditCard' is defined 
+but never used.  @typesc
+ript-eslint/no-unused-va
+rs
+10:5  Warning: 'Shield' 
+is defined but never 
+used.  @typescript-eslin
+t/no-unused-vars
+11:5  Warning: 'User' 
+is defined but never 
+used.  @typescript-eslin
+t/no-unused-vars
+13:5  Warning: 'Plus' 
+is defined but never 
+used.  @typescript-eslin
+t/no-unused-vars
+
+./lib/calendar.ts
+9:11  Warning: 
+'increaseDate' is 
+assigned a value but 
+never used.  @typescript
+-eslint/no-unused-vars
+
+info  - Need to disable 
+some ESLint rules? 
+Learn more here: https:/
+/nextjs.org/docs/app/api
+-reference/config/eslint
+#disabling-rules

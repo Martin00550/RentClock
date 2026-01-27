@@ -1,0 +1,15 @@
+export const COUNTRY_CODES = [
+    { code: "US", dial_code: "+1", flag: "🇺🇸" },
+    { code: "CA", dial_code: "+1", flag: "🇨🇦" },
+    { code: "GB", dial_code: "+44", flag: "🇬🇧" },
+    { code: "AU", dial_code: "+61", flag: "🇦🇺" },
+    { code: "DE", dial_code: "+49", flag: "🇩🇪" },
+    { code: "FR", dial_code: "+33", flag: "🇫🇷" },
+    { code: "JP", dial_code: "+81", flag: "🇯🇵" },
+    { code: "CN", dial_code: "+86", flag: "🇨🇳" },
+    { code: "IN", dial_code: "+91", flag: "🇮🇳" },
+    { code: "BR", dial_code: "+55", flag: "🇧🇷" },
+    { code: "MX", dial_code: "+52", flag: "🇲🇽" },
+    { code: "IT", dial_code: "+39", flag: "🇮🇹" },
+    { code: "ES", dial_code: "+34", flag: "🇪🇸" },
+];

@@ -1,0 +1,33 @@
+﻿   Γû▓ Next.js 15.5.9
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+npx : Failed to compile.
+At line:1 char:1
++ npx next build --debug 
+> build_full.log 2>&1; 
+cat build_full.log
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (F  
+  ailed to compile.:Str   
+ ing) [], RemoteExcept    
+ion
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+
+./components/leases/add-le
+ase-form.tsx
+Module not found: Can't 
+resolve 
+'@/components/ui/label'
+
+https://nextjs.org/docs/me
+ssages/module-not-found
+
+
+> Build failed because of 
+webpack errors
