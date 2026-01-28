@@ -10,13 +10,10 @@ import { FaqSection } from "@/components/landing/faq-section";
 import {
   CheckCircle2,
   ArrowRight,
-  CalendarCheck,
   TrendingDown,
   AlertTriangle,
   XCircle,
   Upload,
-  Bell,
-  Calendar,
   ShieldCheck,
   Lock,
   CreditCard

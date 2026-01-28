@@ -11,7 +11,7 @@ export default function PrivacyPage() {
                         <strong>Effective Date:</strong> January 2026
                     </p>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        RentClock ("we," "us," or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our service.
+                        <p className="mb-4">By using RentClock (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;), you agree to the collection and use of information in accordance with this policy. </p>RentClock (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our service.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">1. Information We Collect</h2>

@@ -26,6 +26,7 @@ export default function TestSuitePage() {
         <div className="p-12 max-w-2xl mx-auto space-y-8">
             <div>
                 <h1 className="text-3xl font-bold text-slate-900">QA Test Suite</h1>
+                <div className="bg-slate-100 p-4 rounded text-sm font-mono overflow-auto mb-6">Status: &quot;{status}&quot;</div>
                 <p className="text-slate-500">Tools to verify scanning and alert logic.</p>
             </div>
 
@@ -33,7 +34,7 @@ export default function TestSuitePage() {
                 <div className="border rounded-2xl p-6 bg-white space-y-4">
                     <h2 className="font-bold text-lg">1. Create Test Data</h2>
                     <p className="text-sm text-slate-600">
-                        Creates a dummy lease expiring in exactly 7 days. This should trigger the "Urgent" alert logic immediately.
+                        Creates a dummy lease expiring in exactly 7 days. This should trigger the &quot;Urgent&quot; alert logic immediately.
                     </p>
                     <Button onClick={handleCreate} disabled={status === "creating"} className="bg-[#1e3a5f]">
                         {status === "creating" && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

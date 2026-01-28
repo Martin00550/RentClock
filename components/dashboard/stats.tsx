@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, Calendar, Hash, TrendingUp } from "lucide-react";
+import { AlertCircle, Hash, TrendingUp } from "lucide-react";
 import { calculateRevenueImpact, formatCurrency, getNextRelevantEvent } from "@/lib/lease-utils";
 import { differenceInDays } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

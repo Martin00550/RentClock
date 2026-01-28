@@ -1,11 +1,11 @@
-import { format, subMonths } from "date-fns";
+
 
 export interface CPIDataPoint {
     year: string;
     period: string;
     periodName: string;
     value: string;
-    footnotes: any[];
+    footnotes: unknown[];
 }
 
 export interface CPIResponse {

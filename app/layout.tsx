@@ -58,7 +58,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <head>
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
+
           <meta name="theme-color" content="#1e3a5f" />
           <link rel="apple-touch-icon" href="/icon-192.png" />
           <StructuredData />

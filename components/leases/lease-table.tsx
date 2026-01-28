@@ -38,7 +38,7 @@ export function LeaseTable({ leases }: { leases: Lease[] }) {
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 tracking-tight">Your Portfolio is Unprotected</h3>
                 <p className="text-slate-500 mt-3 mb-8 max-w-sm font-medium leading-relaxed">
-                    You haven't added any leases yet. Start your <span className="text-[#1e3a5f] font-bold">Safety Net</span> today by uploading your first document.
+                    <p className="text-slate-600 mb-6">You haven&apos;t added any leases yet.</p> Start your <span className="text-[#1e3a5f] font-bold">Safety Net</span> today by uploading your first document.
                     <br /><span className="text-[10px] uppercase font-black tracking-widest text-slate-400 mt-2 block">First 3 Leases are Free Forever</span>
                 </p>
                 <Link href="/ai-import">
@@ -83,7 +83,7 @@ export function LeaseTable({ leases }: { leases: Lease[] }) {
                                         <div className="bg-slate-50 p-3 rounded-full">
                                             <Search className="h-6 w-6 text-slate-300" />
                                         </div>
-                                        <p className="text-sm font-medium">No results for "{searchQuery}"</p>
+                                        <p className="text-sm font-medium">No results for &quot;{searchQuery}&quot;</p>
                                         <Button
                                             variant="link"
                                             className="text-[#1e3a5f] h-auto p-0"

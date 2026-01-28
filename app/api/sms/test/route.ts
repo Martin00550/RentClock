@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { Twilio } from "twilio";
 
-export async function POST(req: NextRequest) {
+export async function POST() {
     const { userId } = await auth();
 
     if (!userId) {
@@ -62,10 +62,11 @@ export async function POST(req: NextRequest) {
         });
 
         return NextResponse.json({ success: true });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Twilio error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Failed to send test SMS";
         return NextResponse.json(
-            { error: error.message || "Failed to send test SMS" },
+            { error: errorMessage },
             { status: 500 }
         );
     }

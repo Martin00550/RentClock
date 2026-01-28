@@ -37,7 +37,7 @@ export async function GET() {
 
         // Find same month from previous year for year-over-year calculation
         const previousYearData = allData.find(
-            (d: any) => d.period === latest.period && d.year === String(parseInt(latest.year) - 1)
+            (d: { period: string; year: string; value: string }) => d.period === latest.period && d.year === String(parseInt(latest.year) - 1)
         );
 
         // Calculate year-over-year percentage change
@@ -57,9 +57,10 @@ export async function GET() {
                 updated: new Date().toISOString()
             }
         });
-    } catch (error: any) {
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
         return NextResponse.json(
-            { error: error.message || "Internal Server Error" },
+            { error: errorMessage },
             { status: 500 }
         );
     }

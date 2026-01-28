@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { Lease } from "@/lib/types";
-import { formatCurrency } from "@/lib/lease-utils";
+
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 

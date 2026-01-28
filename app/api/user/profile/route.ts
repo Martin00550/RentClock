@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { v4 as uuidv4 } from "uuid";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     const { userId } = await auth();
 
     if (!userId) {
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { has_onboarded, phone, calendar_token, email } = body;
 
-        const updates: any = {};
+        const updates: { has_onboarded?: boolean; phone?: string; calendar_token?: string; email?: string } = {};
         if (typeof has_onboarded === 'boolean') updates.has_onboarded = has_onboarded;
         if (phone !== undefined) updates.phone = phone;
         if (calendar_token) updates.calendar_token = calendar_token;

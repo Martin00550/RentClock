@@ -1,7 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { TrendingUp, AlertCircle, ArrowRight, DollarSign, BarChart3, ShieldCheck } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { TrendingUp, AlertCircle, ArrowRight, DollarSign, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
@@ -17,23 +15,16 @@ export default async function ProfitProtectionPage() {
         redirect("/sign-in");
     }
 
-    const [{ data: leases, error }, { data: userData }] = await Promise.all([
-        supabaseAdmin
-            .from("leases")
-            .select("*")
-            .eq("user_id", userId),
-        supabaseAdmin
-            .from("users")
-            .select("is_pro")
-            .eq("id", userId)
-            .single()
-    ]);
+    const { data: leases, error } = await supabaseAdmin
+        .from("leases")
+        .select("*")
+        .eq("user_id", userId);
 
     if (error) {
         console.error("Error fetching leases:", error);
     }
 
-    const isPro = userData?.is_pro || false;
+
 
     const typedLeases = (leases as Lease[]) || [];
 
@@ -125,7 +116,7 @@ export default async function ProfitProtectionPage() {
 
                         {typedLeases.length === 0 ? (
                             <Card className="rounded-3xl border-slate-200 p-8 text-center bg-slate-50/50">
-                                <p className="text-slate-500 font-medium">No leases found. Import a lease to see opportunities.</p>
+                                <p className="text-slate-500 mb-6">Our automated system monitors this 24/7. &quot;Set it and forget it&quot; peace of mind.</p>
                             </Card>
                         ) : leasesWithOpportunity.length > 0 ? (
                             leasesWithOpportunity.map(lease => {
@@ -183,7 +174,7 @@ export default async function ProfitProtectionPage() {
                         <ul className="space-y-3">
                             <li className="flex gap-3 text-sm text-slate-600">
                                 <div className="h-1.5 w-1.5 rounded-full bg-[#d4a853] mt-2 shrink-0" />
-                                <span><strong>Automated Analysis:</strong> We scan every lease for "CPI" or "Market Rate" adjustment clauses.</span>
+                                <span><strong>Automated Analysis:</strong> We scan every lease for &quot;CPI&quot; or &quot;Market Rate&quot; adjustment clauses.</span>
                             </li>
                             <li className="flex gap-3 text-sm text-slate-600">
                                 <div className="h-1.5 w-1.5 rounded-full bg-[#d4a853] mt-2 shrink-0" />

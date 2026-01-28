@@ -1,5 +1,5 @@
 import { Lease } from "./types";
-import { format, addDays } from "date-fns";
+import { format } from "date-fns";
 import { formatCurrency } from "./lease-utils";
 
 export function generateRentIncreaseNotice(lease: Lease): string {

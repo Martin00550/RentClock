@@ -39,7 +39,7 @@ export function DeleteLeaseDialog({ leaseId, tenantName }: DeleteLeaseDialogProp
                 const data = await res.json();
                 alert("Error: " + (data.error || "Failed to delete lease"));
             }
-        } catch (err) {
+        } catch {
             alert("Network error. Please try again.");
         } finally {
             setDeleting(false);

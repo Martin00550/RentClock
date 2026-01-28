@@ -13,7 +13,6 @@ import {
     MapPin,
     User,
     Bell,
-    CalendarPlus,
     ArrowLeft,
     Loader2,
     Clock,
@@ -21,14 +20,14 @@ import {
     MessageSquare,
     Mail,
     ShieldCheck,
-    ArrowRight
+    ArrowRight,
+    AlertCircle
 } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format, parse, parseISO, isValid, startOfDay } from "date-fns";
-import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
@@ -81,7 +80,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
             });
         }
         setRentSchedule(projected);
-    }, [monthlyRent, rentIncreaseAmount, increaseDate]);
+    }, [monthlyRent, rentIncreaseAmount, increaseDate, extractedFields]);
 
     const Sparkle = ({ field }: { field: string }) => {
         if (!extractedFields.includes(field)) return null;
@@ -96,7 +95,6 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
 
     const [isScanning, setIsScanning] = useState(false);
     const [scanError, setScanError] = useState<string | null>(null);
-    const [scanStatus, setScanStatus] = useState("Initializing...");
 
     // Alert State
     const [reminder90DaysEmail, setReminder90DaysEmail] = useState(true);
@@ -146,7 +144,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
             if (data.rent_schedule) setRentSchedule(data.rent_schedule);
 
             // Track which fields were auto-filled for UI highlights
-            const filled = Object.keys(data).filter(k => !!(data as any)[k]);
+            const filled = Object.keys(data).filter(k => !!(data as Record<string, unknown>)[k]);
             setExtractedFields(filled);
 
             if (data.lease_start_date) {
@@ -173,9 +171,10 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
             if (json.pdf_url) setPdfUrl(json.pdf_url);
             console.log("✅ Form populated successfully");
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("❌ Scan failed:", err);
-            setScanError(err.message || "Unknown error occurred during scan");
+            const errorMessage = err instanceof Error ? err.message : "Unknown error occurred during scan";
+            setScanError(errorMessage);
         } finally {
             console.log("🔄 Scan complete, resetting isScanning");
             setIsScanning(false);
@@ -223,9 +222,10 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
 
             router.push("/dashboard");
             router.refresh();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("Error saving lease:", err);
-            alert(`Failed to save lease: ${err.message || err.code || "Unknown error"}`);
+            const errorMessage = err instanceof Error ? err.message : "Unknown error";
+            alert(`Failed to save lease: ${errorMessage}`);
         } finally {
             setIsSaving(false);
         }
@@ -258,7 +258,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
                 </div>
                 <h2 className="text-3xl font-black text-slate-900 tracking-tight">Lease Limit Reached</h2>
                 <p className="text-slate-500 text-lg max-w-md mx-auto leading-relaxed">
-                    You've reached the <span className="font-bold text-slate-900">3-lease limit</span> of the Free plan. Upgrade to Pro for unlimited properties, SMS alerts, and calendar sync.
+                    You&apos;ve reached the <span className="font-bold text-slate-900">3-lease limit</span> of the Free plan. Upgrade to Pro for unlimited properties, SMS alerts, and calendar sync.
                 </p>
                 <div className="flex flex-col gap-3 pt-4">
                     <Link href="/settings">
@@ -285,7 +285,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
                 </Link>
                 <div>
                     <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Secure Your Revenue</h1>
-                    <p className="text-slate-500">Stop the invisible bleed. Secure your lease data in minutes.</p>
+                    <p className="text-slate-500 mb-6">Enter the lease details manually. We&apos;ll still calculate the escalations.</p>
                 </div>
             </div>
 
@@ -339,7 +339,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
                     {scanError && (
                         <div className="bg-red-50 border border-red-200 rounded-2xl p-6 shadow-sm flex flex-col gap-2">
                             <div className="flex items-center gap-3 text-red-600">
-                                <span className="material-symbols-outlined text-lg">error</span>
+                                <AlertCircle className="h-5 w-5" />
                                 <span className="font-bold">Scan Error</span>
                             </div>
                             <p className="text-sm text-red-500">{scanError}</p>

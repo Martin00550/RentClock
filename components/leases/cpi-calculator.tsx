@@ -5,21 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TrendingUp, Info, ArrowRight, Loader2 } from "lucide-react";
+import { TrendingUp, Info, ArrowRight } from "lucide-react";
 import { formatCurrency } from "@/lib/lease-utils";
 import { CPIDataPoint } from "@/lib/cpi";
-import { cn } from "@/lib/utils";
 
 export function CpiCalculator({ currentRent }: { currentRent: number }) {
     const [cpiData, setCpiData] = useState<CPIDataPoint | null>(null);
-    const [loading, setLoading] = useState(false);
     const [baseRent, setBaseRent] = useState(currentRent);
     const [calculatedRent, setCalculatedRent] = useState<number | null>(null);
     const [yoyChange, setYoyChange] = useState(0.034); // Default fallback
 
     useEffect(() => {
         async function loadCpi() {
-            setLoading(true);
             try {
                 const res = await fetch("/api/cpi");
                 const json = await res.json();
@@ -31,8 +28,6 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                 }
             } catch (err) {
                 console.error("Failed to load CPI", err);
-            } finally {
-                setLoading(false);
             }
         }
         loadCpi();
@@ -84,7 +79,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                         <Info className="h-4 w-4 text-indigo-600" />
                     </div>
                     <p className="text-xs text-indigo-900/80 leading-relaxed font-semibold">
-                        Most commercial leases include a <span className="text-indigo-900 font-black">"Greater of CPI or 3%"</span> clause. Use this tool to ensure you aren't leaving money on the table.
+                        Most commercial leases include a <span className="text-indigo-900 font-black">&quot;Greater of CPI or 3%&quot;</span> clause. Use this tool to ensure you aren&apos;t leaving money on the table.
                     </p>
                 </div>
 
@@ -122,6 +117,10 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                                 <div className="text-4xl font-black text-white tracking-tighter">
                                     {formatCurrency(calculatedRent)}
                                 </div>
+                                <p className="text-xs text-indigo-100 font-medium">
+                                    The calculation uses the higher of 3% or CPI ({cpiData?.value ?? "3.4"}%) for this calculation.
+                                    This matches the &quot;Greater of X% or CPI&quot; clause often found in commercial leases.
+                                </p>
                                 <div className="flex items-center gap-2 mt-2">
                                     <span className="bg-white/20 text-white text-[10px] font-black px-2 py-0.5 rounded-full">+{displayPercentage.toFixed(1)}% Optimization</span>
                                 </div>

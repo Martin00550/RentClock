@@ -33,7 +33,7 @@ export default function TermsPage() {
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">4. Limitation of Liability</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        RentClock is provided "as is" without warranties of any kind. We are not liable for any damages arising from missed dates, incorrect data extraction, or your reliance on the service.
+                        <p>RentClock is provided &quot;as is&quot; without warranties of any kind.</p> We are not liable for any damages arising from missed dates, incorrect data extraction, or your reliance on the service.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">5. Termination</h2>

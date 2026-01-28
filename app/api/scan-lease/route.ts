@@ -125,9 +125,10 @@ export async function POST(req: NextRequest) {
 
                 usedModel = modelName;
                 break;
-            } catch (err: any) {
-                console.warn(`Model ${modelName} failed:`, err.message);
-                lastError = err;
+            } catch (err: unknown) {
+                const errorMessage = err instanceof Error ? err.message : "Unknown error";
+                console.warn(`Model ${modelName} failed:`, errorMessage);
+                lastError = err instanceof Error ? err : new Error(String(err));
             }
         }
 
@@ -172,7 +173,7 @@ export async function POST(req: NextRequest) {
         const extension = mimeType.split("/")[1] || "pdf";
         const fileName = `${uuidv4()}.${extension}`;
 
-        const { data: uploadData, error: uploadError } = await supabaseAdmin
+        const { error: uploadError } = await supabaseAdmin
             .storage
             .from("leases-pdf")
             .upload(fileName, buffer, {
@@ -197,10 +198,11 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ success: true, data, used_model: usedModel, pdf_url: pdfUrl });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Scan error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Failed to process lease";
         return NextResponse.json(
-            { error: error.message || "Failed to process lease" },
+            { error: errorMessage },
             { status: 500 }
         );
     }

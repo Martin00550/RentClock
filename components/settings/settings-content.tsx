@@ -4,25 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-    BadgeCheck,
-    Calendar as CalendarIcon,
-    ExternalLink,
     Info,
     Copy,
     Check,
-    Link as LinkIcon,
-    Download,
-    Bell,
     Loader2,
     Calendar,
-    MessageSquare,
     Smartphone
 } from "lucide-react";
 import { UserProfile, useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { supabase } from "@/lib/supabase";
+
 import { COUNTRY_CODES } from "@/lib/countries";
 
 export function SettingsContent() {
@@ -93,9 +86,10 @@ export function SettingsContent() {
 
             if (!res.ok) throw new Error("Failed to save phone");
             alert("Phone number saved! You will now receive SMS alerts.");
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Error saving phone:", error);
-            alert(`Failed to save phone number: ${error.message}`);
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
+            alert(`Failed to save phone number: ${errorMessage}`);
         } finally {
             setSavingPhone(false);
         }
@@ -110,10 +104,6 @@ export function SettingsContent() {
         navigator.clipboard.writeText(calendarUrl);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
-    };
-
-    const handleDownload = () => {
-        window.location.href = calendarUrl;
     };
 
     return (
@@ -146,7 +136,7 @@ export function SettingsContent() {
                                 <CardContent className="p-8">
                                     <div className="flex items-start gap-8">
                                         <div className="bg-[#1e3a5f] p-5 rounded-[2rem] shadow-2xl shadow-slate-900/20 group-hover:scale-105 transition-transform duration-500 shrink-0">
-                                            <CalendarIcon className="h-10 w-10 text-white" />
+                                            <Calendar className="h-10 w-10 text-white" />
                                         </div>
                                         <div className="flex-1 space-y-6">
                                             <div>
@@ -160,6 +150,7 @@ export function SettingsContent() {
                                                     <div className="flex gap-2">
                                                         <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer">
                                                             <Button variant="outline" size="sm" className="h-8 px-3 rounded-lg font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50 flex items-center gap-1.5">
+                                                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                                                 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Google" className="w-4 h-4" />
                                                                 Google
                                                             </Button>
@@ -297,6 +288,7 @@ export function SettingsContent() {
                                                                     alert("Error: " + (data.error || "Failed to send"));
                                                                 }
                                                             } catch (err) {
+                                                                console.error("Failed to send test SMS:", err);
                                                                 alert("Network error. Please try again.");
                                                             }
                                                         }}
@@ -343,6 +335,4 @@ export function SettingsContent() {
     );
 }
 
-function PhoneInput() {
-    return null;
-}
+

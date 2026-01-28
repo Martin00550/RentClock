@@ -9,12 +9,8 @@ import {
     Calendar,
     Clock,
     DollarSign,
-    Edit3,
     User,
-    CheckCircle2,
-    AlertCircle,
-    FileDown,
-    MoreVertical
+    CheckCircle2
 } from "lucide-react";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
@@ -64,7 +60,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
 
     // Derived Calculations
     const startDate = lease.lease_start_date ? new Date(lease.lease_start_date) : new Date(lease.created_at);
-    const endDate = lease.lease_end_date ? new Date(lease.lease_end_date) : null;
+
 
     // Status
     const status = getLeaseStatus(lease);

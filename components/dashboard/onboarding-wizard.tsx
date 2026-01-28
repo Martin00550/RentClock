@@ -1,19 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@clerk/nextjs";
-import { supabase } from "@/lib/supabase";
 import { COUNTRY_CODES } from "@/lib/countries";
-import { Loader2, Smartphone, Calendar, Check, Copy, ArrowRight, ShieldCheck } from "lucide-react";
+import { Loader2, Smartphone, Calendar, ArrowRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { Label } from "@/components/ui/label";
-import { v4 as uuidv4 } from "uuid";
-
-export function OnboardingWizard() {
+import { Label } from "@/components/ui/label"; export function OnboardingWizard() {
     const { user, isLoaded } = useUser();
     const [open, setOpen] = useState(false);
     const [step, setStep] = useState(1); // 1 = Phone, 2 = Calendar
@@ -27,36 +23,36 @@ export function OnboardingWizard() {
 
     // Calendar State
     const [baseUrl, setBaseUrl] = useState("");
-    const [copied, setCopied] = useState(false);
+
+    const [calendarToken, setCalendarToken] = useState("");
 
     useEffect(() => {
         if (!isLoaded || !user) return;
         setBaseUrl(window.location.origin);
+
+        const checkOnboardingStatus = async () => {
+            if (!user) return;
+            try {
+                const res = await fetch("/api/user/profile");
+                if (!res.ok) throw new Error("Failed to fetch profile");
+                const data = await res.json();
+
+                if (data.is_pro) setIsPro(data.is_pro);
+                if (data.calendar_token) setCalendarToken(data.calendar_token);
+
+                // If has_onboarded is false and user is PRO, show wizard
+                if (!data.has_onboarded && data.is_pro) {
+                    setOpen(true);
+                }
+            } catch (error) {
+                console.error("Error checking onboarding status:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         checkOnboardingStatus();
     }, [isLoaded, user]);
-
-    const [calendarToken, setCalendarToken] = useState("");
-
-    const checkOnboardingStatus = async () => {
-        if (!user) return;
-        try {
-            const res = await fetch("/api/user/profile");
-            if (!res.ok) throw new Error("Failed to fetch profile");
-            const data = await res.json();
-
-            if (data.is_pro) setIsPro(data.is_pro);
-            if (data.calendar_token) setCalendarToken(data.calendar_token);
-
-            // If has_onboarded is false and user is PRO, show wizard
-            if (!data.has_onboarded && data.is_pro) {
-                setOpen(true);
-            }
-        } catch (error) {
-            console.error("Error checking onboarding status:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const completeOnboarding = async () => {
         setOpen(false);
@@ -101,12 +97,6 @@ export function OnboardingWizard() {
     const calendarUrl = (user && calendarToken) ? `${baseUrl}/api/calendar/feed?token=${calendarToken}` : "";
     const googleCalendarUrl = `https://www.google.com/calendar/render?cid=${encodeURIComponent(calendarUrl.replace("https://", "http://"))}`;
     const appleCalendarUrl = calendarUrl.replace("https://", "webcal://");
-
-    const handleCopy = () => {
-        navigator.clipboard.writeText(calendarUrl);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
 
     if (!isLoaded || loading) return null;
 
@@ -186,7 +176,7 @@ export function OnboardingWizard() {
                                                 className="h-12 rounded-xl text-lg font-bold"
                                             />
                                         </div>
-                                        <p className="text-xs text-slate-400">We respect your inbox. Only critical alarms.</p>
+                                        <p className="text-slate-600 mb-8">We&apos;re verifying your setup... Only critical alarms.</p>
                                     </div>
 
                                     <div className="flex flex-col gap-3 pt-2">
@@ -215,6 +205,7 @@ export function OnboardingWizard() {
                                         <div className="grid grid-cols-2 gap-3">
                                             <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer">
                                                 <Button variant="outline" className="w-full h-12 rounded-xl font-bold text-sm text-slate-700 bg-white border-slate-200 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                                     <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Google" className="w-5 h-5" />
                                                     Google
                                                 </Button>
@@ -228,7 +219,7 @@ export function OnboardingWizard() {
                                         </div>
 
                                         <p className="text-xs text-slate-400 text-center pt-2">
-                                            Doesn't work? <a href="/settings?tab=integrations" className="text-[#1e3a5f] font-bold hover:underline">Go to Settings</a> for manual setup.
+                                            Doesn&apos;t work? <a href="/settings?tab=integrations" className="text-[#1e3a5f] font-bold hover:underline">Go to Settings</a> for manual setup.
                                         </p>
                                     </div>
 
