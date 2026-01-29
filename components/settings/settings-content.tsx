@@ -13,7 +13,6 @@ import {
     XCircle,
     ChevronDown,
     Search,
-    Download,
     Lock
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -21,7 +20,6 @@ import { UserProfile, useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { sendTestEmail } from "@/actions/test-email";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
 import { Mail } from "lucide-react";
@@ -37,7 +35,6 @@ export function SettingsContent() {
     const [savingPhone, setSavingPhone] = useState(false);
     const [openCountryField, setOpenCountryField] = useState(false);
     const [searchCountry, setSearchCountry] = useState("");
-    const [testEmail, setTestEmail] = useState("");
     const [emailNotifications, setEmailNotifications] = useState(true);
     const [savingEmailSettings, setSavingEmailSettings] = useState(false);
 
@@ -184,7 +181,6 @@ export function SettingsContent() {
     // Use secure calendar token from API, not user.id
     const calendarUrl = calendarToken ? `${baseUrl}/api/calendar/feed?token=${calendarToken}` : "";
     const googleCalendarUrl = calendarUrl ? `https://www.google.com/calendar/render?cid=${encodeURIComponent(calendarUrl.replace("https://", "http://"))}` : "";
-    const appleCalendarUrl = calendarUrl ? calendarUrl.replace("https://", "webcal://") : "";
 
     const handleCopy = () => {
         if (!isPro) return;

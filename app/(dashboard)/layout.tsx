@@ -66,7 +66,7 @@ export default function DashboardLayout({
     );
 }
 
-function MobileNavItem({ href, icon: Icon, label }: { href: string; icon: any; label: string }) {
+function MobileNavItem({ href, icon: Icon, label }: { href: string; icon: React.ElementType; label: string }) {
     return (
         <Link href={href} className="flex flex-col items-center gap-1 group">
             <Icon className="h-5 w-5 text-slate-400 group-hover:text-[#1e3a5f] transition-colors" />
