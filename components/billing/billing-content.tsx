@@ -5,11 +5,43 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
+import { initializePaddle, Paddle } from "@paddle/paddle-js";
 
 export function BillingContent() {
     const { user } = useUser();
     const [isPro, setIsPro] = useState(false);
     const [leaseCount, setLeaseCount] = useState(0);
+    const [paddle, setPaddle] = useState<Paddle>();
+
+    useEffect(() => {
+        initializePaddle({
+            environment: (process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT as "sandbox" | "production") || "production",
+            token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN!,
+            eventCallback: (data) => {
+                if (data.name === "checkout.completed") {
+                    window.location.reload();
+                }
+            }
+        }).then((paddleInstance) => {
+            if (paddleInstance) {
+                setPaddle(paddleInstance);
+            }
+        });
+    }, []);
+
+    const handleCheckout = (priceId: string) => {
+        if (!paddle || !user) return;
+
+        paddle.Checkout.open({
+            items: [{ priceId, quantity: 1 }],
+            customer: {
+                email: user.primaryEmailAddress?.emailAddress || ""
+            },
+            customData: {
+                userId: user.id
+            }
+        });
+    };
 
     useEffect(() => {
         async function loadData() {
@@ -64,7 +96,9 @@ export function BillingContent() {
                                 </div>
                                 <div className="flex items-baseline gap-2">
                                     <span className="text-6xl font-black tracking-tighter">{isPro ? "$39" : "$0"}</span>
-                                    <span className="text-slate-400 font-bold text-xl tracking-tight">/month</span>
+                                    <span className="text-slate-400 font-bold text-xl tracking-tight">
+                                        {isPro ? "/month after 7-day trial" : "/month"}
+                                    </span>
                                 </div>
                                 <div className="space-y-4">
                                     {isPro ? (
@@ -78,7 +112,7 @@ export function BillingContent() {
                                         </>
                                     ) : (
                                         <>
-                                            {["3 active leases", "Profit Protection Analytics", "Legal Notice Generation", "Email Alerts (7/30/60/90 Days)"].map((feature) => (
+                                            {["3 active leases", "Profit Protection Analytics", "Legal Notice Generation", "Email Alerts (7/30/60/90 Days)", "No credit card required"].map((feature) => (
                                                 <div key={feature} className="flex items-center gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
                                                     <div className="bg-[#d4a853]/20 p-1 rounded-full"><BadgeCheck className="h-5 w-5 text-[#d4a853]" /></div>
                                                     <span className="text-sm font-bold text-slate-200">{feature}</span>
@@ -95,7 +129,10 @@ export function BillingContent() {
                                         </Button>
                                     </a>
                                 ) : (
-                                    <Button className="w-full h-16 bg-[#1e3a5f] hover:bg-[#2a4a73] text-white font-black text-lg rounded-2xl flex items-center justify-center gap-3 transition-transform hover:scale-[1.02]">
+                                    <Button
+                                        onClick={() => handleCheckout(process.env.NEXT_PUBLIC_PADDLE_PRO_ANNUAL_PRICE_ID || "")}
+                                        className="w-full h-16 bg-[#1e3a5f] hover:bg-[#2a4a73] text-white font-black text-lg rounded-2xl flex items-center justify-center gap-3 transition-transform hover:scale-[1.02]"
+                                    >
                                         Upgrade to Pro
                                         <ExternalLink className="h-5 w-5" />
                                     </Button>
@@ -155,16 +192,28 @@ export function BillingContent() {
                                         <div className="flex flex-col">
                                             <span className="text-sm font-bold text-slate-900">Annual <span className="text-[#2d6a4f]">(Recommended)</span></span>
                                             <span className="text-2xl font-black text-slate-900">$39<span className="text-sm text-slate-500 font-medium">/mo</span></span>
-                                            <span className="text-xs text-slate-500">Billed at $468/year</span>
+                                            <span className="text-xs text-slate-500">7-day free trial, then $468/year</span>
                                         </div>
-                                        <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white font-bold">Select</Button>
+                                        <Button
+                                            onClick={() => handleCheckout(process.env.NEXT_PUBLIC_PADDLE_PRO_ANNUAL_PRICE_ID || "")}
+                                            className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white font-bold"
+                                        >
+                                            Start Free Trial
+                                        </Button>
                                     </div>
                                     <div className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-2xl">
                                         <div className="flex flex-col">
                                             <span className="text-sm font-bold text-slate-500">Monthly</span>
                                             <span className="text-xl font-black text-slate-600">$49<span className="text-sm text-slate-400 font-medium">/mo</span></span>
+                                            <span className="text-xs text-slate-500">7-day free trial, then $49/mo</span>
                                         </div>
-                                        <Button variant="outline" className="border-slate-300 text-slate-600 font-bold">Select</Button>
+                                        <Button
+                                            onClick={() => handleCheckout(process.env.NEXT_PUBLIC_PADDLE_PRO_MONTHLY_PRICE_ID || "")}
+                                            variant="outline"
+                                            className="border-slate-300 text-slate-600 font-bold"
+                                        >
+                                            Start Free Trial
+                                        </Button>
                                     </div>
                                 </div>
                             </Card>

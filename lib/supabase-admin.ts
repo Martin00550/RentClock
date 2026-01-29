@@ -13,3 +13,18 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
         persistSession: false
     }
 });
+
+export async function updateUserSubscriptionStatus(userId: string, isPro: boolean) {
+    const { error } = await supabaseAdmin
+        .from("users")
+        .update({
+            is_pro: isPro,
+            subscription_status: isPro ? "active" : "canceled"
+        })
+        .eq("id", userId);
+
+    if (error) {
+        console.error("Error updating user subscription status:", error);
+        throw error;
+    }
+}
