@@ -12,7 +12,7 @@ export async function GET() {
 
     const { data, error } = await supabaseAdmin
         .from("users")
-        .select("has_onboarded, calendar_token, is_pro, phone, email_notifications_enabled")
+        .select("has_onboarded, calendar_token, is_pro, phone, email_notifications_enabled, paddle_customer_id, paddle_subscription_id")
         .eq("id", userId)
         .single();
 
@@ -39,7 +39,9 @@ export async function GET() {
         calendar_token: calendar_token || null,
         is_pro: data?.is_pro ?? false,
         phone: data?.phone || "",
-        email_notifications_enabled: data?.email_notifications_enabled ?? true
+        email_notifications_enabled: data?.email_notifications_enabled ?? true,
+        paddle_customer_id: data?.paddle_customer_id || null,
+        paddle_subscription_id: data?.paddle_subscription_id || null
     });
 }
 

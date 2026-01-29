@@ -1,8 +1,9 @@
 "use client";
 
-import { BadgeCheck, ExternalLink } from "lucide-react";
+import { BadgeCheck, ExternalLink, CreditCard, History, Settings, XCircle, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { initializePaddle, Paddle } from "@paddle/paddle-js";
@@ -12,6 +13,7 @@ export function BillingContent() {
     const [isPro, setIsPro] = useState(false);
     const [leaseCount, setLeaseCount] = useState(0);
     const [paddle, setPaddle] = useState<Paddle>();
+    const [paddleCustomerId, setPaddleCustomerId] = useState<string | null>(null);
 
     useEffect(() => {
         initializePaddle({
@@ -43,6 +45,17 @@ export function BillingContent() {
         });
     };
 
+    const handleManageSubscription = (type: 'update' | 'payment' | 'cancel') => {
+        // For Paddle v2, the Customer Portal is the best place to manage everything.
+        // In a real app, you might want to generate a secure portal link via your backend,
+        // but for now, we'll use the standardized sandbox/production portal links.
+        const portalUrl = process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT === 'sandbox'
+            ? "https://sandbox-buyers-portal.paddle.com/subscriptions"
+            : "https://buy.paddle.com/subscriptions";
+
+        window.open(portalUrl, "_blank");
+    };
+
     useEffect(() => {
         async function loadData() {
             if (!user) return;
@@ -52,6 +65,7 @@ export function BillingContent() {
                 if (profileRes.ok) {
                     const data = await profileRes.json();
                     setIsPro(data.is_pro || false);
+                    setPaddleCustomerId(data.paddle_customer_id || null);
                 }
 
                 // Fetch lease count
@@ -122,12 +136,58 @@ export function BillingContent() {
                                     )}
                                 </div>
                                 {isPro ? (
-                                    <a href="https://sandbox-buyers-portal.paddle.com/subscriptions" target="_blank" rel="noopener noreferrer">
-                                        <Button className="w-full h-16 bg-white/10 hover:bg-white/20 text-white font-black text-lg rounded-2xl flex items-center justify-center gap-3 transition-transform hover:scale-[1.02]">
-                                            Manage Subscription
-                                            <ExternalLink className="h-5 w-5" />
-                                        </Button>
-                                    </a>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button className="w-full h-16 bg-white/10 hover:bg-white/20 text-white font-black text-lg rounded-2xl flex items-center justify-center gap-3 transition-transform hover:scale-[1.02]">
+                                                Manage Subscription
+                                                <ChevronDown className="h-5 w-5" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-64 bg-slate-900 border-white/10 p-2 rounded-2xl shadow-2xl" align="end">
+                                            <div className="flex flex-col gap-1">
+                                                <button
+                                                    onClick={() => handleManageSubscription('payment')}
+                                                    className="flex items-center gap-3 w-full p-3 hover:bg-white/5 rounded-xl text-left transition-colors group"
+                                                >
+                                                    <div className="bg-blue-500/20 p-2 rounded-lg group-hover:bg-blue-500/30">
+                                                        <CreditCard className="h-4 w-4 text-blue-400" />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-bold text-white">Update Payment</span>
+                                                        <span className="text-[10px] text-slate-400">Change your card info</span>
+                                                    </div>
+                                                </button>
+
+                                                <button
+                                                    onClick={() => handleManageSubscription('update')}
+                                                    className="flex items-center gap-3 w-full p-3 hover:bg-white/5 rounded-xl text-left transition-colors group"
+                                                >
+                                                    <div className="bg-purple-500/20 p-2 rounded-lg group-hover:bg-purple-500/30">
+                                                        <History className="h-4 w-4 text-purple-400" />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-bold text-white">Billing History</span>
+                                                        <span className="text-[10px] text-slate-400">View past invoices</span>
+                                                    </div>
+                                                </button>
+
+                                                <div className="h-px bg-white/5 my-1" />
+
+                                                <button
+                                                    onClick={() => handleManageSubscription('cancel')}
+                                                    className="flex items-center gap-3 w-full p-3 hover:bg-red-500/10 rounded-xl text-left transition-colors group"
+                                                >
+                                                    <div className="bg-red-500/20 p-2 rounded-lg group-hover:bg-red-500/30">
+                                                        <XCircle className="h-4 w-4 text-red-400" />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-bold text-white group-hover:text-red-400">Cancel Subscription</span>
+                                                        <span className="text-[10px] text-slate-400">Stop future charges</span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </PopoverContent>
+                                    </Popover>
                                 ) : (
                                     <Button
                                         onClick={() => handleCheckout(process.env.NEXT_PUBLIC_PADDLE_PRO_ANNUAL_PRICE_ID || "")}

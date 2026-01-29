@@ -29,7 +29,14 @@ export async function POST(req: NextRequest) {
                     case EventName.SubscriptionUpdated:
                         // The status is available on the data object for subscription events
                         const status = (eventData.data as { status?: string }).status;
-                        await updateUserSubscriptionStatus(userId, status === "active" || status === "trialing");
+                        const customerId = (eventData.data as { customerId?: string }).customerId;
+                        const subscriptionId = (eventData.data as { id?: string }).id;
+                        await updateUserSubscriptionStatus(
+                            userId,
+                            status === "active" || status === "trialing",
+                            customerId,
+                            subscriptionId
+                        );
                         break;
 
                     case EventName.SubscriptionCanceled:

@@ -14,12 +14,19 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
     }
 });
 
-export async function updateUserSubscriptionStatus(userId: string, isPro: boolean) {
+export async function updateUserSubscriptionStatus(
+    userId: string,
+    isPro: boolean,
+    paddleCustomerId?: string,
+    paddleSubscriptionId?: string
+) {
     const { error } = await supabaseAdmin
         .from("users")
         .update({
             is_pro: isPro,
-            subscription_status: isPro ? "active" : "canceled"
+            subscription_status: isPro ? "active" : "canceled",
+            ...(paddleCustomerId && { paddle_customer_id: paddleCustomerId }),
+            ...(paddleSubscriptionId && { paddle_subscription_id: paddleSubscriptionId })
         })
         .eq("id", userId);
 
