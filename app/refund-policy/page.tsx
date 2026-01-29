@@ -16,17 +16,17 @@ export default function RefundPolicyPage() {
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Money-Back Guarantee</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        We offer a <strong>7-day money-back guarantee</strong> on all new subscriptions. If you are not satisfied with RentClock for any reason during your first 7 days, let us know and we will refund your initial payment in full.
+                        We offer a <strong>14-day money-back guarantee</strong> on all new subscriptions. You are entitled to a full refund within 14 days of your initial purchase, no questions asked.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">How to Request a Refund</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        To request a refund, please email our support team at <a href="mailto:support@rentclock.online" className="text-[#1e3a5f] underline">support@rentclock.online</a> with your account email address and a brief explanation of why the product didn&apos;t meet your needs.
+                        To request a refund, please email our support team at <a href="mailto:support@rentclock.online" className="text-[#1e3a5f] underline">support@rentclock.online</a> with your account email address.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Cancellations</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        You can cancel your subscription at any time from your dashboard. After the 7-day window, your cancellation will take effect at the end of the current billing cycle, and you will not be charged again. We do not provide prorated refunds for cancellations made mid-cycle after the initial 7-day period.
+                        You can cancel your subscription at any time from your dashboard. After the 14-day window, your cancellation will take effect at the end of the current billing cycle, and you will not be charged again.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Contact Us</h2>

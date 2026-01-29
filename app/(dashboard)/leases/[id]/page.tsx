@@ -22,6 +22,31 @@ import { getLeaseStatus, formatCurrency, getNextRelevantEvent, calculateRevenueI
 import { NoticeButton } from "@/components/leases/notice-button";
 import { CpiCalculator } from "@/components/leases/cpi-calculator";
 import { LeaseSplitView } from "@/components/leases/lease-split-view";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params;
+    const { data: lease } = await supabaseAdmin
+        .from("leases")
+        .select("tenant_name, lease_end_date, property_address")
+        .eq("id", id)
+        .single();
+
+    if (!lease) return { title: "Lease Not Found | RentClock" };
+
+    const status = getLeaseStatus(lease as Lease);
+    const statusEmoji = status === "urgent" ? "🚨" : status === "warning" ? "⚠️" : "✅";
+
+    return {
+        title: `${statusEmoji} ${lease.tenant_name} | RentClock Alert`,
+        description: `Lease expires ${lease.lease_end_date}. Action required for ${lease.property_address}.`,
+        openGraph: {
+            title: `${lease.tenant_name} - Lease Alert`,
+            description: `Lease Status: ${status.toUpperCase()} at ${lease.property_address}`,
+            type: "website",
+        }
+    };
+}
 
 export default async function LeaseDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;

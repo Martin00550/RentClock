@@ -64,8 +64,8 @@ export function LeaseTable({ leases }: { leases: Lease[] }) {
                 />
             </div>
 
-            <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-                <Table>
+            <div className="rounded-xl border bg-white shadow-sm overflow-x-auto">
+                <Table className="min-w-[800px] md:min-w-full">
                     <TableHeader className="bg-slate-50">
                         <TableRow>
                             <TableHead className="font-semibold text-xs uppercase tracking-wider">Tenant & Address</TableHead>

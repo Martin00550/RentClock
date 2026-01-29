@@ -44,8 +44,8 @@ export function ImminentCriticalDates({ leases }: { leases: Lease[] }) {
         .slice(0, 5); // Top 5
 
     return (
-        <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-            <div className="p-6 border-b flex items-center justify-between">
+        <div className="rounded-xl border bg-white shadow-sm overflow-x-auto">
+            <div className="p-6 border-b flex items-center justify-between sticky left-0 bg-white z-10">
                 <div>
                     <h2 className="text-xl font-bold text-slate-900 tracking-tight">Active Profit Protection Alarms</h2>
                     <p className="text-sm text-slate-500">Upcoming events requiring your final approval.</p>
@@ -56,7 +56,7 @@ export function ImminentCriticalDates({ leases }: { leases: Lease[] }) {
                     </Button>
                 </Link>
             </div>
-            <Table>
+            <Table className="min-w-[700px] md:min-w-full">
                 <TableHeader className="bg-slate-50">
                     <TableRow>
                         <TableHead className="font-semibold text-xs uppercase tracking-wider">Tenant & Property</TableHead>

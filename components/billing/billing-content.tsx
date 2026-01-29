@@ -172,6 +172,21 @@ export function BillingContent() {
                     </div>
                 </div>
             </div>
+            {/* Help & Support */}
+            <div className="mt-12 pt-12 border-t border-slate-100">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-10 bg-slate-50 border border-slate-200 rounded-[2.5rem]">
+                    <div className="text-center md:text-left space-y-2">
+                        <h4 className="text-2xl font-black text-slate-900 tracking-tight">Need help or a refund?</h4>
+                        <p className="text-slate-500 font-medium">Every subscription is backed by our full 14-day money-back guarantee.</p>
+                    </div>
+                    <div className="flex flex-col items-center md:items-end gap-1">
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Reach out directly to</span>
+                        <a href="mailto:support@rentclock.online" className="text-xl md:text-2xl font-black text-[#1e3a5f] hover:scale-105 transition-transform">
+                            support@rentclock.online
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

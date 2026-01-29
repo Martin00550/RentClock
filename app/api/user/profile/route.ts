@@ -12,7 +12,7 @@ export async function GET() {
 
     const { data, error } = await supabaseAdmin
         .from("users")
-        .select("has_onboarded, calendar_token, is_pro, phone")
+        .select("has_onboarded, calendar_token, is_pro, phone, email_notifications_enabled")
         .eq("id", userId)
         .single();
 
@@ -38,7 +38,8 @@ export async function GET() {
         has_onboarded: data?.has_onboarded ?? false,
         calendar_token: calendar_token || null,
         is_pro: data?.is_pro ?? false,
-        phone: data?.phone || ""
+        phone: data?.phone || "",
+        email_notifications_enabled: data?.email_notifications_enabled ?? true
     });
 }
 
@@ -52,26 +53,32 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { has_onboarded, phone, calendar_token, email } = body;
+        const { has_onboarded, phone, calendar_token, email, email_notifications_enabled } = body;
 
-        const updates: { has_onboarded?: boolean; phone?: string; calendar_token?: string; email?: string } = {};
+        const updates: {
+            has_onboarded?: boolean;
+            phone?: string;
+            calendar_token?: string;
+            email?: string;
+            email_notifications_enabled?: boolean
+        } = {};
         if (typeof has_onboarded === 'boolean') updates.has_onboarded = has_onboarded;
         if (phone !== undefined) updates.phone = phone;
         if (calendar_token) updates.calendar_token = calendar_token;
-        if (email) updates.email = email; // Only if we need to sync email on first create
+        if (email) updates.email = email;
+        if (typeof email_notifications_enabled === 'boolean') updates.email_notifications_enabled = email_notifications_enabled;
 
         // Check if user exists first to decide on insert vs update, or use upsert
         const { error } = await supabaseAdmin
             .from("users")
             .upsert({
                 id: userId,
-                ...updates,
-                updated_at: new Date().toISOString()
+                ...updates
             }, { onConflict: "id" });
 
         if (error) {
             console.error("Error updating user profile:", error);
-            return new NextResponse("Error updating profile", { status: 500 });
+            return NextResponse.json({ error: error.message }, { status: 500 });
         }
 
         return NextResponse.json({ success: true });

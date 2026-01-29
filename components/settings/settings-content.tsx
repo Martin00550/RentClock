@@ -9,12 +9,22 @@ import {
     Check,
     Loader2,
     Calendar,
-    Smartphone
+    Smartphone,
+    XCircle,
+    ChevronDown,
+    Search,
+    Download,
+    Lock
 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { UserProfile, useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { sendTestEmail } from "@/actions/test-email";
+import Link from "next/link";
+import { Switch } from "@/components/ui/switch";
+import { Mail } from "lucide-react";
 
 import { COUNTRY_CODES } from "@/lib/countries";
 
@@ -25,6 +35,11 @@ export function SettingsContent() {
     const [phone, setPhone] = useState("");
     const [countryCode, setCountryCode] = useState("+1");
     const [savingPhone, setSavingPhone] = useState(false);
+    const [openCountryField, setOpenCountryField] = useState(false);
+    const [searchCountry, setSearchCountry] = useState("");
+    const [testEmail, setTestEmail] = useState("");
+    const [emailNotifications, setEmailNotifications] = useState(true);
+    const [savingEmailSettings, setSavingEmailSettings] = useState(false);
 
     // Dynamic billing state
     const [isPro, setIsPro] = useState(false);
@@ -62,6 +77,10 @@ export function SettingsContent() {
                     }
                 }
 
+                if (typeof data.email_notifications_enabled === 'boolean') {
+                    setEmailNotifications(data.email_notifications_enabled);
+                }
+
 
             } catch (error) {
                 console.error("Error loading profile:", error);
@@ -69,6 +88,37 @@ export function SettingsContent() {
         }
         loadProfile();
     }, [user]);
+
+    const removePhone = async () => {
+        if (!user) return;
+        if (!confirm("Are you sure you want to remove your phone number? You will no longer receive SMS alerts.")) return;
+
+        setSavingPhone(true);
+        try {
+            const res = await fetch("/api/user/profile", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    phone: null,
+                    email: user.primaryEmailAddress?.emailAddress
+                })
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Failed to remove phone");
+            }
+
+            setPhone("");
+            alert("Phone number removed successfully.");
+        } catch (error: unknown) {
+            console.error("Error removing phone:", error);
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
+            alert(`Failed to remove phone number: ${errorMessage}`);
+        } finally {
+            setSavingPhone(false);
+        }
+    };
 
     const savePhone = async () => {
         if (!user) return;
@@ -84,8 +134,16 @@ export function SettingsContent() {
                 })
             });
 
-            if (!res.ok) throw new Error("Failed to save phone");
-            alert("Phone number saved! You will now receive SMS alerts.");
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Failed to save phone");
+            }
+
+            if (isPro) {
+                alert("Phone number saved! You can now receive SMS alerts.");
+            } else {
+                alert("Phone number saved! Upgrade to Pro to activate SMS alerts.");
+            }
         } catch (error: unknown) {
             console.error("Error saving phone:", error);
             const errorMessage = error instanceof Error ? error.message : "Unknown error";
@@ -95,12 +153,41 @@ export function SettingsContent() {
         }
     };
 
+    const toggleEmailNotifications = async (checked: boolean) => {
+        if (!user) return;
+
+        setEmailNotifications(checked);
+        setSavingEmailSettings(true);
+
+        try {
+            const res = await fetch("/api/user/profile", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email_notifications_enabled: checked,
+                    email: user.primaryEmailAddress?.emailAddress
+                })
+            });
+
+            if (!res.ok) {
+                setEmailNotifications(!checked); // Revert on failure
+                alert("Failed to update email settings. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error updating email settings:", error);
+            setEmailNotifications(!checked); // Revert on error
+        } finally {
+            setSavingEmailSettings(false);
+        }
+    };
+
     // Use secure calendar token from API, not user.id
     const calendarUrl = calendarToken ? `${baseUrl}/api/calendar/feed?token=${calendarToken}` : "";
     const googleCalendarUrl = calendarUrl ? `https://www.google.com/calendar/render?cid=${encodeURIComponent(calendarUrl.replace("https://", "http://"))}` : "";
     const appleCalendarUrl = calendarUrl ? calendarUrl.replace("https://", "webcal://") : "";
 
     const handleCopy = () => {
+        if (!isPro) return;
         navigator.clipboard.writeText(calendarUrl);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -114,15 +201,14 @@ export function SettingsContent() {
             </div>
 
             <Tabs defaultValue="integrations" className="w-full">
-                <TabsList className="bg-transparent border-b border-slate-200 w-full justify-start rounded-none h-auto p-0 gap-10">
-                    <TabsTrigger value="integrations" className="data-[state=active]:border-[#1e3a5f] data-[state=active]:text-[#1e3a5f] rounded-none border-b-2 border-transparent px-0 pb-4 h-auto text-sm font-bold transition-all">Integrations</TabsTrigger>
-
-                    <TabsTrigger value="account" className="data-[state=active]:border-[#1e3a5f] data-[state=active]:text-[#1e3a5f] rounded-none border-b-2 border-transparent px-0 pb-4 h-auto text-sm font-bold transition-all">Account</TabsTrigger>
+                <TabsList className="bg-transparent border-b border-slate-200 w-full justify-center md:justify-start rounded-none h-auto p-0 gap-8 md:gap-10">
+                    <TabsTrigger value="integrations" className="data-[state=active]:border-[#1e3a5f] data-[state=active]:text-[#1e3a5f] rounded-none border-b-2 border-transparent px-4 pb-4 h-auto text-sm font-bold transition-all">Integrations</TabsTrigger>
+                    <TabsTrigger value="account" className="data-[state=active]:border-[#1e3a5f] data-[state=active]:text-[#1e3a5f] rounded-none border-b-2 border-transparent px-4 pb-4 h-auto text-sm font-bold transition-all">Account</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="integrations" className="mt-12 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="max-w-4xl space-y-8">
-                        <div>
+                        <div className="text-center md:text-left">
                             <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Connected Integrations</h3>
                             <p className="text-slate-500 mt-1">Manage your external connections and automated alarms.</p>
                         </div>
@@ -133,29 +219,46 @@ export function SettingsContent() {
                                 <div className="absolute top-0 right-0 bg-[#d4a853] text-[#1e3a5f] text-[10px] font-black px-4 py-2 rounded-bl-xl uppercase tracking-widest">
                                     Active
                                 </div>
-                                <CardContent className="p-8">
-                                    <div className="flex items-start gap-8">
+                                <CardContent className="p-6 md:p-8">
+                                    <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 md:gap-8">
                                         <div className="bg-[#1e3a5f] p-5 rounded-[2rem] shadow-2xl shadow-slate-900/20 group-hover:scale-105 transition-transform duration-500 shrink-0">
                                             <Calendar className="h-10 w-10 text-white" />
                                         </div>
-                                        <div className="flex-1 space-y-6">
+                                        <div className="flex-1 w-full space-y-6">
                                             <div>
-                                                <h4 className="text-2xl font-black text-slate-900 leading-tight tracking-tighter">Calendar Magic Link</h4>
-                                                <p className="text-slate-500 font-medium mt-1">Sync your lease deadlines directly to your personal calendar.</p>
+                                                <h4 className="text-xl md:text-2xl font-black text-slate-900 leading-tight tracking-tighter">Calendar Import</h4>
+                                                <p className="text-sm md:text-base text-slate-500 font-medium mt-1">Download lease deadlines to your personal calendar.</p>
                                             </div>
 
-                                            <div className="space-y-4 bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                                                <div className="flex items-center justify-between">
+                                            <div className="space-y-4 bg-slate-50 p-6 rounded-2xl border border-slate-100 relative overflow-hidden">
+                                                {!isPro && (
+                                                    <div className="absolute inset-0 bg-white/40 backdrop-blur-xs z-10 flex flex-col items-center justify-center p-4 md:p-6 text-center">
+                                                        <div className="bg-[#1e3a5f] p-2 rounded-xl mb-3 shadow-xl">
+                                                            <Lock className="h-5 w-5 text-white" />
+                                                        </div>
+                                                        <h5 className="text-[12px] md:text-sm font-black text-[#1e3a5f] uppercase tracking-wider mb-1">Premium Benefit</h5>
+                                                        <p className="text-[10px] text-[#1e3a5f] font-bold max-w-[200px] leading-tight mb-4">
+                                                            Unlock automatic calendar syncing for your leases.
+                                                        </p>
+                                                        <Link href="/billing">
+                                                            <Button size="sm" className="h-9 px-6 bg-[#1e3a5f] hover:bg-[#2a4a73] text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-slate-900/20 active:scale-95 transition-all">
+                                                                Unlock Sync
+                                                            </Button>
+                                                        </Link>
+                                                    </div>
+                                                )}
+
+                                                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                                                     <Label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Quick Add</Label>
                                                     <div className="flex gap-2">
-                                                        <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer">
+                                                        <a href={isPro ? googleCalendarUrl : "/billing"} target={isPro ? "_blank" : "_self"} rel="noopener noreferrer">
                                                             <Button variant="outline" size="sm" className="h-8 px-3 rounded-lg font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50 flex items-center gap-1.5">
                                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                                 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Google" className="w-4 h-4" />
                                                                 Google
                                                             </Button>
                                                         </a>
-                                                        <a href={appleCalendarUrl}>
+                                                        <a href={isPro ? (calendarUrl + "&download=true") : "/billing"}>
                                                             <Button variant="outline" size="sm" className="h-8 px-3 rounded-lg font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50 flex items-center gap-1.5">
                                                                 <Calendar className="w-4 h-4 text-[#ff3b30]" />
                                                                 Apple / Outlook
@@ -164,17 +267,17 @@ export function SettingsContent() {
                                                     </div>
                                                 </div>
 
-                                                <div className="pt-2">
+                                                <div className="pt-2 text-left w-full">
                                                     <Label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block">Your Unique Sync Feed</Label>
                                                     <div className="flex gap-2">
                                                         <Input
                                                             readOnly
-                                                            value={calendarUrl}
-                                                            className="h-12 flex-1 rounded-xl bg-white border-slate-200 font-mono text-xs text-slate-500 shadow-sm"
+                                                            value={isPro ? calendarUrl : "••••••••••••••••••••••••••••••••"}
+                                                            className="h-10 md:h-12 flex-1 rounded-xl bg-white border-slate-200 font-mono text-[10px] md:text-xs text-slate-500 shadow-sm"
                                                         />
                                                         <Button
-                                                            onClick={handleCopy}
-                                                            className="h-12 px-6 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl font-bold font-display shadow-sm"
+                                                            onClick={isPro ? handleCopy : () => { }}
+                                                            className="h-10 md:h-12 px-4 md:px-6 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl font-bold font-display shadow-sm"
                                                         >
                                                             {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
                                                         </Button>
@@ -197,30 +300,30 @@ export function SettingsContent() {
                                                         <TabsContent value="google" className="space-y-3 mt-0">
                                                             <div className="flex items-start gap-3 text-xs text-slate-600">
                                                                 <span className="shrink-0 w-5 h-5 bg-white border border-slate-200 rounded-full flex items-center justify-center font-bold text-slate-900 shadow-sm">1</span>
-                                                                <p className="pt-0.5">Go to <span className="font-bold text-slate-900">Settings</span> on your Google Calendar.</p>
+                                                                <p className="pt-0.5"><span className="font-bold text-blue-600">Automatic:</span> Click the Google button above to add to your Google account.</p>
                                                             </div>
                                                             <div className="flex items-start gap-3 text-xs text-slate-600">
                                                                 <span className="shrink-0 w-5 h-5 bg-white border border-slate-200 rounded-full flex items-center justify-center font-bold text-slate-900 shadow-sm">2</span>
-                                                                <p className="pt-0.5">Find <span className="font-bold text-slate-900">Add calendar</span> in sidebar &rarr; <span className="font-bold text-slate-900">From URL</span>.</p>
+                                                                <p className="pt-0.5"><span className="font-bold text-slate-900">Manual:</span> Copy the <span className="italic">Unique Sync Feed</span> link below.</p>
                                                             </div>
                                                             <div className="flex items-start gap-3 text-xs text-slate-600">
                                                                 <span className="shrink-0 w-5 h-5 bg-white border border-slate-200 rounded-full flex items-center justify-center font-bold text-slate-900 shadow-sm">3</span>
-                                                                <p className="pt-0.5">Paste the link above and click <span className="font-bold text-slate-900">Add calendar</span>.</p>
+                                                                <p className="pt-0.5">In Settings &rarr; <span className="font-bold text-blue-600">Add calendar (+)</span> &rarr; <span className="font-bold text-slate-900">From URL</span> and paste the link.</p>
                                                             </div>
                                                         </TabsContent>
 
                                                         <TabsContent value="apple" className="space-y-3 mt-0">
                                                             <div className="flex items-start gap-3 text-xs text-slate-600">
                                                                 <span className="shrink-0 w-5 h-5 bg-white border border-slate-200 rounded-full flex items-center justify-center font-bold text-slate-900 shadow-sm">1</span>
-                                                                <p className="pt-0.5">Open Calendar on your Mac or Outlook.</p>
+                                                                <p className="pt-0.5">Click the <span className="font-bold text-slate-900">Apple / Outlook</span> button to download the <span className="font-bold">.ics</span> file.</p>
                                                             </div>
                                                             <div className="flex items-start gap-3 text-xs text-slate-600">
                                                                 <span className="shrink-0 w-5 h-5 bg-white border border-slate-200 rounded-full flex items-center justify-center font-bold text-slate-900 shadow-sm">2</span>
-                                                                <p className="pt-0.5"><span className="font-bold text-slate-900">File</span> &rarr; <span className="font-bold text-slate-900">New Calendar Subscription</span>.</p>
+                                                                <p className="pt-0.5">Open your calendar app and select <span className="font-bold text-slate-900">File &rarr; Import</span>.</p>
                                                             </div>
                                                             <div className="flex items-start gap-3 text-xs text-slate-600">
                                                                 <span className="shrink-0 w-5 h-5 bg-white border border-slate-200 rounded-full flex items-center justify-center font-bold text-slate-900 shadow-sm">3</span>
-                                                                <p className="pt-0.5">Paste the link and click <span className="font-bold text-slate-900">Subscribe</span>.</p>
+                                                                <p className="pt-0.5">Choose the downloaded file to add all lease events instantly.</p>
                                                             </div>
                                                         </TabsContent>
                                                     </Tabs>
@@ -231,77 +334,142 @@ export function SettingsContent() {
                                 </CardContent>
                             </Card>
 
+                            {/* Email Notifications */}
+                            <Card className="rounded-3xl border-slate-200 bg-white shadow-xl overflow-hidden relative group">
+                                <div className="absolute top-0 right-0 bg-slate-100 text-slate-400 text-[10px] font-black px-4 py-2 rounded-bl-xl uppercase tracking-widest">
+                                    {emailNotifications ? "Subscribed" : "Unsubscribed"}
+                                </div>
+                                <CardContent className="p-6 md:p-8">
+                                    <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 md:gap-8">
+                                        <div className="bg-[#1e3a5f] p-5 rounded-[2rem] shadow-2xl shadow-slate-900/20 group-hover:scale-105 transition-transform duration-500 shrink-0">
+                                            <Mail className="h-10 w-10 text-white" />
+                                        </div>
+                                        <div className="flex-1 w-full space-y-6">
+                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                <div>
+                                                    <h4 className="text-xl md:text-2xl font-black text-slate-900 leading-tight tracking-tighter">Email Alerts</h4>
+                                                    <p className="text-sm md:text-base text-slate-500 font-medium mt-1">Receive detailed lease expiration reports</p>
+                                                </div>
+                                                <div className="flex items-center justify-center md:justify-end gap-3">
+                                                    {savingEmailSettings && <Loader2 className="h-4 w-4 animate-spin text-slate-400" />}
+                                                    <Switch
+                                                        checked={emailNotifications}
+                                                        onCheckedChange={toggleEmailNotifications}
+                                                        className="data-[state=checked]:bg-[#1e3a5f]"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 max-w-md mx-auto md:mx-0">
+                                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                                                    Current email: <span className="text-[#1e3a5f]">{user?.primaryEmailAddress?.emailAddress}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
                             {/* SMS */}
                             <Card className="rounded-3xl border-slate-200 bg-white shadow-xl overflow-hidden relative group">
                                 <div className="absolute top-0 right-0 bg-slate-100 text-slate-400 text-[10px] font-black px-4 py-2 rounded-bl-xl uppercase tracking-widest">
-                                    {phone ? "Enabled" : "Not Setup"}
+                                    {phone ? (isPro ? "Enabled" : "Pro Required") : "Not Setup"}
                                 </div>
-                                <CardContent className="p-8">
-                                    <div className="flex items-start gap-8">
+                                <CardContent className="p-6 md:p-8">
+                                    <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 md:gap-8">
                                         <div className="bg-[#1e3a5f] p-5 rounded-[2rem] shadow-2xl shadow-slate-900/20 group-hover:scale-105 transition-transform duration-500 shrink-0">
                                             <Smartphone className="h-10 w-10 text-white" />
                                         </div>
-                                        <div className="flex-1 space-y-6">
+                                        <div className="flex-1 w-full space-y-6">
                                             <div>
-                                                <h4 className="text-2xl font-black text-slate-900 leading-tight tracking-tighter">SMS Alerts</h4>
-                                                <p className="text-slate-500 font-medium mt-1">Receive critical profit protection SMS alerts</p>
+                                                <h4 className="text-xl md:text-2xl font-black text-slate-900 leading-tight tracking-tighter">SMS Alerts</h4>
+                                                <p className="text-sm md:text-base text-slate-500 font-medium mt-1">Receive critical profit protection alerts.</p>
                                             </div>
 
-                                            <div className="grid gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-100 max-w-md">
-                                                <div className="space-y-3">
-                                                    <Label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Mobile Number</Label>
-                                                    <div className="flex gap-2">
-                                                        <select
-                                                            value={countryCode}
-                                                            onChange={(e) => setCountryCode(e.target.value)}
-                                                            className="h-12 w-[110px] rounded-xl border border-slate-200 bg-white px-3 font-bold text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent shadow-sm"
-                                                        >
-                                                            {COUNTRY_CODES.map((c) => (
-                                                                <option key={c.code} value={c.dial_code}>{c.flag} {c.dial_code}</option>
-                                                            ))}
-                                                        </select>
-                                                        <Input
-                                                            placeholder="555-0123"
-                                                            value={phone}
-                                                            onChange={(e) => setPhone(e.target.value)}
-                                                            className="h-12 flex-1 rounded-xl bg-white border-slate-200 text-slate-900 font-bold shadow-sm focus-visible:ring-[#1e3a5f]"
-                                                        />
-                                                        <Button
-                                                            onClick={savePhone}
-                                                            disabled={savingPhone}
-                                                            className="h-12 px-6 bg-[#1e3a5f] hover:bg-[#2a4a73] text-white rounded-xl font-black shadow-lg shadow-slate-900/10 transition-all hover:scale-[1.02]"
-                                                        >
-                                                            {savingPhone ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
-                                                        </Button>
+                                            <div className="space-y-4">
+                                                <div className="flex flex-col gap-2 w-full text-center md:text-left">
+                                                    <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mobile Number</Label>
+                                                    <div className="flex flex-col gap-3 max-w-md mx-auto md:mx-0">
+                                                        <div className="flex gap-2">
+                                                            <Popover open={openCountryField} onOpenChange={setOpenCountryField}>
+                                                                <PopoverTrigger asChild>
+                                                                    <Button
+                                                                        variant="outline"
+                                                                        className="w-[100px] md:w-[130px] h-12 justify-between bg-white border-slate-200 rounded-xl px-3 md:px-4 shrink-0 transition-all hover:border-slate-300"
+                                                                    >
+                                                                        <span className="font-bold text-slate-700 text-sm">{countryCode}</span>
+                                                                        <ChevronDown className="h-4 w-4 opacity-50" />
+                                                                    </Button>
+                                                                </PopoverTrigger>
+                                                                <PopoverContent className="w-[300px] p-0 rounded-2xl shadow-2xl border-slate-200" align="start">
+                                                                    <div className="p-3 border-b border-slate-100">
+                                                                        <div className="relative">
+                                                                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
+                                                                            <Input
+                                                                                placeholder="Search country..."
+                                                                                className="pl-9 h-9 text-xs rounded-lg border-slate-200"
+                                                                                value={searchCountry}
+                                                                                onChange={(e) => setSearchCountry(e.target.value)}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="max-h-[300px] overflow-y-auto p-1">
+                                                                        {COUNTRY_CODES.filter(c =>
+                                                                            c.code.toLowerCase().includes(searchCountry.toLowerCase()) ||
+                                                                            c.dial_code.includes(searchCountry)
+                                                                        ).map((c) => (
+                                                                            <button
+                                                                                key={c.code}
+                                                                                onClick={() => {
+                                                                                    setCountryCode(c.dial_code);
+                                                                                    setOpenCountryField(false);
+                                                                                }}
+                                                                                className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold hover:bg-slate-50 rounded-lg transition-colors group"
+                                                                            >
+                                                                                <span className="text-slate-600 group-hover:text-[#1e3a5f] flex items-center gap-2">
+                                                                                    <span className="text-base">{c.flag}</span>
+                                                                                    {c.code}
+                                                                                </span>
+                                                                                <span className="text-slate-400 font-mono tracking-tighter">{c.dial_code}</span>
+                                                                            </button>
+                                                                        ))}
+                                                                    </div>
+                                                                </PopoverContent>
+                                                            </Popover>
+                                                            <Input
+                                                                placeholder="555-0123"
+                                                                value={phone}
+                                                                onChange={(e) => setPhone(e.target.value)}
+                                                                className="h-12 flex-1 bg-white border-slate-200 rounded-xl px-4 md:px-6 font-bold text-slate-700 shadow-sm transition-all focus-visible:ring-[#1e3a5f]"
+                                                            />
+                                                        </div>
+                                                        <div className="flex gap-2">
+                                                            <Button
+                                                                onClick={savePhone}
+                                                                disabled={savingPhone}
+                                                                className="h-12 flex-1 bg-[#1e3a5f] hover:bg-[#2a4a73] text-white rounded-xl font-black shadow-lg shadow-slate-900/10 transition-all active:scale-95"
+                                                            >
+                                                                {savingPhone ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save Settings"}
+                                                            </Button>
+                                                            {phone && (
+                                                                <Button
+                                                                    onClick={removePhone}
+                                                                    disabled={savingPhone}
+                                                                    variant="outline"
+                                                                    className="h-12 w-12 p-0 border-red-100 text-red-500 hover:bg-red-50 hover:border-red-200 rounded-xl shadow-sm transition-all shrink-0"
+                                                                    title="Remove phone number"
+                                                                >
+                                                                    <XCircle className="h-5 w-5" />
+                                                                </Button>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                {phone && isPro && (
-                                                    <Button
-                                                        variant="outline"
-                                                        onClick={async () => {
-                                                            try {
-                                                                const res = await fetch("/api/sms/test", { method: "POST" });
-                                                                const data = await res.json();
-                                                                if (res.ok) {
-                                                                    alert("✓ Test SMS sent! Check your phone.");
-                                                                } else {
-                                                                    alert("Error: " + (data.error || "Failed to send"));
-                                                                }
-                                                            } catch (err) {
-                                                                console.error("Failed to send test SMS:", err);
-                                                                alert("Network error. Please try again.");
-                                                            }
-                                                        }}
-                                                        className="h-10 w-full border-[#1e3a5f]/20 text-[#1e3a5f] font-bold text-sm hover:bg-[#1e3a5f]/5 rounded-xl"
-                                                    >
-                                                        📱 Send Test SMS
-                                                    </Button>
-                                                )}
-                                                {!isPro && phone && (
-                                                    <p className="text-xs text-slate-400 font-medium">
-                                                        Upgrade to Pro to send test & receive SMS alerts
+                                                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 max-w-md mx-auto md:mx-0">
+                                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center">
+                                                        {isPro ? "SMS alerts are active for all critical deadlines." : "Upgrade to Pro to activate SMS alerts."}
                                                     </p>
-                                                )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
