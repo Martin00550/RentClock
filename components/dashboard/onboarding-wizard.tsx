@@ -124,7 +124,7 @@ import { Label } from "@/components/ui/label"; export function OnboardingWizard(
                     </DialogTitle>
                     <DialogDescription className="text-slate-300 font-medium mt-2">
                         {step === 1
-                            ? "Don't miss critical lease deadlines. We'll text you when it's time to act."
+                            ? "Don't miss critical lease deadlines. RentClock will text you when it's time to act."
                             : "See upcoming renewals and rent increases directly in your personal calendar."
                         }
                     </DialogDescription>
@@ -176,7 +176,7 @@ import { Label } from "@/components/ui/label"; export function OnboardingWizard(
                                                 className="h-12 rounded-xl text-lg font-bold"
                                             />
                                         </div>
-                                        <p className="text-slate-600 mb-8">We&apos;re verifying your setup... Only critical alarms.</p>
+                                        <p className="text-slate-600 mb-8">RentClock is verifying your setup... Only critical alarms.</p>
                                     </div>
 
                                     <div className="flex flex-col gap-3 pt-2">

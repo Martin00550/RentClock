@@ -180,11 +180,11 @@ export default async function ProfitProtectionPage() {
                         <ul className="space-y-3">
                             <li className="flex gap-3 text-sm text-slate-600">
                                 <div className="h-1.5 w-1.5 rounded-full bg-[#d4a853] mt-2 shrink-0" />
-                                <span><strong>Automated Analysis:</strong> We scan every lease for &quot;CPI&quot; or &quot;Market Rate&quot; adjustment clauses.</span>
+                                <span><strong>Automated Analysis:</strong> RentClock scans every lease for &quot;CPI&quot; or &quot;Market Rate&quot; adjustment clauses.</span>
                             </li>
                             <li className="flex gap-3 text-sm text-slate-600">
                                 <div className="h-1.5 w-1.5 rounded-full bg-[#d4a853] mt-2 shrink-0" />
-                                <span><strong>Real-Time Indexing:</strong> We pull the latest BLS data (Consumer Price Index) to find the exact multiplier.</span>
+                                <span><strong>Real-Time Indexing:</strong> RentClock pulls the latest BLS data (Consumer Price Index) to find the exact multiplier.</span>
                             </li>
                             <li className="flex gap-3 text-sm text-slate-600">
                                 <div className="h-1.5 w-1.5 rounded-full bg-[#d4a853] mt-2 shrink-0" />

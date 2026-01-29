@@ -24,7 +24,7 @@ export default function Error({
                 </div>
                 <h2 className="text-2xl font-black text-slate-900 mb-2">Something went wrong!</h2>
                 <p className="text-slate-500 mb-8 leading-relaxed">
-                    We encountered an unexpected error. Our team has been notified.
+                    An unexpected error occurred. The RentClock team has been notified.
                     <br />
                     <span className="text-xs font-mono bg-slate-100 px-2 py-1 rounded mt-2 inline-block text-slate-400">
                         {error.message || "Unknown Error"}

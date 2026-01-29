@@ -148,7 +148,7 @@ export default function LandingPage() {
                                 </div>
                                 <h4 className="text-xl font-bold text-slate-900 mb-3">The Spreadsheet Crash</h4>
                                 <p className="text-slate-600 leading-relaxed">
-                                    Excel is great for math, but terrible for alerts. It relies on you being perfect every day. We don&apos;t.
+                                    Excel is great for math, but terrible for alerts. It relies on you being perfect every day. RentClock doesn&apos;t.
                                 </p>
                             </div>
                         </div>
@@ -360,7 +360,7 @@ export default function LandingPage() {
                             <div className="space-y-3">
                                 <h6 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1e3a5f]">AI Disclosure & Affiliation</h6>
                                 <p className="text-[11px] text-slate-400 leading-relaxed max-w-xl font-medium">
-                                    RentClock is an independent service built on top of advanced AI models to simplify lease management and critical date tracking. Our platform offers a user-friendly interface to enhance usability and provide specialized portfolio protection features. We are an independent product and are not affiliated with, endorsed by, or sponsored by Google, OpenAI, or any other model providers.
+                                    RentClock is an independent service built on top of advanced AI models to simplify lease management and critical date tracking. The platform offers a user-friendly interface to enhance usability and provide specialized portfolio protection features. RentClock is an independent product and is not affiliated with, endorsed by, or sponsored by Google, OpenAI, or any other model providers.
                                 </p>
                             </div>
                             <div className="flex flex-col gap-1">

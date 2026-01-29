@@ -14,7 +14,7 @@ export function FaqSection() {
                 <div className="space-y-4">
                     <FaqItem
                         question="Where is my data stored and who can see it?"
-                        answer="All lease documents are held in a private, encrypted vault. We use bank-grade 256-bit encryption for every file. Your data is isolated at the database level, meaning it is never used for training AI models or shared with third parties. You maintain 100% ownership."
+                        answer="All lease documents are held in a private, encrypted vault. RentClock uses bank-grade 256-bit encryption for every file. Your data is isolated at the database level, meaning it is never used for training AI models or shared with third parties. You maintain 100% ownership."
                     />
                     <FaqItem
                         question="Can it handle non-standard or hand-annotated leases?"

@@ -62,10 +62,10 @@ export default function ContactPage() {
                                 Support & Inquiries
                             </div>
                             <h1 className="text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight">
-                                We&apos;re here to protect your yield.
+                                RentClock is here to protect your yield.
                             </h1>
                             <p className="text-xl text-slate-600 mt-6 leading-relaxed max-w-lg">
-                                Whether you&apos;re a single-property owner or managing a strip mall, our team is ready to help you secure your revenue.
+                                Whether you&apos;re a single-property owner or managing a strip mall, the RentClock team is ready to help you secure your revenue.
                             </p>
                         </div>
 
@@ -117,7 +117,7 @@ export default function ContactPage() {
                                 </div>
                                 <h2 className="text-3xl font-black text-slate-900 tracking-tight">Message Received</h2>
                                 <p className="text-slate-500 text-lg leading-relaxed">
-                                    Your request has been securely logged. Our support team will reach out to you within 24 business hours.
+                                    Your request has been securely logged. The RentClock support team will reach out to you within 24 business hours.
                                 </p>
                                 <Button
                                     onClick={() => setIsSubmitted(false)}
@@ -149,7 +149,7 @@ export default function ContactPage() {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <Label className="text-sm font-bold text-slate-600 uppercase tracking-widest">How can we help?</Label>
+                                    <Label className="text-sm font-bold text-slate-600 uppercase tracking-widest">How can RentClock help?</Label>
                                     <Textarea
                                         required
                                         placeholder="I have a question about bulk lease uploads..."

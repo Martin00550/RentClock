@@ -11,12 +11,12 @@ export default function RefundPolicyPage() {
                         <strong>Effective Date:</strong> January 2026
                     </p>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        At RentClock, we want you to be completely satisfied with our service. We provide a transparent and fair refund policy.
+                        At RentClock, the goal is for you to be completely satisfied with the service. RentClock provides a transparent and fair refund policy.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Money-Back Guarantee</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        We offer a <strong>14-day money-back guarantee</strong> on all new subscriptions. You are entitled to a full refund within 14 days of your initial purchase, no questions asked.
+                        RentClock offers a <strong>14-day money-back guarantee</strong> on all new subscriptions. You are entitled to a full refund within 14 days of your initial purchase, no questions asked.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">How to Request a Refund</h2>

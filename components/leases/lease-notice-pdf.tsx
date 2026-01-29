@@ -55,7 +55,7 @@ export const LeaseNoticePDF = ({ tenantName, address, newRent, effectiveDate }: 
 
             <View style={styles.section}>
                 <Text style={styles.text}>
-                    Pursuant to your lease agreement, we are writing to notify you that your base rent will increase effective <Text style={styles.bold}>{effectiveDate}</Text>.
+                    Pursuant to your lease agreement, RentClock is writing to notify you that your base rent will increase effective <Text style={styles.bold}>{effectiveDate}</Text>.
                 </Text>
             </View>
 

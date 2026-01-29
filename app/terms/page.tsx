@@ -16,7 +16,7 @@ export default function TermsPage() {
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">1. Service Description</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        RentClock is a lease management tool that helps property owners track critical dates such as rent increases and lease expirations. We provide automated reminders via email and SMS.
+                        RentClock is a lease management tool that helps property owners track critical dates such as rent increases and lease expirations. RentClock provides automated reminders via email and SMS.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">2. Disclaimer</h2>
@@ -33,12 +33,12 @@ export default function TermsPage() {
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">4. Limitation of Liability</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        <p>RentClock is provided &quot;as is&quot; without warranties of any kind.</p> We are not liable for any damages arising from missed dates, incorrect data extraction, or your reliance on the service.
+                        <p>RentClock is provided "as is" without warranties of any kind.</p> RentClock is not liable for any damages arising from missed dates, incorrect data extraction, or your reliance on the service.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">5. Termination</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        We reserve the right to suspend or terminate accounts that violate these terms. You may cancel your subscription at any time.
+                        RentClock reserves the right to suspend or terminate accounts that violate these terms. You may cancel your subscription at any time.
                     </p>
 
 

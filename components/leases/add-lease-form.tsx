@@ -285,7 +285,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
                 </Link>
                 <div>
                     <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Secure Your Revenue</h1>
-                    <p className="text-slate-500 mb-6">Enter the lease details manually. We&apos;ll still calculate the escalations.</p>
+                    <p className="text-slate-500 mb-6">Enter the lease details manually. RentClock will still calculate the escalations.</p>
                 </div>
             </div>
 
@@ -332,7 +332,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
                             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                                 <div className="h-full bg-[#1e3a5f] w-full animate-pulse transition-all duration-500"></div>
                             </div>
-                            <p className="text-[10px] text-slate-400 font-medium italic">We are finding the dates for your final approval. This prevents revenue leakage.</p>
+                            <p className="text-[10px] text-slate-400 font-medium italic">RentClock is finding the dates for your final approval. This prevents revenue leakage.</p>
                         </div>
                     )}
 
