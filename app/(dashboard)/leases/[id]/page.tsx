@@ -113,7 +113,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                     </div>
 
                     {/* SECTION 1: TOP STATS */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 group-data-[is-split=true]/content:grid-cols-1 gap-6 transition-all duration-500">
                         <div className="bg-white border-2 border-slate-100 rounded-[2rem] p-8 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow">
                             <div className="bg-[#1e3a5f]/10 p-3 w-fit rounded-2xl">
                                 <Calendar className="h-6 w-6 text-[#1e3a5f]" />
@@ -146,9 +146,9 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                     </div>
 
                     {/* SECTION 2: DETAILS & TIMELINE */}
-                    <div className="grid gap-8 lg:grid-cols-12 items-start">
+                    <div className="grid gap-8 lg:grid-cols-12 group-data-[is-split=true]/content:grid-cols-1 items-start transition-all duration-500">
                         {/* LEFT: TENANT INFO */}
-                        <div className="lg:col-span-4 h-full">
+                        <div className="lg:col-span-4 group-data-[is-split=true]/content:col-span-1 h-full">
                             <Card className="rounded-[2.5rem] border-slate-200 shadow-sm h-full overflow-hidden">
                                 <CardHeader className="bg-slate-50/50 border-b border-slate-100 p-8">
                                     <div className="flex items-center gap-4">
@@ -191,7 +191,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                         </div>
 
                         {/* RIGHT: LIFECYCLE */}
-                        <div className="lg:col-span-8 h-full">
+                        <div className="lg:col-span-8 group-data-[is-split=true]/content:col-span-1 h-full">
                             <Card className="rounded-[2.5rem] border-slate-200 shadow-sm h-full overflow-hidden">
                                 <CardHeader className="bg-slate-50/50 border-b border-slate-100 p-8">
                                     <CardTitle className="text-2xl font-black text-slate-900 tracking-tight">Lease Pulse-line</CardTitle>

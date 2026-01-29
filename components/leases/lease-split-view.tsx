@@ -16,7 +16,11 @@ export function LeaseSplitView({ pdfUrl, children }: LeaseSplitViewProps) {
     return (
         <div className={cn("relative min-h-screen transition-all duration-500", isSplit ? "flex gap-4" : "")}>
             {/* Main Content Area */}
-            <div className={cn("transition-all duration-500", isSplit ? "w-1/2 overflow-y-auto h-[calc(100vh-100px)] lg:h-auto" : "w-full")}>
+            <div
+                className={cn("transition-all duration-500 group/content", isSplit ? "w-1/2 overflow-y-auto h-[calc(100vh-100px)] lg:h-auto" : "w-full")}
+                data-is-split={isSplit}
+            >
+                {/* 
                 <div className="flex justify-end mb-4">
                     <Button
                         onClick={() => setIsSplit(!isSplit)}
@@ -36,11 +40,12 @@ export function LeaseSplitView({ pdfUrl, children }: LeaseSplitViewProps) {
                         )}
                     </Button>
                 </div>
+                */}
                 {children}
             </div>
 
             {/* PDF Viewer Side Panel */}
-            {isSplit && (
+            {/* {isSplit && (
                 <div className="w-1/2 h-[calc(100vh-40px)] sticky top-4 border-2 border-slate-200 rounded-[2.5rem] overflow-hidden bg-slate-100 shadow-2xl animate-in slide-in-from-right-10 duration-500">
                     <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -64,7 +69,7 @@ export function LeaseSplitView({ pdfUrl, children }: LeaseSplitViewProps) {
                         title="Lease Document"
                     />
                 </div>
-            )}
+            )} */}
         </div>
     );
 }

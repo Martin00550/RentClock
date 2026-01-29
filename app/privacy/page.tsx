@@ -35,13 +35,13 @@ export default function PrivacyPage() {
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">4. Your Rights</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        You may request deletion of your account and all associated data at any time by contacting us at <a href="mailto:support@rentclock.app" className="text-[#1e3a5f] underline">support@rentclock.app</a>.
+                        You may request deletion of your account and all associated data at any time by contacting us at <a href="mailto:support@rentclock.online" className="text-[#1e3a5f] underline">support@rentclock.online</a>.
                     </p>
 
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">5. Contact Us</h2>
                     <p className="text-slate-600 leading-relaxed">
-                        For any privacy-related questions, please contact us at <a href="mailto:support@rentclock.app" className="text-[#1e3a5f] underline">support@rentclock.app</a>.
+                        For any privacy-related questions, please contact us at <a href="mailto:support@rentclock.online" className="text-[#1e3a5f] underline">support@rentclock.online</a>.
                     </p>
                     <p className="text-slate-600 leading-relaxed mt-4">
                         <strong>Legal Entity:</strong>

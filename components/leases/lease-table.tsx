@@ -17,6 +17,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { Lease } from "@/lib/types";
 import { getLeaseStatus, formatCurrency } from "@/lib/lease-utils";
+import { ActionMenu } from "./action-menu";
 
 export function LeaseTable({ leases }: { leases: Lease[] }) {
     const [searchQuery, setSearchQuery] = useState("");
@@ -133,9 +134,7 @@ export function LeaseTable({ leases }: { leases: Lease[] }) {
                                         </TableCell>
                                         <TableCell className="py-4 text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-[#1e3a5f] hover:bg-slate-100/50">
-                                                    <MoreVertical className="h-4 w-4" />
-                                                </Button>
+                                                <ActionMenu lease={lease} />
                                                 <Link href={`/leases/${lease.id}`}>
                                                     <Button variant="ghost" size="sm" className="text-[#1e3a5f] hover:bg-[#1e3a5f]/10 font-bold text-[10px] tracking-tight uppercase px-3 h-8 border border-[#1e3a5f]/20">
                                                         Manage

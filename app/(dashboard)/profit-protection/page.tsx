@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { formatCurrency, calculateRevenueImpact } from "@/lib/lease-utils";
 import { CpiCalculator } from "@/components/leases/cpi-calculator";
 import { Lease } from "@/lib/types";
+import { ActionMenu } from "@/components/leases/action-menu";
 
 export default async function ProfitProtectionPage() {
     const { userId } = await auth();
@@ -122,30 +123,35 @@ export default async function ProfitProtectionPage() {
                             leasesWithOpportunity.map(lease => {
                                 const impact = calculateRevenueImpact(lease);
                                 return (
-                                    <Link key={lease.id} href={`/leases/${lease.id}`}>
-                                        <Card className="group rounded-[2rem] border-slate-200 shadow-sm hover:shadow-md transition-all hover:border-[#1e3a5f]/30">
-                                            <CardContent className="p-6 flex items-center justify-between">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="h-12 w-12 rounded-2xl bg-[#1e3a5f]/5 flex items-center justify-center text-xl font-black text-[#1e3a5f]">
-                                                        {lease.tenant_name.charAt(0)}
+                                    <div key={lease.id} className="relative group">
+                                        <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <ActionMenu lease={lease} />
+                                        </div>
+                                        <Link href={`/leases/${lease.id}`}>
+                                            <Card className="group rounded-[2rem] border-slate-200 shadow-sm hover:shadow-md transition-all hover:border-[#1e3a5f]/30">
+                                                <CardContent className="p-6 flex items-center justify-between">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="h-12 w-12 rounded-2xl bg-[#1e3a5f]/5 flex items-center justify-center text-xl font-black text-[#1e3a5f]">
+                                                            {lease.tenant_name.charAt(0)}
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-bold text-slate-900 text-lg group-hover:text-[#1e3a5f] transition-colors">{lease.tenant_name}</h4>
+                                                            <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">{lease.property_address}</p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <h4 className="font-bold text-slate-900 text-lg group-hover:text-[#1e3a5f] transition-colors">{lease.tenant_name}</h4>
-                                                        <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">{lease.property_address}</p>
+                                                    <div className="flex items-center gap-6">
+                                                        <div className="text-right">
+                                                            <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest block">Opportunity</span>
+                                                            <span className="text-xl font-black text-[#2d6a4f] mt-1 block">+{formatCurrency(impact)}/yr</span>
+                                                        </div>
+                                                        <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-[#1e3a5f] transition-colors">
+                                                            <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-white transition-colors" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="flex items-center gap-6">
-                                                    <div className="text-right">
-                                                        <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest block">Opportunity</span>
-                                                        <span className="text-xl font-black text-[#2d6a4f] mt-1 block">+{formatCurrency(impact)}/yr</span>
-                                                    </div>
-                                                    <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-[#1e3a5f] transition-colors">
-                                                        <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-white transition-colors" />
-                                                    </div>
-                                                </div>
-                                            </CardContent>
-                                        </Card>
-                                    </Link>
+                                                </CardContent>
+                                            </Card>
+                                        </Link>
+                                    </div>
                                 )
                             })
                         ) : (

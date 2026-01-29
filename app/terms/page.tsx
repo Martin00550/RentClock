@@ -42,7 +42,20 @@ export default function TermsPage() {
                     </p>
 
 
-                    <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">6. Legal Entity</h2>
+                    <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">6. SMS Messaging Policy</h2>
+                    <p className="text-slate-600 leading-relaxed mb-6">
+                        By enabling SMS alerts in your account dashboard, you consent to receive automated transactional text messages from RentClock.
+                        <br /><br />
+                        <strong>Opt-In:</strong> SMS alerts are disabled by default. You must manually toggle alerts on for each specific lease in your dashboard.
+                        <br />
+                        <strong>Frequency:</strong> Messages are sent based on your specific lease dates (typically at 90, 60, 30, and 7-day intervals).
+                        <br />
+                        <strong>Opt-Out:</strong> You can disable SMS alerts at any time by toggling them off in your dashboard settings. Alternatively, you can reply "STOP" to any message to be unsubscribed from all future SMS.
+                        <br />
+                        <strong>Rates:</strong> Message and data rates may apply.
+                    </p>
+
+                    <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">7. Legal Entity</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
                         RentClock is operated by:
                         <br />
@@ -53,9 +66,9 @@ export default function TermsPage() {
                         917 01 Trnava, Slovakia
                     </p>
 
-                    <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">7. Contact Us</h2>
+                    <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">8. Contact Us</h2>
                     <p className="text-slate-600 leading-relaxed">
-                        For questions about these terms, please contact: <a href="mailto:support@rentclock.app" className="text-[#1e3a5f] underline">support@rentclock.app</a>
+                        For questions about these terms, please contact: <a href="mailto:support@rentclock.online" className="text-[#1e3a5f] underline">support@rentclock.online</a>
                     </p>
                 </div>
             </div>

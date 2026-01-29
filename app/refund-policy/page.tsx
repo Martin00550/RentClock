@@ -21,7 +21,7 @@ export default function RefundPolicyPage() {
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">How to Request a Refund</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        To request a refund, please email our support team at <a href="mailto:support@rentclock.app" className="text-[#1e3a5f] underline">support@rentclock.app</a> with your account email address and a brief explanation of why the product didn&apos;t meet your needs.
+                        To request a refund, please email our support team at <a href="mailto:support@rentclock.online" className="text-[#1e3a5f] underline">support@rentclock.online</a> with your account email address and a brief explanation of why the product didn&apos;t meet your needs.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">Cancellations</h2>
@@ -34,7 +34,7 @@ export default function RefundPolicyPage() {
                         If you have any questions about our Refund Policy, please contact us:
                     </p>
                     <p className="text-slate-600 leading-relaxed mt-4">
-                        <strong>Email:</strong> <a href="mailto:support@rentclock.app" className="text-[#1e3a5f] underline">support@rentclock.app</a>
+                        <strong>Email:</strong> <a href="mailto:support@rentclock.online" className="text-[#1e3a5f] underline">support@rentclock.online</a>
                         <br /><br />
                         <strong>Legal Entity:</strong>
                         <br />

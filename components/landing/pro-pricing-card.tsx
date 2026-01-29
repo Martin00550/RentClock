@@ -13,14 +13,19 @@ export function ProPricingCard() {
     const billingNote = isAnnual ? "Billed annually at $468/year" : "Billed monthly";
 
     return (
-        <div className="bg-white border-2 border-[#1e3a5f] rounded-2xl p-8 shadow-xl relative overflow-hidden">
+        <div className="bg-white border-2 border-[#1e3a5f] rounded-2xl p-8 shadow-xl relative">
             {isAnnual && (
-                <div className="absolute top-0 right-0 bg-[#d4a853] text-[#1e3a5f] text-[10px] font-bold px-4 py-1.5 rounded-bl-lg uppercase tracking-widest">
-                    Save 20%
+                <div className="absolute top-0 left-0 right-0 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+                    <div className="w-full h-[2px] bg-[#1e3a5f] absolute top-1/2 left-0 -translate-y-1/2 opacity-20" />
+                    <div className="bg-[#1e3a5f] text-white text-[11px] font-black px-6 py-2 rounded-full uppercase tracking-[0.25em] relative shadow-xl border border-white/10">
+                        Save 20% Annually
+                    </div>
                 </div>
             )}
-            <div className="mb-6">
-                <h3 className="text-xl font-bold text-slate-900 mb-4">Pro</h3>
+            <div className="mb-6 pt-4">
+                <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center justify-center gap-2">
+                    Pro
+                </h3>
 
                 {/* Billing Toggle */}
                 <div className="flex items-center justify-center gap-3 mb-4 p-1 bg-slate-100 rounded-xl">
@@ -65,10 +70,6 @@ export function ProPricingCard() {
                 </li>
                 <li className="flex items-center gap-3 text-slate-600">
                     <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
-                    <span>Legal Notice Generation</span>
-                </li>
-                <li className="flex items-center gap-3 text-slate-600">
-                    <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
                     <span>Unlimited AI Extraction</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600">
@@ -81,7 +82,7 @@ export function ProPricingCard() {
                 </li>
                 <li className="flex items-center gap-3 text-slate-600">
                     <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
-                    <span>Google & Outlook Calendar Sync</span>
+                    <span>Google & Outlook Calendar Integration</span>
                 </li>
             </ul>
             <SignUpTrigger redirectUrl="/dashboard?upgrade=true">
@@ -89,7 +90,9 @@ export function ProPricingCard() {
                     Upgrade to Pro
                 </Button>
             </SignUpTrigger>
-            <p className="text-center text-slate-400 text-sm mt-4">Instant access. Cancel anytime.</p>
-        </div>
+            <p className="text-center text-slate-400 text-sm mt-4">
+                14-day money-back guarantee. Cancel anytime.
+            </p>
+        </div >
     );
 }

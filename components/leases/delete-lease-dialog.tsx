@@ -53,10 +53,10 @@ export function DeleteLeaseDialog({ leaseId, tenantName }: DeleteLeaseDialogProp
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="h-10 px-4 text-red-500 hover:text-red-600 hover:bg-red-50 font-bold text-sm rounded-xl"
+                    className="w-full justify-start h-10 px-3 text-red-500 hover:text-red-600 hover:bg-red-50 font-bold text-sm rounded-xl"
                 >
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
+                    Remove Lease
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="rounded-3xl border-slate-200">

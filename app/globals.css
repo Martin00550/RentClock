@@ -47,43 +47,43 @@
 
 :root {
   --radius: 0.75rem;
-  
+
   /* Trust Navy Palette */
   --background: #f8f9fa;
   --foreground: #2d3436;
-  
+
   --card: #ffffff;
   --card-foreground: #2d3436;
   --popover: #ffffff;
   --popover-foreground: #2d3436;
-  
+
   /* Primary: Navy Blue */
   --primary: #1e3a5f;
   --primary-foreground: #ffffff;
-  
+
   /* Secondary: Lighter Navy */
   --secondary: #e8eef4;
   --secondary-foreground: #1e3a5f;
-  
+
   --muted: #f1f3f5;
   --muted-foreground: #6c757d;
-  
+
   /* Accent: Gold */
   --accent: #d4a853;
   --accent-foreground: #1e3a5f;
-  
+
   --destructive: #dc3545;
   --border: #dee2e6;
   --input: #dee2e6;
   --ring: #1e3a5f;
-  
+
   /* Charts */
   --chart-1: #1e3a5f;
   --chart-2: #2d6a4f;
   --chart-3: #d4a853;
   --chart-4: #6c757d;
   --chart-5: #adb5bd;
-  
+
   /* Sidebar */
   --sidebar: #1e3a5f;
   --sidebar-foreground: #ffffff;
@@ -132,6 +132,11 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+
+  button,
+  a:not([disabled]) {
+    cursor: pointer;
   }
 
   body {

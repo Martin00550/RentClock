@@ -174,7 +174,7 @@ export function HeroCalculator() {
                         <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-slate-50 rounded-xl border border-slate-100">
                             <CheckCircle2 className="h-4 w-4 text-[#2d6a4f]" />
                             <p className="text-sm font-bold text-slate-600">
-                                3 Leases Free Forever • No Credit Card
+                                First 3 Leases Free • No Credit Card
                             </p>
                         </div>
                     </div>
