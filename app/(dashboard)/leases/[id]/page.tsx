@@ -245,7 +245,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                                                 }}
                                                                 className="h-12 px-6 rounded-2xl font-bold border-2"
                                                             />
-                                                            <NoticeButton lease={lease} type={nextEventName === "Rent Increase" ? "rent-increase" : "renewal"} isPro={isPro} />
+                                                            <NoticeButton lease={lease} type={nextEventName === "Rent Increase" ? "rent-increase" : "renewal"} />
                                                         </div>
                                                     </div>
                                                 </div>
