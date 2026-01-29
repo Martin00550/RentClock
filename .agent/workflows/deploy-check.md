@@ -22,7 +22,13 @@ Unused imports or variables will cause build warnings that may be treated as err
 - Look for greyed-out imports in your IDE.
 - Verify that every `const` and `useState` is actually used in the component logic or JSX.
 
-### 4. Verify Legal & Compliance (RentClock Specific)
+### 4. Check for Unescaped Entities
+JSX will fail on unescaped characters like `"`, `'`, `>`, or `}`.
+- Replace `"` with `&quot;`
+- Replace `'` with `&apos;`
+- Ensure no nested `<p>` tags inside `<p>` tags (Hydration error/Lint error).
+
+### 5. Verify Legal & Compliance (RentClock Specific)
 Before final deployment for Paddle verification, ensure:
 - [ ] Refund Policy is set to **14 days**.
 - [ ] Support email `support@rentclock.online` is in the footer.
