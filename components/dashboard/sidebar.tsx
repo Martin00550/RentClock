@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
     BarChart3,
@@ -46,9 +47,11 @@ export function Sidebar() {
             <div className={cn("flex flex-col px-6 pt-6 transition-all duration-300", isCollapsed ? "px-4 items-center" : "")}>
                 {isCollapsed ? (
                     <div className="h-10 w-10 rounded-xl overflow-hidden border border-slate-700 shadow-lg shadow-slate-900/50 hover:scale-110 transition-transform flex items-center justify-center bg-[#1e3a5f]">
-                        <img
+                        <Image
                             src="/icon-192.png"
                             alt="RC"
+                            width={40}
+                            height={40}
                             className="h-full w-full object-cover scale-[1.7]"
                         />
                     </div>

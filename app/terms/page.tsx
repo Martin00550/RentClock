@@ -50,7 +50,7 @@ export default function TermsPage() {
                         <br />
                         <strong>Frequency:</strong> Messages are sent based on your specific lease dates (typically at 90, 60, 30, and 7-day intervals).
                         <br />
-                        <strong>Opt-Out:</strong> You can disable SMS alerts at any time by toggling them off in your dashboard settings. Alternatively, you can reply "STOP" to any message to be unsubscribed from all future SMS.
+                        <strong>Opt-Out:</strong> You can disable SMS alerts at any time by toggling them off in your dashboard settings. Alternatively, you can reply &quot;STOP&quot; to any message to be unsubscribed from all future SMS.
                         <br />
                         <strong>Rates:</strong> Message and data rates may apply.
                     </p>

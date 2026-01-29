@@ -62,10 +62,10 @@ export default function ContactPage() {
                                 Support & Inquiries
                             </div>
                             <h1 className="text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight">
-                                We're here to protect your yield.
+                                We&apos;re here to protect your yield.
                             </h1>
                             <p className="text-xl text-slate-600 mt-6 leading-relaxed max-w-lg">
-                                Whether you're a single-property owner or managing a strip mall, our team is ready to help you secure your revenue.
+                                Whether you&apos;re a single-property owner or managing a strip mall, our team is ready to help you secure your revenue.
                             </p>
                         </div>
 

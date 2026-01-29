@@ -12,7 +12,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { MoreVertical, Search, ShieldCheck, Plus } from "lucide-react";
+import { Search, ShieldCheck, Plus } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Lease } from "@/lib/types";

@@ -9,14 +9,12 @@ import { SignInTrigger } from "@/components/landing/signin-trigger";
 import { FaqSection } from "@/components/landing/faq-section";
 import {
     CheckCircle2,
-    ArrowRight,
     TrendingDown,
     AlertTriangle,
     XCircle,
     Upload,
     ShieldCheck,
-    Lock,
-    CreditCard
+    Lock
 } from "lucide-react";
 import { HeroCalculator } from "@/components/landing/hero-calculator";
 import { motion } from "framer-motion";
@@ -82,7 +80,7 @@ export default function LandingPage() {
                                 The safety net your commercial portfolio is missing
                             </h1>
                             <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-xl">
-                                Spreadsheets don't send reminders. RentClock ensures you never miss a rent increase or renewal option again—without the enterprise complexity.
+                                Spreadsheets don&apos;t send reminders. RentClock ensures you never miss a rent increase or renewal option again—without the enterprise complexity.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center gap-6">
                                 <SignUpTrigger>
@@ -122,7 +120,7 @@ export default function LandingPage() {
                             <h2 className="text-[#d4a853] font-bold uppercase tracking-widest text-sm mb-4">The Cost of Inaction</h2>
                             <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Managing property is a professional duty</h3>
                             <p className="text-lg text-slate-600 leading-relaxed">
-                                Don't let a busy schedule compromise your returns. Commercial leases are full of traps, and a single missed window can lock you into old rates for years.
+                                Don&apos;t let a busy schedule compromise your returns. Commercial leases are full of traps, and a single missed window can lock you into old rates for years.
                             </p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

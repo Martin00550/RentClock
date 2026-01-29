@@ -6,16 +6,12 @@ import { generateRentIncreaseNotice, generateRenewalReminder } from "@/lib/notic
 import { FileDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
-
 interface NoticeButtonProps {
     lease: Lease;
     type: "rent-increase" | "renewal";
-    isPro?: boolean;
 }
 
-export function NoticeButton({ lease, type, isPro = false }: NoticeButtonProps) {
+export function NoticeButton({ lease, type }: NoticeButtonProps) {
     const handleGenerate = () => {
         const content = type === "rent-increase"
             ? generateRentIncreaseNotice(lease)
