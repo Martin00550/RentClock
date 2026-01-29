@@ -13,13 +13,13 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "RentClock | Portfolio Safety Net",
   description: "Professional-grade commercial lease tracking. Automated alerts for rent increases and expirations to protect your portfolio revenue.",
-  metadataBase: new URL("https://rentclock.app"), // Placeholder, update with actual domain
+  metadataBase: new URL("https://rentclock.online"),
   keywords: ["commercial real estate", "lease tracking", "rent increase", "landlord software", "portfolio protection"],
   authors: [{ name: "RentClock Team" }],
   openGraph: {
     title: "RentClock | Portfolio Safety Net",
     description: "Never miss a commercial rent increase again. The 'silent alarm' for your lease portfolio.",
-    url: "https://rentclock.app",
+    url: "https://rentclock.online",
     siteName: "RentClock",
     locale: "en_US",
     type: "website",
