@@ -354,18 +354,40 @@ export default function LandingPage() {
                         </ul>
                     </div>
                 </div>
-                <div className="max-w-[1200px] mx-auto px-6 mt-16 pt-8 border-t border-slate-100 flex flex-col md:row items-center justify-between gap-6">
-                    <div className="text-slate-400 text-xs font-medium">
-                        © 2026 RentClock B2B SaaS. All rights reserved.
-                    </div>
-                    <div className="flex items-center gap-6 opacity-30">
-                        <div className="flex items-center gap-1.5">
-                            <Lock className="h-3 w-3" />
-                            <span className="text-[8px] font-bold uppercase tracking-widest">Encrypted Vault</span>
+                <div className="max-w-[1200px] mx-auto px-6 mt-16 pt-12 border-t border-slate-100">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-end">
+                        <div className="space-y-6">
+                            <div className="space-y-3">
+                                <h6 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1e3a5f]">AI Disclosure & Affiliation</h6>
+                                <p className="text-[11px] text-slate-400 leading-relaxed max-w-xl font-medium">
+                                    RentClock is an independent service built on top of advanced AI models to simplify lease management and critical date tracking. Our platform offers a user-friendly interface to enhance usability and provide specialized portfolio protection features. We are an independent product and are not affiliated with, endorsed by, or sponsored by Google, OpenAI, or any other model providers.
+                                </p>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                    © 2026 MARTIN VASKO • TRNAVA, SLOVAKIA • IČO: 56440553
+                                </div>
+                                <div className="flex items-center gap-4 opacity-40 grayscale">
+                                    <div className="flex items-center gap-1">
+                                        <Lock className="h-2.5 w-2.5" />
+                                        <span className="text-[8px] font-bold uppercase tracking-widest">Bank-Grade Encryption</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <ShieldCheck className="h-2.5 w-2.5" />
+                                        <span className="text-[8px] font-bold uppercase tracking-widest">Secure Data Custody</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                            <ShieldCheck className="h-3 w-3" />
-                            <span className="text-[8px] font-bold uppercase tracking-widest">Secure Data Privacy</span>
+
+                        <div className="flex justify-start md:justify-end">
+                            <div className="bg-slate-50 border border-slate-200/60 p-5 rounded-2xl flex flex-col gap-1 transition-all hover:border-slate-300">
+                                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400">Need help?</span>
+                                <a href="mailto:support@rentclock.online" className="text-sm font-black text-[#1e3a5f] flex items-center gap-2 group">
+                                    support@rentclock.online
+                                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full group-hover:animate-pulse"></span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
