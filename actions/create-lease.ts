@@ -18,14 +18,48 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
     }
 
     // 1. Fetch User Status & Lease Count
-    const { data: userProfile, error: profileError } = await supabaseAdmin
+    let { data: userProfile, error: profileError } = await supabaseAdmin
         .from("users")
         .select("is_pro")
         .eq("id", userId)
         .single();
 
-    if (profileError || !userProfile) {
-        return { error: "Failed to fetch user profile" };
+    // JIT User Creation (Self-healing)
+    if (!userProfile) {
+        try {
+            const { currentUser } = await import("@clerk/nextjs/server");
+            const clerkUser = await currentUser();
+
+            if (clerkUser) {
+                const email = clerkUser.emailAddresses[0]?.emailAddress || "";
+
+                const { error: createError } = await supabaseAdmin
+                    .from("users")
+                    .insert({
+                        id: userId,
+                        email: email,
+                        is_pro: false,
+                        created_at: new Date().toISOString()
+                    });
+
+                if (!createError) {
+                    userProfile = { is_pro: false }; // success
+                } else {
+                    console.error("Failed to auto-create user:", createError);
+                }
+            }
+        } catch (err) {
+            console.error("JIT user creation failed:", err);
+        }
+    }
+
+    if (!userProfile) {
+        // Double check if it was a real connection error or just missing
+        if (profileError && profileError.code !== "PGRST116") {
+            return { error: "Failed to fetch user profile" };
+        }
+        // If still missing after JIT attempt, we can't proceed due to FK constraints usually
+        return { error: "User account not fully synchronized. Please try again in a moment." };
     }
 
     const { count, error: countError } = await supabaseAdmin
