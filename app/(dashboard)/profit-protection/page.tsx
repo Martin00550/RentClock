@@ -71,6 +71,7 @@ export default async function ProfitProtectionPage() {
                                 +{formatCurrency(totalRevenueOpportunity)}
                             </div>
                         </div>
+                    </CardContent>
                 </Card>
 
                 <Card className="rounded-[2rem] border-slate-200 shadow-sm">
@@ -159,6 +160,17 @@ export default async function ProfitProtectionPage() {
                                             </Card>
                                         </Link>
                                     </div>
+                                )
+                            })
+                        ) : (
+                            <Card className="rounded-3xl border-slate-200 p-8 text-center bg-slate-50/50">
+                                <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                    <TrendingUp className="h-6 w-6 text-green-600" />
+                                </div>
+                                <h4 className="text-lg font-bold text-slate-900">Portfolio Optimized</h4>
+                                <p className="text-slate-500 font-medium mt-2">Great job! No revenue leakage detected across your active leases.</p>
+                            </Card>
+                        )}
                     </div>
                 </div>
 
