@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { HeroCalculator } from "@/components/landing/hero-calculator";
 import { motion } from "framer-motion";
+import { StepVisual1, StepVisual2, StepVisual3 } from "@/components/landing/step-visuals";
 
 const revealProps = {
     initial: { opacity: 0, y: 30 },
@@ -77,10 +78,10 @@ export default function LandingPage() {
                                 <span className="text-xs font-bold uppercase tracking-wider">First 3 Leases Free • No Credit Card</span>
                             </div>
                             <h1 className="text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight text-slate-900">
-                                The safety net your commercial portfolio is missing
+                                A safety net your commercial portfolio is missing
                             </h1>
                             <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-xl">
-                                Spreadsheets don&apos;t send reminders. RentClock ensures you never miss a rent increase or renewal option again—without the enterprise complexity.
+                                Spreadsheets don&apos;t send reminders. RentClock helps you stay ahead of rent increases and renewal options—without the enterprise complexity.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center gap-6">
                                 <SignUpTrigger>
@@ -148,71 +149,146 @@ export default function LandingPage() {
                                 </div>
                                 <h4 className="text-xl font-bold text-slate-900 mb-3">The Spreadsheet Crash</h4>
                                 <p className="text-slate-600 leading-relaxed">
-                                    Excel is great for math, but terrible for alerts. It relies on you being perfect every day. RentClock doesn&apos;t.
+                                    Excel is great for math, but terrible for alerts. It relies on constant manual checking. RentClock doesn&apos;t.
                                 </p>
                             </div>
                         </div>
                     </motion.div>
                 </section>
 
-                {/* HOW IT WORKS */}
-                <section className="py-24 bg-slate-50" id="how-it-works">
+                <section className="py-32 bg-slate-50 relative overflow-hidden" id="how-it-works">
+                    {/* Background decoration */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-[#1e3a5f]/5 rounded-full blur-3xl z-0 opacity-40 pointer-events-none" />
+
                     <motion.div
-                        className="max-w-[1200px] mx-auto px-6"
+                        className="max-w-[1200px] mx-auto px-6 relative z-10"
                         {...revealProps}
                     >
-                        <div className="text-center max-w-[700px] mx-auto mb-20">
-                            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Start tracking Today. No training required.</h2>
-                            <p className="text-lg text-slate-600">If you can use email, you can use RentClock. Built for growing portfolios.</p>
+                        <div className="text-center max-w-[700px] mx-auto mb-24">
+                            <h2 className="text-[#d4a853] font-black uppercase tracking-[0.2em] text-sm mb-4">The Process</h2>
+                            <h3 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Start tracking today.<br />Simple by design.</h3>
+                            <p className="text-lg text-slate-600 font-medium">If you can use email, you can use RentClock. Built for growing portfolios.</p>
                         </div>
-                        <div className="relative max-w-4xl mx-auto">
-                            <div className="absolute left-10 top-0 bottom-0 w-0.5 bg-slate-200 hidden md:block"></div>
+
+                        <div className="relative max-w-5xl mx-auto">
+                            {/* Vertical Connection Line */}
+                            <div className="absolute left-16 top-16 bottom-48 w-[2px] bg-slate-200 hidden md:block rounded-full overflow-hidden">
+                                {/* Gold Progress Line */}
+                                <motion.div
+                                    className="w-full bg-[#d4a853] shadow-[0_0_15px_rgba(212,168,83,0.6)]"
+                                    animate={{ height: ["0%", "0%", "50%", "50%", "100%", "100%", "0%"] }}
+                                    transition={{
+                                        duration: 9,
+                                        repeat: Infinity,
+                                        ease: "easeInOut",
+                                        times: [0, 0.27, 0.38, 0.66, 0.77, 0.98, 1]
+                                    }}
+                                />
+                            </div>
+
                             <div className="space-y-16">
-                                <div className="relative flex items-start gap-8 md:gap-16">
-                                    {/* Step 1: Upload UI Snippet */}
-                                    <div className="shrink-0 w-24 h-24 bg-white border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center gap-1 z-10 shadow-sm overflow-hidden group-hover:border-[#1e3a5f] transition-colors">
-                                        <div className="bg-slate-50 p-2 rounded-lg">
-                                            <Upload className="h-5 w-5 text-slate-400" />
-                                        </div>
-                                        <span className="text-[10px] font-bold text-slate-400 uppercase">Lease.pdf</span>
+                                {/* Step 1 */}
+                                <div className="relative flex flex-col md:flex-row items-center md:items-center gap-12 md:gap-16 group">
+                                    <div className="shrink-0 flex items-center justify-center relative w-32">
+                                        <StepVisual1 />
                                     </div>
-                                    <div className="pt-2 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm grow">
-                                        <h4 className="text-xl font-bold text-slate-900 mb-2">1. Securely Upload Lease</h4>
-                                        <p className="text-lg text-slate-600">Simply upload your PDF. RentClock highlights key dates for you to review. <strong>You always have the final say.</strong> Fast, private processing.</p>
+                                    <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-100/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-4px_rgba(0,0,0,0.1)] transition-all grow group-hover:-translate-y-1 duration-300 relative overflow-hidden">
+                                        <div className="absolute -top-10 -right-4 p-6 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity select-none pointer-events-none">
+                                            <span className="text-9xl font-black text-[#1e3a5f] tracking-tighter">01</span>
+                                        </div>
+                                        <h4 className="text-2xl font-black text-slate-900 mb-4 tracking-tight relative z-10">Securely Upload Lease</h4>
+                                        <p className="text-lg text-slate-600 leading-relaxed font-medium relative z-10">
+                                            Simply drag and drop your PDF. RentClock&apos;s AI extracts key dates, rent steps, and expiration windows for you to review.
+                                            <strong className="text-[#1e3a5f] ml-1">You check and approve every detail.</strong> Fast, private, and automated.
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="relative flex items-start gap-8 md:gap-16">
-                                    {/* Step 2: Alarms UI Snippet */}
-                                    <div className="shrink-0 w-24 h-24 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col items-center justify-center z-10 shadow-sm gap-2">
-                                        <div className="w-12 h-6 bg-[#2d6a4f] rounded-full relative p-1 transition-all">
-                                            <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm" />
-                                        </div>
-                                        <span className="text-[9px] font-bold text-slate-500 uppercase text-center leading-tight">60 Days<br />Alert</span>
+
+                                {/* Step 2 */}
+                                <div className="relative flex flex-col md:flex-row items-center md:items-center gap-12 md:gap-16 group">
+                                    <div className="shrink-0 flex items-center justify-center relative w-32">
+                                        <StepVisual2 />
                                     </div>
-                                    <div className="pt-2 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm grow">
-                                        <h4 className="text-xl font-bold text-slate-900 mb-2">2. Verify Key Dates</h4>
-                                        <p className="text-lg text-slate-600">Review the automated suggestions. Nothing is active until you say so. You stay in control.</p>
+                                    <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-100/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-4px_rgba(0,0,0,0.1)] transition-all grow group-hover:-translate-y-1 duration-300 relative overflow-hidden">
+                                        <div className="absolute -top-10 -right-4 p-6 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity select-none pointer-events-none">
+                                            <span className="text-9xl font-black text-[#1e3a5f] tracking-tighter">02</span>
+                                        </div>
+                                        <h4 className="text-2xl font-black text-slate-900 mb-4 tracking-tight relative z-10">Verify Key Dates</h4>
+                                        <p className="text-lg text-slate-600 leading-relaxed font-medium relative z-10">
+                                            Review the high-precision suggestions. Correct dates if needed and set your preferred lead times.
+                                            <strong className="text-[#1e3a5f] ml-1">Nothing is active until you confirm.</strong> You stay in complete control of your data.
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="relative flex items-start gap-8 md:gap-16">
-                                    {/* Step 3: Calendar UI Snippet */}
-                                    <div className="shrink-0 w-24 h-24 bg-white border border-slate-200 rounded-2xl flex flex-col z-10 shadow-sm overflow-hidden">
-                                        <div className="bg-[#1e3a5f] h-4 w-full" />
-                                        <div className="p-2 flex flex-col items-center justify-center grow gap-1">
-                                            <div className="bg-green-100 p-1 rounded-full">
-                                                <CheckCircle2 className="h-4 w-4 text-[#2d6a4f]" />
-                                            </div>
-                                            <span className="text-[8px] font-bold text-slate-600 uppercase text-center">Add to Calendar</span>
-                                        </div>
+
+                                {/* Step 3 */}
+                                <div className="relative flex flex-col md:flex-row items-center md:items-center gap-12 md:gap-16 group">
+                                    <div className="shrink-0 flex items-center justify-center relative w-32">
+                                        <StepVisual3 />
                                     </div>
-                                    <div className="pt-2 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm grow">
-                                        <h4 className="text-xl font-bold text-slate-900 mb-2">3. Sleep Soundly</h4>
-                                        <p className="text-lg text-slate-600">Get alerts 90, 60, and 30 days out. Add directly to Outlook or Google Calendar. Whether you&apos;re at the office or on the golf course, you&apos;ll know what&apos;s coming.</p>
+                                    <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-100/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-4px_rgba(0,0,0,0.1)] transition-all grow group-hover:-translate-y-1 duration-300 relative overflow-hidden">
+                                        <div className="absolute -top-10 -right-4 p-6 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity select-none pointer-events-none">
+                                            <span className="text-9xl font-black text-[#1e3a5f] tracking-tighter">03</span>
+                                        </div>
+                                        <h4 className="text-2xl font-black text-slate-900 mb-4 tracking-tight relative z-10">Stay Informed</h4>
+                                        <p className="text-lg text-slate-600 leading-relaxed font-medium relative z-10">
+                                            Get <strong className="text-[#1e3a5f]">email, SMS, and calendar</strong> alerts 90, 60, and 30 days out. Your critical dates sync directly to Outlook or Google Calendar.
+                                            <strong className="text-[#1e3a5f] ml-1">Whether you&apos;re at the office or on the golf course</strong>, we help prevent missed revenue opportunities.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </motion.div>
+                </section>
+
+                <section className="py-24 bg-white border-t border-slate-100">
+                    <div className="max-w-[1000px] mx-auto px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-[#d4a853] font-black uppercase tracking-[0.2em] text-sm mb-4">The Smart Choice</h2>
+                            <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Why RentClock wins</h3>
+                            <p className="text-lg text-slate-600 font-medium">Stop paying for overpriced hours or relying on fragile spreadsheets.</p>
+                        </div>
+
+                        <div className="overflow-hidden rounded-3xl border border-slate-200 shadow-xl shadow-slate-900/5">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-slate-50 border-b border-slate-200">
+                                        <th className="py-6 px-6 md:px-10 text-xs font-black uppercase tracking-widest text-slate-500 w-1/4">Aspect</th>
+                                        <th className="py-6 px-6 md:px-10 text-sm font-black uppercase tracking-widest text-[#1e3a5f] w-1/4 bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">RentClock</th>
+                                        <th className="py-6 px-6 md:px-10 text-xs font-black uppercase tracking-widest text-slate-500 w-1/4">Property Lawyer</th>
+                                        <th className="py-6 px-6 md:px-10 text-xs font-black uppercase tracking-widest text-slate-500 w-1/4">Excel Sheet</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white">
+                                    <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                                        <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Annual Cost</td>
+                                        <td className="py-6 px-6 md:px-10 font-black text-[#2d6a4f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10 text-lg">$468/yr</td>
+                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">~$4,800/yr (Est.)</td>
+                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">$0 (Financial)</td>
+                                    </tr>
+                                    <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                                        <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Setup Effort</td>
+                                        <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Automated</td>
+                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Days / Weeks</td>
+                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Manual Entry</td>
+                                    </tr>
+                                    <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                                        <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Missed Date Risk</td>
+                                        <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Automated Alerts</td>
+                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Low</td>
+                                        <td className="py-6 px-6 md:px-10 text-rose-600 font-bold">High (Human Error)</td>
+                                    </tr>
+                                    <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                                        <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Revenue Focus</td>
+                                        <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Profit Protection</td>
+                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Billing / Compliance</td>
+                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">None</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </section>
 
                 {/* PRICING */}
@@ -246,19 +322,19 @@ export default function LandingPage() {
                                     </li>
                                     <li className="flex items-center gap-3 text-slate-600">
                                         <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
-                                        <span>Legal Notice Generation</span>
+                                        <span>Auto-Generates PDF Notices</span>
                                     </li>
                                     <li className="flex items-center gap-3 text-slate-600">
                                         <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
-                                        <span>Automated Lease Review</span>
+                                        <span>Automated Lease Entry</span>
                                     </li>
                                     <li className="flex items-center gap-3 text-slate-600">
                                         <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
-                                        <span>Email Alerts (7, 30, 60, 90 Days)</span>
+                                        <span>Lease & Rent Increase Alerts (Email)</span>
                                     </li>
                                     <li className="flex items-center gap-3 text-slate-400">
                                         <CheckCircle2 className="h-5 w-5 text-slate-400 shrink-0" />
-                                        <span>SMS Alerts (7, 30, 60, 90 Days) (Pro)</span>
+                                        <span>Lease & Rent Increase Alerts (SMS) (Pro)</span>
                                     </li>
                                     <li className="flex items-center gap-3 text-slate-400">
                                         <CheckCircle2 className="h-5 w-5 text-slate-400 shrink-0" />
@@ -292,10 +368,10 @@ export default function LandingPage() {
 
                     <div className="max-w-[800px] mx-auto text-center px-6 relative z-10">
                         <h2 className="text-3xl md:text-5xl font-black text-white mb-6 leading-tight">
-                            You have nothing to lose but your spreadsheets.
+                            Move beyond static spreadsheets.
                         </h2>
                         <p className="text-lg text-slate-300 mb-10 max-w-xl mx-auto">
-                            Start tracking your first 3 leases today. Stop the revenue leakage now.
+                            Start tracking your first 3 leases today. Help stop revenue leakage.
                         </p>
                         <div className="flex flex-col items-center gap-8">
                             <SignUpTrigger>
@@ -370,11 +446,11 @@ export default function LandingPage() {
                                 <div className="flex items-center gap-4 opacity-40 grayscale">
                                     <div className="flex items-center gap-1">
                                         <Lock className="h-2.5 w-2.5" />
-                                        <span className="text-[8px] font-bold uppercase tracking-widest">Bank-Grade Encryption</span>
+                                        <span className="text-[8px] font-bold uppercase tracking-widest">Secure AES-256 Encryption</span>
                                     </div>
                                     <div className="flex items-center gap-1">
                                         <ShieldCheck className="h-2.5 w-2.5" />
-                                        <span className="text-[8px] font-bold uppercase tracking-widest">Secure Data Custody</span>
+                                        <span className="text-[8px] font-bold uppercase tracking-widest">Private Data Handling</span>
                                     </div>
                                 </div>
                             </div>

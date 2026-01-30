@@ -261,15 +261,17 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                                             </p>
                                                         </div>
                                                         <div className="flex gap-3">
-                                                            <AddToCalendar
-                                                                event={{
-                                                                    title: `${lease.tenant_name} - ${nextEventName}`,
-                                                                    description: `Reminder for ${nextEventName}. Property: ${lease.property_address}`,
-                                                                    location: lease.property_address || undefined,
-                                                                    startDate: nextEventDate
-                                                                }}
-                                                                className="h-12 px-6 rounded-2xl font-bold border-2"
-                                                            />
+                                                            {isPro && (
+                                                                <AddToCalendar
+                                                                    event={{
+                                                                        title: `${lease.tenant_name} - ${nextEventName}`,
+                                                                        description: `Reminder for ${nextEventName}. Property: ${lease.property_address}`,
+                                                                        location: lease.property_address || undefined,
+                                                                        startDate: nextEventDate
+                                                                    }}
+                                                                    className="h-12 px-6 rounded-2xl font-bold border-2"
+                                                                />
+                                                            )}
                                                             <NoticeButton lease={lease} type={nextEventName === "Rent Increase" ? "rent-increase" : "renewal"} />
                                                         </div>
                                                     </div>

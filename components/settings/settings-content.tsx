@@ -424,7 +424,6 @@ export function SettingsContent() {
                                                                             >
                                                                                 <span className="text-slate-600 group-hover:text-[#1e3a5f] flex items-center gap-2">
                                                                                     <span className="text-base">{c.flag}</span>
-                                                                                    {c.code}
                                                                                 </span>
                                                                                 <span className="text-slate-400 font-mono tracking-tighter">{c.dial_code}</span>
                                                                             </button>

@@ -186,38 +186,36 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
         setIsSaving(true);
 
         try {
-            // Parse numeric values safely (empty string becomes null, not NaN)
-            const rentValue = monthlyRent ? parseFloat(monthlyRent.replace(/,/g, "")) : null;
-            const increaseValue = rentIncreaseAmount ? parseFloat(rentIncreaseAmount.replace(/,/g, "")) : null;
+            // Prepare FormData for the Server Action
+            const formData = new FormData();
+            formData.append("tenant_name", tenantName);
+            formData.append("property_address", propertyAddress);
+            if (monthlyRent) formData.append("monthly_rent", monthlyRent.replace(/,/g, ""));
+            if (rentIncreaseAmount) formData.append("rent_increase_amount", rentIncreaseAmount.replace(/,/g, ""));
 
-            const leaseData = {
-                user_id: user.id,
-                tenant_name: tenantName,
-                property_address: propertyAddress || null,
-                monthly_rent: isNaN(rentValue as number) ? null : rentValue,
-                lease_end_date: expiryDate ? startOfDay(expiryDate).toISOString().split('T')[0] : null,
-                rent_increase_date: increaseDate ? startOfDay(increaseDate).toISOString().split('T')[0] : null,
-                rent_increase_amount: isNaN(increaseValue as number) ? null : increaseValue,
-                lease_start_date: leaseStartDate ? startOfDay(leaseStartDate).toISOString().split('T')[0] : null,
-                notice_period_days: 60,
-                reminder_90_days_email: reminder90DaysEmail,
-                reminder_60_days_email: reminder60DaysEmail,
-                reminder_30_days_email: reminder30DaysEmail,
-                reminder_7_days_email: reminder7DaysEmail,
-                reminder_90_days_sms: reminder90DaysSMS,
-                reminder_60_days_sms: reminder60DaysSMS,
-                reminder_30_days_sms: reminder30DaysSMS,
-                reminder_7_days_sms: reminder7DaysSMS,
-                pdf_url: pdfUrl,
-            };
+            if (leaseStartDate) formData.append("lease_start_date", startOfDay(leaseStartDate).toISOString().split('T')[0]);
+            if (expiryDate) formData.append("lease_end_date", startOfDay(expiryDate).toISOString().split('T')[0]);
+            if (increaseDate) formData.append("rent_increase_date", startOfDay(increaseDate).toISOString().split('T')[0]);
 
-            console.log("Saving lease data:", leaseData);
+            formData.append("reminder_90_days_email", String(reminder90DaysEmail));
+            formData.append("reminder_60_days_email", String(reminder60DaysEmail));
+            formData.append("reminder_30_days_email", String(reminder30DaysEmail));
+            formData.append("reminder_7_days_email", String(reminder7DaysEmail));
+            formData.append("reminder_90_days_sms", String(reminder90DaysSMS));
+            formData.append("reminder_60_days_sms", String(reminder60DaysSMS));
+            formData.append("reminder_30_days_sms", String(reminder30DaysSMS));
+            formData.append("reminder_7_days_sms", String(reminder7DaysSMS));
 
-            const { error } = await supabase.from("leases").insert(leaseData);
+            if (pdfUrl) formData.append("pdf_url", pdfUrl);
 
-            if (error) {
-                console.error("Supabase error:", error);
-                throw error;
+            // Import the action dynamically to avoid build issues if mixed
+            const { createLease } = await import("@/actions/create-lease");
+
+            const result = await createLease({}, formData);
+
+            if (result.error) {
+                alert(result.error);
+                return;
             }
 
             router.push("/dashboard");

@@ -17,8 +17,8 @@ export function ProPricingCard() {
             {isAnnual && (
                 <div className="absolute top-0 left-0 right-0 -translate-y-1/2 flex items-center justify-center pointer-events-none">
                     <div className="w-full h-[2px] bg-[#1e3a5f] absolute top-1/2 left-0 -translate-y-1/2 opacity-20" />
-                    <div className="bg-[#1e3a5f] text-white text-[11px] font-black px-6 py-2 rounded-full uppercase tracking-[0.25em] relative shadow-xl border border-white/10">
-                        Save 20% Annually
+                    <div className="bg-[#1e3a5f] text-white text-[13px] font-extrabold px-6 py-2 rounded-full uppercase tracking-[0.1em] relative shadow-xl border border-white/10">
+                        Save $120 Per Year
                     </div>
                 </div>
             )}
@@ -70,28 +70,32 @@ export function ProPricingCard() {
                 </li>
                 <li className="flex items-center gap-3 text-slate-600">
                     <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
-                    <span>Unlimited AI Extraction</span>
+                    <span>Auto-Generates PDF Notices</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600">
                     <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
-                    <span>Email Alerts (7, 30, 60, 90 Days)</span>
+                    <span>Automated Lease Entry</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600">
                     <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
-                    <span>SMS Alerts (7, 30, 60, 90 Days)</span>
+                    <span>Lease & Rent Increase Alerts (Email)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-600">
+                    <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
+                    <span>Lease & Rent Increase Alerts (SMS)</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600">
                     <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
                     <span>Google & Outlook Calendar Integration</span>
                 </li>
             </ul>
-            <SignUpTrigger redirectUrl="/dashboard?upgrade=true">
+            <SignUpTrigger redirectUrl={`/billing?checkout=${isAnnual ? 'pro_annual' : 'pro_monthly'}`}>
                 <Button className="w-full bg-[#1e3a5f] hover:bg-[#2a4a73] text-white py-5 h-auto rounded-xl font-bold text-lg transition-colors shadow-lg shadow-slate-900/10">
-                    Upgrade to Pro
+                    Start 7-Day Free Trial
                 </Button>
             </SignUpTrigger>
-            <p className="text-center text-slate-400 text-sm mt-4">
-                14-day money-back guarantee. Cancel anytime.
+            <p className="text-center text-slate-400 text-sm mt-4 leading-relaxed px-4">
+                Trial is free. Payments covered by 14-day money-back guarantee.
             </p>
         </div >
     );

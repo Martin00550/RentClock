@@ -5,15 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { useUser } from "@clerk/nextjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { initializePaddle, Paddle } from "@paddle/paddle-js";
+import { useSearchParams } from "next/navigation";
 
 export function BillingContent() {
     const { user } = useUser();
+    const searchParams = useSearchParams();
     const [isPro, setIsPro] = useState(false);
     const [leaseCount, setLeaseCount] = useState(0);
     const [paddle, setPaddle] = useState<Paddle>();
     const [paddleCustomerId, setPaddleCustomerId] = useState<string | null>(null);
+    const hasTriggeredAutoCheckout = useRef(false);
 
     useEffect(() => {
         initializePaddle({
@@ -30,6 +33,25 @@ export function BillingContent() {
             }
         });
     }, []);
+
+    // Handle Auto-Checkout from Landing Page
+    useEffect(() => {
+        const checkoutType = searchParams.get("checkout");
+
+        if (paddle && user && checkoutType && !isPro && !hasTriggeredAutoCheckout.current) {
+            hasTriggeredAutoCheckout.current = true;
+
+            const priceId = checkoutType === 'pro_annual'
+                ? process.env.NEXT_PUBLIC_PADDLE_PRO_ANNUAL_PRICE_ID
+                : checkoutType === 'pro_monthly'
+                    ? process.env.NEXT_PUBLIC_PADDLE_PRO_MONTHLY_PRICE_ID
+                    : null;
+
+            if (priceId) {
+                handleCheckout(priceId);
+            }
+        }
+    }, [paddle, user, isPro, searchParams]);
 
     const handleCheckout = (priceId: string) => {
         if (!paddle || !user) return;
@@ -117,7 +139,7 @@ export function BillingContent() {
                                 <div className="space-y-4">
                                     {isPro ? (
                                         <>
-                                            {["Unlimited leases", "Profit Protection Analytics", "Legal Notice Generation", "Email Alerts (7/30/60/90 Days)", "SMS Alerts (7/30/60/90 Days)", "Calendar Sync"].map((feature) => (
+                                            {["Unlimited leases", "Profit Protection Analytics", "Legal Notice Generation", "Email Alerts (90d + Deadline Day)", "SMS Alerts (90d + Deadline Day)", "Calendar Sync"].map((feature) => (
                                                 <div key={feature} className="flex items-center gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
                                                     <div className="bg-[#d4a853]/20 p-1 rounded-full"><BadgeCheck className="h-5 w-5 text-[#d4a853]" /></div>
                                                     <span className="text-sm font-bold text-slate-200">{feature}</span>
@@ -126,7 +148,7 @@ export function BillingContent() {
                                         </>
                                     ) : (
                                         <>
-                                            {["3 active leases", "Profit Protection Analytics", "Legal Notice Generation", "Email Alerts (7/30/60/90 Days)", "No credit card required"].map((feature) => (
+                                            {["3 active leases", "Profit Protection Analytics", "Legal Notice Generation", "Email Alerts (90d + Deadline Day)", "No credit card required"].map((feature) => (
                                                 <div key={feature} className="flex items-center gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
                                                     <div className="bg-[#d4a853]/20 p-1 rounded-full"><BadgeCheck className="h-5 w-5 text-[#d4a853]" /></div>
                                                     <span className="text-sm font-bold text-slate-200">{feature}</span>
@@ -276,6 +298,9 @@ export function BillingContent() {
                                         </Button>
                                     </div>
                                 </div>
+                                <p className="text-center text-slate-500 text-sm font-medium">
+                                    Trial is free. Payments covered by 14-day money-back guarantee.
+                                </p>
                             </Card>
                         )}
                     </div>
@@ -296,6 +321,6 @@ export function BillingContent() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

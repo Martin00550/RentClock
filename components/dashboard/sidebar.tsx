@@ -12,6 +12,7 @@ import {
     CreditCard,
     ChevronLeft,
     ChevronRight,
+    LifeBuoy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserButton, useUser } from "@clerk/nextjs";
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
     { name: "Profit Protection", href: "/profit-protection", icon: Sparkles, color: "text-[#d4a853]" },
     { name: "Billing", href: "/billing", icon: CreditCard, color: "text-rose-500" },
     { name: "Settings", href: "/settings", icon: Settings, color: "text-slate-500" },
+    { name: "Support", href: "mailto:support@rentclock.online", icon: LifeBuoy, color: "text-emerald-500" },
 ];
 
 export function Sidebar() {

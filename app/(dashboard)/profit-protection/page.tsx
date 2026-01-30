@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { TrendingUp, AlertCircle, ArrowRight, DollarSign, BarChart3 } from "lucide-react";
+import { TrendingUp, AlertCircle, ArrowRight, DollarSign, BarChart3, Lock } from "lucide-react";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
@@ -8,6 +8,8 @@ import { formatCurrency, calculateRevenueImpact } from "@/lib/lease-utils";
 import { CpiCalculator } from "@/components/leases/cpi-calculator";
 import { Lease } from "@/lib/types";
 import { ActionMenu } from "@/components/leases/action-menu";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default async function ProfitProtectionPage() {
     const { userId } = await auth();
@@ -15,6 +17,14 @@ export default async function ProfitProtectionPage() {
     if (!userId) {
         redirect("/sign-in");
     }
+
+    const { data: userProfile, error: profileError } = await supabaseAdmin
+        .from("users")
+        .select("is_pro")
+        .eq("id", userId)
+        .single();
+
+    const isPro = userProfile?.is_pro || false;
 
     const { data: leases, error } = await supabaseAdmin
         .from("leases")
@@ -24,8 +34,6 @@ export default async function ProfitProtectionPage() {
     if (error) {
         console.error("Error fetching leases:", error);
     }
-
-
 
     const typedLeases = (leases as Lease[]) || [];
 
@@ -49,25 +57,20 @@ export default async function ProfitProtectionPage() {
                 </p>
             </div>
 
-
-
             {/* PORTFOLIO HEALTH GRID */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="rounded-[2rem] border-slate-200 shadow-sm bg-[#1e3a5f] text-white">
-                    <CardContent className="p-8 flex flex-col gap-4">
+                {/* REVENUE AT RISK CARD - GATED */}
+                <Card className="rounded-[2rem] border-slate-200 shadow-sm bg-[#1e3a5f] text-white relative overflow-hidden group">
+                    <CardContent className="p-8 flex flex-col gap-4 relative z-10">
                         <div className="bg-white/10 p-3 w-fit rounded-2xl">
                             <DollarSign className="h-6 w-6 text-white" />
                         </div>
                         <div>
                             <span className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em]">Annual Revenue at Risk</span>
-                            <div className="text-4xl font-black text-white mt-2 tracking-tight">+{formatCurrency(totalRevenueOpportunity)}<span className="text-lg text-white/40 font-bold ml-1">/yr</span></div>
+                            <div className="text-4xl font-black text-white mt-2 tracking-tight">
+                                +{formatCurrency(totalRevenueOpportunity)}
+                            </div>
                         </div>
-                        <div className="mt-auto pt-4 border-t border-white/10">
-                            <p className="text-xs text-white/80 font-medium">
-                                Potential gains from pending CPI adjustments across {leasesWithOpportunity.length} leases.
-                            </p>
-                        </div>
-                    </CardContent>
                 </Card>
 
                 <Card className="rounded-[2rem] border-slate-200 shadow-sm">
@@ -120,15 +123,19 @@ export default async function ProfitProtectionPage() {
                                 <p className="text-slate-500 mb-6">Our automated system monitors this 24/7. &quot;Set it and forget it&quot; peace of mind.</p>
                             </Card>
                         ) : leasesWithOpportunity.length > 0 ? (
-                            leasesWithOpportunity.map(lease => {
+                            leasesWithOpportunity.map((lease, idx) => {
                                 const impact = calculateRevenueImpact(lease);
+                                // For Free users, only show the first one clearly (as a "teaser") if you wanted, 
+                                // OR blur everything. Let's blur everything for maximum upgrade pressure.
+                                const isBlur = !isPro;
+
                                 return (
                                     <div key={lease.id} className="relative group">
                                         <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <ActionMenu lease={lease} />
                                         </div>
                                         <Link href={`/leases/${lease.id}`}>
-                                            <Card className="group rounded-[2rem] border-slate-200 shadow-sm hover:shadow-md transition-all hover:border-[#1e3a5f]/30">
+                                            <Card className="group rounded-[2rem] border-slate-200 shadow-sm hover:shadow-md transition-all hover:border-[#1e3a5f]/30 relative overflow-hidden">
                                                 <CardContent className="p-6 flex items-center justify-between">
                                                     <div className="flex items-center gap-4">
                                                         <div className="h-12 w-12 rounded-2xl bg-[#1e3a5f]/5 flex items-center justify-center text-xl font-black text-[#1e3a5f]">
@@ -152,27 +159,12 @@ export default async function ProfitProtectionPage() {
                                             </Card>
                                         </Link>
                                     </div>
-                                )
-                            })
-                        ) : (
-                            <Card className="rounded-3xl border-slate-200 p-8 text-center bg-slate-50/50">
-                                <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                                    <TrendingUp className="h-6 w-6 text-green-600" />
-                                </div>
-                                <h4 className="text-lg font-bold text-slate-900">Portfolio Optimized</h4>
-                                <p className="text-slate-500 font-medium mt-2">Great job! No revenue leakage detected across your active leases.</p>
-                            </Card>
-                        )}
                     </div>
                 </div>
 
                 {/* GLOBAL CALCULATOR */}
                 <div className="lg:col-span-5 flex flex-col gap-6">
                     <h3 className="text-xl font-black text-slate-900 tracking-tight">Global Calculator</h3>
-                    {/* We can reuse the calculator here, or create a specific global one. 
-                        For now, let's use the component but maybe suggest it's for 'Scenario Planning' 
-                        by passing the total portfolio value as default. 
-                    */}
                     <CpiCalculator currentRent={totalPortfolioValue} />
 
                     <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100">

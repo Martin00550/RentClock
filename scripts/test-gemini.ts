@@ -1,4 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env.local" });
 
 const apiKey = process.env.GEMINI_API_KEY;
 if (!apiKey) {
@@ -7,7 +10,7 @@ if (!apiKey) {
 }
 
 const genAI = new GoogleGenerativeAI(apiKey);
-const modelName = "gemini-3.0-flash-preview";
+const modelName = "gemini-2.5-flash";
 
 async function test() {
     console.log(`Testing model: ${modelName}...`);

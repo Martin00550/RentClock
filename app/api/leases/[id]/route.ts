@@ -33,7 +33,7 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     if (lease.pdf_url) {
         try {
             const urlParts = lease.pdf_url.split('/');
-            const fileName = urlParts[urlParts.length - 1];
+            const fileName = urlParts[urlParts.length - 1]; // uuid.pdf
             if (fileName) {
                 await supabaseAdmin.storage
                     .from("leases-pdf")

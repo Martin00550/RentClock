@@ -26,40 +26,43 @@ const LeaseSchema = z.object({
 });
 
 // Force dynamic - essential for handling FormData
+// Force dynamic - essential for handling FormData
 export const dynamic = 'force-dynamic';
 
+import { auth } from "@clerk/nextjs/server";
+
 export async function POST(req: NextRequest) {
-    console.log("📂 /api/scan-lease hit");
     try {
+        const { userId } = await auth();
+        if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         if (!process.env.GEMINI_API_KEY) {
             return NextResponse.json(
-                { error: "Missing GEMINI_API_KEY in server environment" },
+                { error: "Server configuration error" },
                 { status: 500 }
             );
         }
 
         // --- RATE LIMITING ---
         const ip = req.headers.get("x-forwarded-for") || "unknown";
-        const limitCheck = await checkRateLimit(ip, 50, 3600); // Increased to 50 for bulk support
+        const limitCheck = await checkRateLimit(userId, 20, 3600); // Limit by UserID, not IP
 
         if (!limitCheck.success) {
-            console.warn(`🛑 Rate limit exceeded for IP: ${ip}`);
             return NextResponse.json(
-                { error: "Rate limit exceeded. You can scan up to 50 leases per hour." },
+                { error: "Hourly scan limit reached." },
                 { status: 429 }
             );
         }
-        console.log(`Usage: ${limitCheck.remaining}/${limitCheck.limit} remaining for ${ip}`);
         // ---------------------
 
         const formData = await req.formData();
         const file = formData.get("file") as File;
 
         if (!file) {
-            console.error("❌ No file uploaded");
             return NextResponse.json({ error: "No file provided" }, { status: 400 });
         }
-        console.log(`✅ File received: ${file.name} (${file.size} bytes)`);
 
         // Convert file to buffer
         const arrayBuffer = await file.arrayBuffer();
@@ -70,7 +73,7 @@ export async function POST(req: NextRequest) {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
         // Try models in order of preference
-        const modelsToTry = ["gemini-2.0-flash-exp", "gemini-1.5-flash"];
+        const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash-latest"];
 
         let result = null;
         let usedModel = "";
@@ -80,7 +83,6 @@ export async function POST(req: NextRequest) {
 
         for (const modelName of modelsToTry) {
             try {
-                console.log(`🤖 Attempting scan with model: ${modelName} (${isMultimodal ? "Multimodal" : "Text Only"})`);
                 const model = genAI.getGenerativeModel({
                     model: modelName,
                     generationConfig: {
@@ -90,7 +92,7 @@ export async function POST(req: NextRequest) {
 
                 const prompt = `
                     You are a rigorous data extraction AI for US Commercial Real Estate leases.
-                    Examine the provided lease document (PDF or Image) and extract the following fields.
+                    Examine the provided lease document and extract the following fields.
                     Return ONLY valid JSON. 
                     
                     Fields to extract:
@@ -119,25 +121,20 @@ export async function POST(req: NextRequest) {
                         }
                     ]);
                 } else {
-                    // Fallback for text files or others (simplified)
                     result = await model.generateContent(`${prompt}\n\nDocument Context:\n${buffer.toString("utf-8")}`);
                 }
 
                 usedModel = modelName;
                 break;
             } catch (err: unknown) {
-                const errorMessage = err instanceof Error ? err.message : "Unknown error";
-                console.warn(`Model ${modelName} failed:`, errorMessage);
                 lastError = err instanceof Error ? err : new Error(String(err));
             }
         }
 
         if (!result) {
-            console.error("All models failed.");
-            throw lastError || new Error("Failed to generate content with any model");
+            throw lastError || new Error("Failed to generate content");
         }
 
-        console.log(`✅ Success with model: ${usedModel}`);
         const response = await result.response;
         const textResponse = response.text();
         const jsonString = textResponse.replace(/```json|```/g, "").trim();
@@ -149,10 +146,8 @@ export async function POST(req: NextRequest) {
             const parsed = LeaseSchema.safeParse(rawData);
 
             if (!parsed.success) {
-                console.error("❌ Zod Validation Failed:", parsed.error);
-                // Attempt to salvage partially correct data or return raw if critical fields exist
+                // Attempt to salvage partially correct data
                 if (rawData.tenant_name && rawData.monthly_rent) {
-                    console.warn("⚠️ Returning raw data despite validation failure (best effort).");
                     data = rawData;
                 } else {
                     throw new Error("AI returned invalid data structure");
@@ -161,17 +156,16 @@ export async function POST(req: NextRequest) {
                 data = parsed.data;
             }
         } catch (jsonError) {
-            console.error("❌ JSON Parse or Validation Error:", jsonError);
             return NextResponse.json(
-                { error: "AI response was not valid JSON or matched schema." },
+                { error: "AI response was not valid JSON." },
                 { status: 500 }
             );
         }
 
         // --- PERSIST DOCUMENT TO STORAGE ---
-        console.log(`📤 Uploading ${mimeType} to storage...`);
+        // Save to user-specific path: {userId}/{uuid}.{ext}
         const extension = mimeType.split("/")[1] || "pdf";
-        const fileName = `${uuidv4()}.${extension}`;
+        const fileName = `${userId}/${uuidv4()}.${extension}`;
 
         const { error: uploadError } = await supabaseAdmin
             .storage
@@ -183,16 +177,12 @@ export async function POST(req: NextRequest) {
             });
 
         let pdfUrl = "";
-        if (uploadError) {
-            console.error("❌ Storage upload failed:", uploadError);
-            // Don't fail the whole request just because storage failed, but log it
-        } else {
+        if (!uploadError) {
             const { data: publicUrlData } = supabaseAdmin
                 .storage
                 .from("leases-pdf")
                 .getPublicUrl(fileName);
             pdfUrl = publicUrlData.publicUrl;
-            console.log(`✅ PDF Persisted: ${pdfUrl}`);
         }
         // ------------------------------
 

@@ -1,4 +1,5 @@
 import { LeaseTable } from "@/components/leases/lease-table";
+import { ExportLeasesButton } from "@/components/leases/export-leases-button";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
@@ -34,12 +35,15 @@ export default async function LeasesPage() {
                     <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Lease Portfolio</h1>
                     <p className="text-slate-500 text-base md:text-lg font-medium">Manage all your active and upcoming lease agreements.</p>
                 </div>
-                <Link href="/ai-import" className="w-full md:w-auto">
-                    <Button className="w-full md:w-auto bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-6 h-12 rounded-xl font-bold shadow-lg shadow-slate-200 flex items-center justify-center gap-2 transition-all">
-                        <Plus className="h-5 w-5" />
-                        Add New Lease
-                    </Button>
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <ExportLeasesButton leases={typedLeases} />
+                    <Link href="/ai-import" className="w-full sm:w-auto">
+                        <Button className="w-full sm:w-auto bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-6 h-12 rounded-xl font-bold shadow-lg shadow-slate-200 flex items-center justify-center gap-2 transition-all">
+                            <Plus className="h-5 w-5" />
+                            Add New Lease
+                        </Button>
+                    </Link>
+                </div>
             </div>
 
             <LeaseTable leases={typedLeases} />
