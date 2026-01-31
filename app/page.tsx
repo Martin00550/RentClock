@@ -312,7 +312,7 @@ export default function LandingPage() {
                                     </li>
                                     <li className="flex items-center gap-3 text-slate-400">
                                         <CheckCircle2 className="h-5 w-5 text-slate-400 shrink-0" />
-                                        <span>Google & Outlook Calendar Integration (Pro)</span>
+                                        <span>Calendar Sync (Pro)</span>
                                     </li>
                                 </ul>
                                 <SignUpTrigger>

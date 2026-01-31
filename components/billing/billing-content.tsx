@@ -234,7 +234,7 @@ export function BillingContent() {
                                     <div className="space-y-4">
                                         {isPro ? (
                                             <>
-                                                {["Unlimited Leases", "Profit Protection Analytics", "Auto-Generates PDF Notices", "Automated Lease Entry", "Lease & Rent Increase Alerts (Email)", "Lease & Rent Increase Alerts (SMS)", "Google & Outlook Calendar Integration"].map((feature) => (
+                                                {["Unlimited Leases", "Profit Protection Analytics", "Auto-Generates PDF Notices", "Automated Lease Entry", "Lease & Rent Increase Alerts (Email)", "Lease & Rent Increase Alerts (SMS)", "Calendar Sync"].map((feature) => (
                                                     <div key={feature} className="flex items-center gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
                                                         <div className="bg-[#d4a853]/20 p-1 rounded-full"><BadgeCheck className="h-5 w-5 text-[#d4a853]" /></div>
                                                         <span className="text-sm font-bold text-slate-200">{feature}</span>

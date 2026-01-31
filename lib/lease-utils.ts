@@ -51,7 +51,7 @@ export function getNextRelevantEvent(lease: Lease): { date: Date; type: "Rent In
             ...e,
             dateObj: parseISO(e.date!) // verify parseISO handles the string format
         }))
-        .filter(e => differenceInDays(e.dateObj, today) >= 0) // keep only future/today
+        .filter(e => differenceInDays(e.dateObj, today) >= -30) // keep past 30 days (overdue) + future
         .sort((a, b) => differenceInDays(a.dateObj, b.dateObj)); // sort by soonest
 
     if (events.length === 0) return null;

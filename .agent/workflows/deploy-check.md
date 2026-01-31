@@ -22,19 +22,25 @@ Unused imports or variables will cause build warnings that may be treated as err
 - Look for greyed-out imports in your IDE.
 - Verify that every `const` and `useState` is actually used in the component logic or JSX.
 
-### 4. Check for Unescaped Entities
+### 4. Check for Unescaped Entities (`react/no-unescaped-entities`)
 JSX will fail on unescaped characters like `"`, `'`, `>`, or `}`.
 - Replace `"` with `&quot;`
 - Replace `'` with `&apos;`
-- Ensure no nested `<p>` tags inside `<p>` tags (Hydration error/Lint error).
+- **Common Locations:** Blog posts, long copy sections.
 
-### 5. Verify Legal & Compliance (RentClock Specific)
+### 5. Check for Server/Client Conflicts
+- **Metadata Export:** You CANNOT export `metadata` from a file marked `"use client"`.
+- If a page needs metadata AND client interactivity:
+  - Keep the `page.tsx` as a Server Component (no `"use client"`).
+  - Move the interactive parts (buttons, forms) into a separate component (e.g., `components/signup-trigger.tsx`) and mark *that* component as `"use client"`.
+
+### 6. Verify Legal & Compliance (RentClock Specific)
 Before final deployment for Paddle verification, ensure:
 - [ ] Refund Policy is set to **14 days**.
 - [ ] Support email `support@rentclock.online` is in the footer.
 - [ ] Legal entity (Martin Vasko) and IČO are in the footer.
 
-### 5. Final Push
+### 7. Final Push
 Once `npm run build` passes with zero errors:
 ```bash
 git add .

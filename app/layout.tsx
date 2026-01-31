@@ -64,7 +64,7 @@ export default function RootLayout({
           <StructuredData />
         </head>
         <body className={`${manrope.variable} font-sans antialiased`} suppressHydrationWarning>
-          <NextTopLoader color="#4f46e5" showSpinner={false} />
+          <NextTopLoader color="#d4a853" showSpinner={false} />
           {children}
         </body>
       </html>

@@ -17,7 +17,7 @@ export function ProPricingCard() {
             {isAnnual && (
                 <div className="absolute top-0 left-0 right-0 -translate-y-1/2 flex items-center justify-center pointer-events-none">
                     <div className="w-full h-[2px] bg-[#1e3a5f] absolute top-1/2 left-0 -translate-y-1/2 opacity-20" />
-                    <div className="bg-[#1e3a5f] text-white text-[13px] font-extrabold px-6 py-2 rounded-full uppercase tracking-[0.1em] relative shadow-xl border border-white/10">
+                    <div className="bg-[#1e3a5f] text-white text-[13px] font-extrabold px-6 py-2 rounded-full uppercase tracking-widest relative shadow-xl border border-white/10">
                         Save $120 Per Year
                     </div>
                 </div>
@@ -86,7 +86,7 @@ export function ProPricingCard() {
                 </li>
                 <li className="flex items-center gap-3 text-slate-600">
                     <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
-                    <span>Google & Outlook Calendar Integration</span>
+                    <span>Calendar Sync</span>
                 </li>
             </ul>
             <SignUpTrigger redirectUrl={`/billing?checkout=${isAnnual ? 'pro_annual' : 'pro_monthly'}`}>
