@@ -43,6 +43,9 @@ Sincerely,
 
 [Your Name/Property Management]
 RentClock Protected Portfolio
+
+--------------------------------------------------
+DISCLAIMER: This report is for informational purposes only and does not constitute legal or financial advice. Please verify dates and amounts against your original lease agreement and consult with local legal counsel before issuing formal notices.
 `.trim();
 }
 
@@ -71,5 +74,8 @@ Sincerely,
 
 [Your Name/Property Management]
 RentClock Protected Portfolio
+
+--------------------------------------------------
+DISCLAIMER: This report is for informational purposes only and does not constitute legal or financial advice. Please verify dates and amounts against your original lease agreement and consult with local legal counsel before issuing formal notices.
 `.trim();
 }

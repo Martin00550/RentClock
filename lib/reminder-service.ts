@@ -151,8 +151,8 @@ export async function processLeaseReminders() {
                 // --- SMS PAYLOAD ---
                 if (smsAllowed && lease.users?.phone && lease.users?.is_pro) {
                     const smsBody = isExpiry
-                        ? `RentClock: Lease for ${lease.tenant_name} expires in ${daysUntil} days. Review: ${appUrl}/leases/${lease.id}`
-                        : `RentClock: Rent Increase for ${lease.tenant_name} is due in ${daysUntil} days. Capture revenue: ${appUrl}/leases/${lease.id}`;
+                        ? `RentClock: Lease for ${lease.tenant_name} expires in ${daysUntil} days. Review: ${appUrl}/leases/${lease.id} Reply STOP to opt out.`
+                        : `RentClock: Rent Increase for ${lease.tenant_name} is due in ${daysUntil} days. Capture revenue: ${appUrl}/leases/${lease.id} Reply STOP to opt out.`;
 
                     notificationResults.push(
                         sendSms(lease.users.phone, smsBody).then(res => ({ type: 'sms', ...res }))

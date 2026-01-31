@@ -5,18 +5,18 @@ export function StructuredData() {
         "name": "RentClock",
         "operatingSystem": "Web",
         "applicationCategory": "BusinessApplication",
-        "description": "Professional-grade commercial lease tracking and portfolio protection software.",
+        "description": "The simple commercial lease tracker and management software for landlords. Track rent increases, lease expirations, and critical dates.",
         "offers": {
             "@type": "Offer",
             "price": "0",
             "priceCurrency": "USD",
-            "description": "3 leases free forever",
+            "description": "Start free (3 leases included)"
         },
         "featureList": [
+            "Commercial Lease Tracker",
+            "Lease Management Software",
             "Automated Rent Increase Alerts",
-            "CPI Index Tracking",
-            "Portfolio Safety Net",
-            "SMS Reminders"
+            "Critical Date Reminders"
         ],
         "author": {
             "@type": "Organization",

@@ -225,6 +225,9 @@ export function LeaseNoticePDF({ lease, type }: LeaseNoticePDFProps) {
                 {/* FOOTER */}
                 <View style={styles.footer}>
                     <Text>Professional Portfolio Management • Secured by RentClock</Text>
+                    <Text style={{ marginTop: 5, fontSize: 7, color: "#cbd5e1" }}>
+                        DISCLAIMER: This report is for informational purposes only and does not constitute legal or financial advice. Please verify dates against your original lease agreement.
+                    </Text>
                 </View>
             </Page>
         </Document>

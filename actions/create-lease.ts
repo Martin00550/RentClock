@@ -18,6 +18,7 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
     }
 
     // 1. Fetch User Status & Lease Count
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let { data: userProfile, error: profileError } = await supabaseAdmin
         .from("users")
         .select("is_pro")

@@ -11,14 +11,14 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "RentClock | Portfolio Safety Net",
-  description: "Professional-grade commercial lease tracking. Automated alerts for rent increases and expirations to protect your portfolio revenue.",
+  title: "RentClock | Commercial Lease Tracker & Management Software",
+  description: "Track lease expirations, rent increases, and critical dates. The simple lease management software for commercial landlords. Start free.",
   metadataBase: new URL("https://rentclock.online"),
-  keywords: ["commercial real estate", "lease tracking", "rent increase", "landlord software", "portfolio protection"],
+  keywords: ["lease tracker", "commercial lease tracker", "lease management software", "commercial real estate software", "rent increase tracker", "lease administration", "landlord software"],
   authors: [{ name: "RentClock Team" }],
   openGraph: {
-    title: "RentClock | Portfolio Safety Net",
-    description: "Never miss a commercial rent increase again. The 'silent alarm' for your lease portfolio.",
+    title: "RentClock | Commercial Lease Tracker & Management Software",
+    description: "Track lease expirations and rent increases. The simple lease management software for commercial landlords.",
     url: "https://rentclock.online",
     siteName: "RentClock",
     locale: "en_US",
@@ -28,14 +28,14 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "RentClock - Portfolio Safety Net",
+        alt: "RentClock - Commercial Lease Tracker",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "RentClock | Portfolio Safety Net",
-    description: "The professional's vault for commercial lease management.",
+    title: "RentClock | Commercial Lease Tracker",
+    description: "The simple lease management software for commercial landlords.",
     images: ["/og-image.png"],
   },
   manifest: "/manifest.json",

@@ -13,6 +13,10 @@ export function FaqSection() {
 
                 <div className="space-y-4">
                     <FaqItem
+                        question="Is RentClock a full lease management software?"
+                        answer="Yes. RentClock is a specialized commercial lease tracker and management software designed for simplicity. It handles the core duties of a lease administrator—tracking critical dates, rent steps, and document storage—without the bloat of enterprise systems."
+                    />
+                    <FaqItem
                         question="Where is my data stored and who can see it?"
                         answer="All lease documents are held in a private, encrypted vault. RentClock uses industry-standard 256-bit encryption for every file. Your data is isolated at the database level, meaning it is never used for training AI models or shared with third parties. You maintain 100% ownership."
                     />
