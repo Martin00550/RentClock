@@ -85,7 +85,7 @@ export default function LeaseTrackingSoftwarePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900">Document Abstraction</h3>
                                 <p className="text-slate-600 leading-relaxed">
-                                    Upload a PDF and let our system find the dates for you. It's the fastest way to get your portfolio out of filing cabinets and into a secure digital system.
+                                    Upload a PDF and let our system find the dates for you. It&apos;s the fastest way to get your portfolio out of filing cabinets and into a secure digital system.
                                 </p>
                             </div>
                         </div>

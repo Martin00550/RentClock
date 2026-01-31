@@ -28,7 +28,7 @@ export default function UltimateGuidePost() {
                         The Ultimate Guide to Commercial Lease Tracking
                     </h1>
                     <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
-                        Why "set it and forget it" costs commercial landlords millions—and the systems you need to stop it.
+                        Why &quot;set it and forget it&quot; costs commercial landlords millions—and the systems you need to stop it.
                     </p>
                     <div className="mt-8 flex items-center justify-center gap-4 text-sm font-bold text-slate-400">
                         <span>Updated Jan 2026</span>
@@ -45,9 +45,9 @@ export default function UltimateGuidePost() {
                         If you own a commercial property, your lease isn&apos;t just a document. It&apos;s a roadmap of future revenue. But if you bury that roadmap in a filing cabinet, you wil miss the turns.
                     </p>
 
-                    <h2 className="text-3xl font-black text-slate-900 mt-16 mb-6">The "Invisible Bleed" in CRE</h2>
+                    <h2 className="text-3xl font-black text-slate-900 mt-16 mb-6">The &quot;Invisible Bleed&quot; in CRE</h2>
                     <p>
-                        Most landlords focus on big vacancies. But the real killer of portfolio value is what we call the "Invisible Bleed"—small, missed dates that compound over time.
+                        Most landlords focus on big vacancies. But the real killer of portfolio value is what we call the &quot;Invisible Bleed&quot;—small, missed dates that compound over time.
                     </p>
                     <ul className="space-y-4 my-8 list-none pl-0">
                         <li className="flex gap-4 p-6 bg-rose-50 rounded-xl border border-rose-100">
@@ -75,7 +75,7 @@ export default function UltimateGuidePost() {
                             <div className="bg-emerald-100 p-2 rounded-lg"><FileSpreadsheet className="h-6 w-6 text-emerald-700" /></div>
                             <h3 className="text-2xl font-bold text-slate-900 m-0">Method 1: The Spreadsheet</h3>
                         </div>
-                        <p>The default choice. You create columns for "Tenant", "Expiration Date", and "Current Rent".</p>
+                        <p>The default choice. You create columns for &quot;Tenant&quot;, &quot;Expiration Date&quot;, and &quot;Current Rent&quot;.</p>
                         <div className="grid md:grid-cols-2 gap-8 mt-6">
                             <div>
                                 <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wide mb-2">Pros</h4>
@@ -100,7 +100,7 @@ export default function UltimateGuidePost() {
                             <div className="bg-blue-100 p-2 rounded-lg"><Calendar className="h-6 w-6 text-blue-700" /></div>
                             <h3 className="text-2xl font-bold text-slate-900 m-0">Method 2: Outlook/Google Calendar</h3>
                         </div>
-                        <p>Setting "all day events" for lease expirations.</p>
+                        <p>Setting &quot;all day events&quot; for lease expirations.</p>
                         <div className="grid md:grid-cols-2 gap-8 mt-6">
                             <div>
                                 <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wide mb-2">Pros</h4>

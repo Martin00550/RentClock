@@ -20,7 +20,7 @@ export default function BlogIndexPage() {
                     <span className="text-xs font-bold uppercase tracking-wider">RentClock Resources</span>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
-                    The Commercial Landlord's Playbook
+                    The Commercial Landlord&apos;s Playbook
                 </h1>
                 <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
                     Strategies to protect your revenue, manage lease critical dates, and avoid costly administration errors.
