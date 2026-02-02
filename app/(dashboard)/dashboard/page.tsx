@@ -1,5 +1,7 @@
 import { DashboardStats } from "@/components/dashboard/stats";
 import { ImminentCriticalDates } from "@/components/dashboard/critical-dates";
+import { ReferralCTA } from "@/components/dashboard/referral-cta";
+import { ReferralClaimer } from "@/components/dashboard/referral-claimer";
 import { Button } from "@/components/ui/button";
 import { Plus, TrendingUp, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -19,25 +21,39 @@ export default async function DashboardPage() {
         console.error("CRITICAL: Supabase environment variables are missing!");
     }
 
-    // Fetch leases for the current user (using admin client to bypass RLS)
-    const { data: leases, error } = await supabaseAdmin
-        .from("leases")
-        .select("*")
-        .eq("user_id", userId);
+    // Parallel Fetching: Leases + User Profile
+    const [leasesRes, profileRes] = await Promise.all([
+        supabaseAdmin.from("leases").select("*").eq("user_id", userId),
+        supabaseAdmin.from("users").select("referral_code, bonus_leases, is_pro").eq("id", userId).single()
+    ]);
 
-    if (error) {
-        console.error("Error fetching leases:", {
-            message: error.message,
-            details: error.details,
-            hint: error.hint,
-            code: error.code
-        });
+    const leases = (leasesRes.data as Lease[]) || [];
+    const userProfile = profileRes.data;
+
+    // JIT Referral Code Generation
+    let referralCode = userProfile?.referral_code;
+    if (userProfile && !referralCode) {
+        // Generate a simple unique code: RC-[RANDOM]
+        const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
+        referralCode = `RC-${randomPart}`;
+
+        // Update DB
+        const { error: updateError } = await supabaseAdmin
+            .from("users")
+            .update({ referral_code: referralCode })
+            .eq("id", userId);
+
+        if (updateError) {
+            console.error("Failed to generate referral code", updateError);
+        }
     }
 
-    const typedLeases = (leases as Lease[]) || [];
+    const isPro = userProfile?.is_pro || false;
+    const bonusLeases = userProfile?.bonus_leases || 0;
 
     return (
         <div className="flex flex-col gap-10">
+            <ReferralClaimer />
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="space-y-1">
                     <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Portfolio Safety Net</h1>
@@ -79,9 +95,18 @@ export default async function DashboardPage() {
                 </div>
             </div>
 
-            <DashboardStats leases={typedLeases} />
+            <DashboardStats leases={leases} />
 
-            <ImminentCriticalDates leases={typedLeases} />
+            {/* REFERRAL SYSTEM */}
+            {referralCode && (
+                <ReferralCTA
+                    referralCode={referralCode}
+                    isPro={isPro}
+                    bonusLeases={bonusLeases}
+                />
+            )}
+
+            <ImminentCriticalDates leases={leases} />
         </div>
     );
 }

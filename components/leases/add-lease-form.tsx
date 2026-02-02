@@ -37,9 +37,10 @@ import { addYears } from "date-fns";
 interface AddLeaseFormProps {
     leaseCount?: number;
     isPro?: boolean;
+    bonusLeases?: number;
 }
 
-export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProps) {
+export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }: AddLeaseFormProps) {
     const { user } = useUser();
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false);
@@ -246,7 +247,8 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
         }
     };
 
-    const limitReached = !isPro && leaseCount >= 3;
+    const limit = 3 + bonusLeases;
+    const limitReached = !isPro && leaseCount >= limit;
 
     if (limitReached) {
         return (
@@ -256,7 +258,9 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
                 </div>
                 <h2 className="text-3xl font-black text-slate-900 tracking-tight">Lease Limit Reached</h2>
                 <p className="text-slate-500 text-lg max-w-md mx-auto leading-relaxed">
-                    You&apos;ve reached the <span className="font-bold text-slate-900">3-lease limit</span> of the Free plan. Upgrade to Pro for unlimited properties, SMS alerts, and calendar sync.
+                    You&apos;ve reached the <span className="font-bold text-slate-900">{limit}-lease limit</span> of your expanded Free plan.
+                    {bonusLeases > 0 && <span className="block text-emerald-600 font-bold text-sm mt-1">(Includes +{bonusLeases} Bonus Slots)</span>}
+                    Upgrade to Pro for unlimited properties, SMS alerts, and calendar sync.
                 </p>
                 <div className="flex flex-col gap-3 pt-4">
                     <Link href="/settings">
@@ -666,7 +670,10 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
                                             <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
                                                 <Mail className="h-4 w-4 text-[#1e3a5f]" />
                                             </div>
-                                            <span className="text-sm font-bold text-slate-700">7-day Email</span>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-bold text-slate-700 leading-none">7-day</span>
+                                                <span className="text-sm font-bold text-slate-700 leading-none">Email</span>
+                                            </div>
                                         </div>
                                         <Switch
                                             checked={reminder7DaysEmail}
@@ -685,7 +692,10 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false }: AddLeaseFormProp
                                             <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
                                                 <MessageSquare className="h-4 w-4 text-[#1e3a5f]" />
                                             </div>
-                                            <span className="text-sm font-bold text-slate-700">7-day SMS</span>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-bold text-slate-700 leading-none">7-day</span>
+                                                <span className="text-sm font-bold text-slate-700 leading-none">SMS</span>
+                                            </div>
                                         </div>
                                         <Switch
                                             checked={reminder7DaysSMS}

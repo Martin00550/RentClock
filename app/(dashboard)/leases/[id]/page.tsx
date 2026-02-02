@@ -111,7 +111,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <LeaseSplitView pdfUrl={lease.pdf_url || ""}>
+            <LeaseSplitView pdfUrl={lease.pdf_url || ""} leaseId={lease.id}>
                 <div className="flex flex-col gap-10">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -272,7 +272,9 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                                                     className="h-12 px-6 rounded-2xl font-bold border-2"
                                                                 />
                                                             )}
-                                                            <NoticeButton lease={lease} type={nextEventName === "Rent Increase" ? "rent-increase" : "renewal"} />
+                                                            {isPro && (
+                                                                <NoticeButton lease={lease} type={nextEventName === "Rent Increase" ? "rent-increase" : "renewal"} />
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>

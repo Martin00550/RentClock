@@ -33,4 +33,30 @@ export interface UserProfile {
     has_onboarded: boolean;
     calendar_token?: string;
     created_at: string;
+    bonus_leases?: number;
+    referral_code?: string;
+    referred_by?: string;
+}
+
+export interface ScanLog {
+    id: string;
+    user_id: string;
+    file_name: string;
+    status: 'success' | 'failed';
+    duration_ms: number;
+    error_message?: string;
+    created_at: string;
+}
+
+export interface SystemSetting {
+    key: string;
+    value: string;
+    is_active: boolean;
+}
+
+export interface ReferralLog {
+    id: string;
+    email: string;
+    referred_by: string;
+    created_at: string;
 }

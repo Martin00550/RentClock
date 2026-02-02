@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher([
     "/dashboard(.*)",
@@ -12,6 +13,22 @@ const isProtectedRoute = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req) => {
     if (isProtectedRoute(req)) await auth.protect();
+
+    // Referral Capture Logic
+    const url = req.nextUrl;
+    const refCode = url.searchParams.get("ref");
+
+    if (refCode) {
+        const response = NextResponse.next();
+        // Set cookie for 30 days
+        response.cookies.set("rentclock_ref", refCode, {
+            path: "/",
+            maxAge: 60 * 60 * 24 * 30, // 30 days
+            httpOnly: false, // Accessible to client if needed, but we use server
+            sameSite: "lax"
+        });
+        return response;
+    }
 });
 
 export const config = {

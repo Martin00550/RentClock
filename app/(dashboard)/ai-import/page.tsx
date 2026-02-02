@@ -10,15 +10,16 @@ export default async function AIImportPage() {
     // Fetch lease count and user pro status
     const [leasesRes, userRes] = await Promise.all([
         supabaseAdmin.from("leases").select("id", { count: "exact", head: true }).eq("user_id", userId),
-        supabaseAdmin.from("users").select("is_pro").eq("id", userId).single()
+        supabaseAdmin.from("users").select("is_pro, bonus_leases").eq("id", userId).single()
     ]);
 
     const leaseCount = leasesRes.count || 0;
     const isPro = userRes.data?.is_pro || false;
+    const bonusLeases = userRes.data?.bonus_leases || 0;
 
     return (
         <div className="mx-auto max-w-5xl">
-            <AddLeaseForm leaseCount={leaseCount} isPro={isPro} />
+            <AddLeaseForm leaseCount={leaseCount} isPro={isPro} bonusLeases={bonusLeases} />
         </div>
     );
 }

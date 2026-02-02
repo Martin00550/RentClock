@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import NextTopLoader from 'nextjs-toploader';
 import { StructuredData } from "@/components/landing/structured-data";
+import { BroadcastBanner } from "@/components/dashboard/broadcast-banner";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -65,6 +66,7 @@ export default function RootLayout({
         </head>
         <body className={`${manrope.variable} font-sans antialiased`} suppressHydrationWarning>
           <NextTopLoader color="#d4a853" showSpinner={false} />
+          <BroadcastBanner />
           {children}
         </body>
       </html>

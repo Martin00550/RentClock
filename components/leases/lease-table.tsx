@@ -137,7 +137,7 @@ export function LeaseTable({ leases }: { leases: Lease[] }) {
                                                 <ActionMenu lease={lease} />
                                                 <Link href={`/leases/${lease.id}`}>
                                                     <Button variant="ghost" size="sm" className="text-[#1e3a5f] hover:bg-[#1e3a5f]/10 font-bold text-[10px] tracking-tight uppercase px-3 h-8 border border-[#1e3a5f]/20">
-                                                        Manage
+                                                        Open Lease
                                                     </Button>
                                                 </Link>
                                             </div>

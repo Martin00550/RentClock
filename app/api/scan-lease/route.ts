@@ -32,13 +32,22 @@ export const dynamic = 'force-dynamic';
 import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
+    const startTime = Date.now();
+    let logStatus = "failed";
+    let logError = "";
+    let fileName = "unknown";
+    let userId = "";
+
     try {
-        const { userId } = await auth();
-        if (!userId) {
+        const { userId: authUserId } = await auth();
+        if (!authUserId) {
+            logError = "Unauthorized";
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
+        userId = authUserId;
 
         if (!process.env.GEMINI_API_KEY) {
+            logError = "Server configuration error";
             return NextResponse.json(
                 { error: "Server configuration error" },
                 { status: 500 }
@@ -46,23 +55,23 @@ export async function POST(req: NextRequest) {
         }
 
         // --- RATE LIMITING ---
-        const ip = req.headers.get("x-forwarded-for") || "unknown";
-        const limitCheck = await checkRateLimit(userId, 20, 3600); // Limit by UserID, not IP
-
+        const limitCheck = await checkRateLimit(userId, 20, 3600); // Limit by UserID
         if (!limitCheck.success) {
+            logError = "Hourly scan limit reached";
             return NextResponse.json(
                 { error: "Hourly scan limit reached." },
                 { status: 429 }
             );
         }
-        // ---------------------
 
         const formData = await req.formData();
         const file = formData.get("file") as File;
 
         if (!file) {
+            logError = "No file provided";
             return NextResponse.json({ error: "No file provided" }, { status: 400 });
         }
+        fileName = file.name;
 
         // Convert file to buffer
         const arrayBuffer = await file.arrayBuffer();
@@ -71,23 +80,18 @@ export async function POST(req: NextRequest) {
 
         // Initialize Gemini
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-        // Try models in order of preference
         const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash-latest"];
 
         let result = null;
         let usedModel = "";
         let lastError = null;
-
         const isMultimodal = ["application/pdf", "image/png", "image/jpeg", "image/webp"].includes(mimeType);
 
         for (const modelName of modelsToTry) {
             try {
                 const model = genAI.getGenerativeModel({
                     model: modelName,
-                    generationConfig: {
-                        temperature: 0,
-                    }
+                    generationConfig: { temperature: 0 }
                 });
 
                 const prompt = `
@@ -113,12 +117,7 @@ export async function POST(req: NextRequest) {
                 if (isMultimodal) {
                     result = await model.generateContent([
                         prompt,
-                        {
-                            inlineData: {
-                                data: buffer.toString("base64"),
-                                mimeType: mimeType
-                            }
-                        }
+                        { inlineData: { data: buffer.toString("base64"), mimeType: mimeType } }
                     ]);
                 } else {
                     result = await model.generateContent(`${prompt}\n\nDocument Context:\n${buffer.toString("utf-8")}`);
@@ -146,7 +145,6 @@ export async function POST(req: NextRequest) {
             const parsed = LeaseSchema.safeParse(rawData);
 
             if (!parsed.success) {
-                // Attempt to salvage partially correct data
                 if (rawData.tenant_name && rawData.monthly_rent) {
                     data = rawData;
                 } else {
@@ -156,21 +154,18 @@ export async function POST(req: NextRequest) {
                 data = parsed.data;
             }
         } catch (jsonError) {
-            return NextResponse.json(
-                { error: "AI response was not valid JSON." },
-                { status: 500 }
-            );
+            logError = "AI returned invalid JSON";
+            throw new Error("AI returned invalid JSON");
         }
 
         // --- PERSIST DOCUMENT TO STORAGE ---
-        // Save to user-specific path: {userId}/{uuid}.{ext}
         const extension = mimeType.split("/")[1] || "pdf";
-        const fileName = `${userId}/${uuidv4()}.${extension}`;
+        const storageFileName = `${userId}/${uuidv4()}.${extension}`;
 
         const { error: uploadError } = await supabaseAdmin
             .storage
             .from("leases-pdf")
-            .upload(fileName, buffer, {
+            .upload(storageFileName, buffer, {
                 contentType: mimeType,
                 cacheControl: "3600",
                 upsert: false
@@ -181,16 +176,43 @@ export async function POST(req: NextRequest) {
             const { data: publicUrlData } = supabaseAdmin
                 .storage
                 .from("leases-pdf")
-                .getPublicUrl(fileName);
+                .getPublicUrl(storageFileName);
             pdfUrl = publicUrlData.publicUrl;
         }
-        // ------------------------------
+
+        // --- SUCCESS LOGGING ---
+        logStatus = "success";
+        const duration = Date.now() - startTime;
+
+        // Fire and forget log
+        if (userId) {
+            supabaseAdmin.from("scan_logs").insert({
+                user_id: userId,
+                file_name: fileName,
+                status: "success",
+                duration_ms: duration,
+                token_usage: 0
+            }).then();
+        }
 
         return NextResponse.json({ success: true, data, used_model: usedModel, pdf_url: pdfUrl });
 
     } catch (error: unknown) {
         console.error("Scan error:", error);
         const errorMessage = error instanceof Error ? error.message : "Failed to process lease";
+
+        // --- ERROR LOGGING ---
+        const duration = Date.now() - startTime;
+        if (userId) {
+            supabaseAdmin.from("scan_logs").insert({
+                user_id: userId,
+                file_name: fileName,
+                status: "failed",
+                duration_ms: duration,
+                error_message: logError || errorMessage
+            }).then();
+        }
+
         return NextResponse.json(
             { error: errorMessage },
             { status: 500 }

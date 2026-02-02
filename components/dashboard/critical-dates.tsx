@@ -125,7 +125,7 @@ export function ImminentCriticalDates({ leases }: { leases: Lease[] }) {
                                         </div>
                                         <Link href={`/leases/${lease.id}`}>
                                             <Button size="sm" className="bg-[#1e3a5f]/10 text-[#1e3a5f] hover:bg-[#1e3a5f]/20 font-black text-[10px] tracking-tight uppercase border border-[#1e3a5f]/20 h-8 rounded-lg">
-                                                Manage
+                                                {lease.computedStatus === "urgent" ? "Resolve" : "Review"}
                                             </Button>
                                         </Link>
                                     </div>

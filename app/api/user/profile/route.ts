@@ -1,18 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { v4 as uuidv4 } from "uuid";
 
 export async function GET() {
     const { userId } = await auth();
+    const user = await currentUser();
 
     if (!userId) {
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    // Sync Email to DB (for Admin Search)
+    const email = user?.emailAddresses.find(e => e.id === user.primaryEmailAddressId)?.emailAddress;
+    if (email) {
+        // Fire and forget update
+        supabaseAdmin.from("users").update({ email }).eq("id", userId).then();
+    }
+
     const { data, error } = await supabaseAdmin
         .from("users")
-        .select("has_onboarded, calendar_token, is_pro, phone, email_notifications_enabled, paddle_customer_id, paddle_subscription_id")
+        .select("has_onboarded, calendar_token, is_pro, phone, email_notifications_enabled, paddle_customer_id, paddle_subscription_id, bonus_leases, referral_code, referred_by")
         .eq("id", userId)
         .single();
 
@@ -41,7 +49,9 @@ export async function GET() {
         phone: data?.phone || "",
         email_notifications_enabled: data?.email_notifications_enabled ?? true,
         paddle_customer_id: data?.paddle_customer_id || null,
-        paddle_subscription_id: data?.paddle_subscription_id || null
+        paddle_subscription_id: data?.paddle_subscription_id || null,
+        bonus_leases: data?.bonus_leases || 0,
+        referral_code: data?.referral_code || null
     });
 }
 

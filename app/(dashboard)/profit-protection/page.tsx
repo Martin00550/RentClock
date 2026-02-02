@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { TrendingUp, AlertCircle, ArrowRight, DollarSign, BarChart3, Lock } from "lucide-react";
+import { TrendingUp, AlertCircle, ArrowRight, DollarSign, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
@@ -8,8 +8,6 @@ import { formatCurrency, calculateRevenueImpact } from "@/lib/lease-utils";
 import { CpiCalculator } from "@/components/leases/cpi-calculator";
 import { Lease } from "@/lib/types";
 import { ActionMenu } from "@/components/leases/action-menu";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 export default async function ProfitProtectionPage() {
     const { userId } = await auth();
@@ -18,13 +16,7 @@ export default async function ProfitProtectionPage() {
         redirect("/sign-in");
     }
 
-    const { data: userProfile, error: profileError } = await supabaseAdmin
-        .from("users")
-        .select("is_pro")
-        .eq("id", userId)
-        .single();
 
-    const isPro = userProfile?.is_pro || false;
 
     const { data: leases, error } = await supabaseAdmin
         .from("leases")
@@ -124,11 +116,10 @@ export default async function ProfitProtectionPage() {
                                 <p className="text-slate-500 mb-6">Our automated system monitors this 24/7. &quot;Set it and forget it&quot; peace of mind.</p>
                             </Card>
                         ) : leasesWithOpportunity.length > 0 ? (
-                            leasesWithOpportunity.map((lease, idx) => {
+                            leasesWithOpportunity.map((lease) => {
                                 const impact = calculateRevenueImpact(lease);
                                 // For Free users, only show the first one clearly (as a "teaser") if you wanted, 
                                 // OR blur everything. Let's blur everything for maximum upgrade pressure.
-                                const isBlur = !isPro;
 
                                 return (
                                     <div key={lease.id} className="relative group">
