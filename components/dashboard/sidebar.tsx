@@ -17,6 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { useSidebar } from "./sidebar-context";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
 
 const NAV_ITEMS = [
     { name: "Command Center", href: "/dashboard", icon: BarChart3, color: "text-blue-500" },
@@ -98,6 +99,10 @@ export function Sidebar() {
             </nav>
 
             <div className={cn("mt-auto p-4 border-t border-slate-800/50", isCollapsed ? "p-2" : "")}>
+
+                {/* TUTORIAL RESTART BUTTON */}
+                <RestartTourButton isCollapsed={isCollapsed} />
+
                 <div className={cn(
                     "flex items-center gap-3 px-2 py-3 rounded-xl transition-all group",
                     !isCollapsed ? "hover:bg-slate-800/50" : "justify-center"
@@ -119,5 +124,32 @@ export function Sidebar() {
                 </div>
             </div>
         </div>
+    );
+}
+
+function RestartTourButton({ isCollapsed }: { isCollapsed: boolean }) {
+    const pathname = usePathname();
+    const { startTour } = useTutorial();
+
+    // Determine current tour
+    let currentTourId = "";
+    if (pathname === "/dashboard" || pathname === "/") currentTourId = "home";
+    else if (pathname === "/leases") currentTourId = "leases";
+    else if (pathname === "/profit-protection") currentTourId = "profit";
+
+    if (!currentTourId) return null;
+
+    return (
+        <button
+            onClick={() => startTour(currentTourId)}
+            className={cn(
+                "mb-4 w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all border border-slate-700/50 bg-slate-800/20 hover:bg-slate-800 hover:border-slate-600 text-slate-400 hover:text-white group",
+                isCollapsed ? "justify-center px-0 h-10 w-10 mx-auto" : ""
+            )}
+            title="Restart Page Guide"
+        >
+            <Sparkles className={cn("h-4 w-4 text-emerald-500", isCollapsed ? "" : "mr-0")} />
+            {!isCollapsed && <span className="text-xs font-bold">Restart Guide</span>}
+        </button>
     );
 }

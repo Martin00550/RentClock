@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { Lease } from "@/lib/types";
 import { format } from "date-fns";
-import { formatCurrency } from "@/lib/lease-utils";
 
 interface ExportLeasesButtonProps {
     leases: Lease[];

@@ -1,5 +1,4 @@
-/* eslint-disable jsx-a11y/alt-text */
-import { Document, Page, Text, View, StyleSheet, Font, Image } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import { format } from "date-fns";
 import { Lease } from "@/lib/types";
 import { formatCurrency } from "@/lib/lease-utils";

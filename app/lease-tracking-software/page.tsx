@@ -1,6 +1,5 @@
 
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SignUpTrigger } from "@/components/landing/signup-trigger";
 import { CheckCircle2, TrendingDown, Clock, FileText } from "lucide-react";

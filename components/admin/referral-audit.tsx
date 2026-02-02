@@ -5,7 +5,6 @@ import { Users, Info } from "lucide-react";
 import { useEffect, useState } from "react";
 // We'll fetch this client side for simplicity or could be server component
 // Let's make it client side to auto-refresh or simple fetch
-import { supabase } from "@/lib/supabase"; // Use client client if public? 
 // Wait, admin needs admin client. Better to use a server action to fetch this data.
 // Let's add 'getReferralAudit' to admin-actions.
 

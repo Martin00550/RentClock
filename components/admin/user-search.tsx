@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Shield, Gift, Loader2, CheckCircle, Smartphone, Calendar, CreditCard } from "lucide-react";
+import { Search, Shield, Gift, Loader2, CheckCircle, Smartphone } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { UserProfile } from "@/lib/types"; // Make sure types are exported
 import { Separator } from "@/components/ui/separator";
@@ -34,7 +34,7 @@ export function AdminUserSearch() {
             } else {
                 setResult(res.user);
             }
-        } catch (err) {
+        } catch {
             setError("Search failed");
         } finally {
             setIsLoading(false);
@@ -53,7 +53,7 @@ export function AdminUserSearch() {
             } else {
                 setError(res.error || "Failed");
             }
-        } catch (err) {
+        } catch {
             setError("Action failed");
         }
     };
@@ -70,7 +70,7 @@ export function AdminUserSearch() {
             } else {
                 setError(res.error || "Failed");
             }
-        } catch (err) {
+        } catch {
             setError("Action failed");
         }
     };

@@ -17,50 +17,12 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
         return { error: "Unauthorized" };
     }
 
-    // 1. Fetch User Status & Lease Count
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let { data: userProfile, error: profileError } = await supabaseAdmin
-        .from("users")
-        .select("is_pro")
-        .eq("id", userId)
-        .single();
+    // 1. Fetch User Status & Lease Count (with JIT creation)
+    const { getOrCreateUserProfile } = await import("@/lib/auth-service");
+    const { user: userProfile, error: userError } = await getOrCreateUserProfile(userId);
 
-    // JIT User Creation (Self-healing)
-    if (!userProfile) {
-        try {
-            const { currentUser } = await import("@clerk/nextjs/server");
-            const clerkUser = await currentUser();
-
-            if (clerkUser) {
-                const email = clerkUser.emailAddresses[0]?.emailAddress || "";
-
-                const { error: createError } = await supabaseAdmin
-                    .from("users")
-                    .insert({
-                        id: userId,
-                        email: email,
-                        is_pro: false,
-                        created_at: new Date().toISOString()
-                    });
-
-                if (!createError) {
-                    userProfile = { is_pro: false }; // success
-                } else {
-                    console.error("Failed to auto-create user:", createError);
-                }
-            }
-        } catch (err) {
-            console.error("JIT user creation failed:", err);
-        }
-    }
-
-    if (!userProfile) {
-        // Double check if it was a real connection error or just missing
-        if (profileError && profileError.code !== "PGRST116") {
-            return { error: "Failed to fetch user profile" };
-        }
-        // If still missing after JIT attempt, we can't proceed due to FK constraints usually
-        return { error: "User account not fully synchronized. Please try again in a moment." };
+    if (userError || !userProfile) {
+        return { error: userError || "Failed to fetch user profile" };
     }
 
     const { count, error: countError } = await supabaseAdmin
@@ -80,17 +42,18 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
         return { error: "Lease limit reached. Upgrade to Pro to add more properties." };
     }
 
-    // 3. Parse Data
-    // We expect the client to pass raw values, we'll sanitize slightly here
+    // 3. Parse Data with Zod
+    const { LeaseSchema } = await import("@/lib/schemas");
+
+    // Convert FormData to object for Zod
     const rawData = {
-        tenant_name: formData.get("tenant_name") as string,
-        property_address: formData.get("property_address") as string,
-        monthly_rent: parseFloat(formData.get("monthly_rent") as string) || null,
-        rent_increase_amount: parseFloat(formData.get("rent_increase_amount") as string) || null,
-        lease_start_date: formData.get("lease_start_date") as string || null,
-        lease_end_date: formData.get("lease_end_date") as string || null,
-        rent_increase_date: formData.get("rent_increase_date") as string || null,
-        notice_period_days: 60, // Default fixed for now
+        tenant_name: formData.get("tenant_name"),
+        property_address: formData.get("property_address"),
+        monthly_rent: formData.get("monthly_rent"),
+        rent_increase_amount: formData.get("rent_increase_amount"),
+        lease_start_date: formData.get("lease_start_date") || null,
+        lease_end_date: formData.get("lease_end_date") || null,
+        rent_increase_date: formData.get("rent_increase_date") || null,
         reminder_90_days_email: formData.get("reminder_90_days_email") === "true",
         reminder_60_days_email: formData.get("reminder_60_days_email") === "true",
         reminder_30_days_email: formData.get("reminder_30_days_email") === "true",
@@ -99,15 +62,24 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
         reminder_60_days_sms: formData.get("reminder_60_days_sms") === "true",
         reminder_30_days_sms: formData.get("reminder_30_days_sms") === "true",
         reminder_7_days_sms: formData.get("reminder_7_days_sms") === "true",
-        pdf_url: formData.get("pdf_url") as string || null,
+        pdf_url: formData.get("pdf_url") || null,
     };
+
+    const parsed = LeaseSchema.safeParse(rawData);
+
+    if (!parsed.success) {
+        console.error("Validation failed:", parsed.error.format());
+        return { error: "Invalid lease data. Please check expected fields." };
+    }
+
+    const leaseData = parsed.data;
 
     // 4. Insert Lease
     const { error: insertError } = await supabaseAdmin
         .from("leases")
         .insert({
             user_id: userId,
-            ...rawData
+            ...leaseData
         });
 
     if (insertError) {

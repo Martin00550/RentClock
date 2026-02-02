@@ -7,7 +7,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useUser } from "@clerk/nextjs";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { initializePaddle, Paddle } from "@paddle/paddle-js";
 import { useSearchParams } from "next/navigation";
 
@@ -25,7 +25,6 @@ export function BillingContent() {
     const [isPro, setIsPro] = useState(false);
     const [leaseCount, setLeaseCount] = useState(0);
     const [paddle, setPaddle] = useState<Paddle>();
-    const [paddleCustomerId, setPaddleCustomerId] = useState<string | null>(null);
     const hasTriggeredAutoCheckout = useRef(false);
 
     // Modal states
@@ -52,6 +51,20 @@ export function BillingContent() {
         });
     }, []);
 
+    const handleCheckout = useCallback((priceId: string) => {
+        if (!paddle || !user) return;
+
+        paddle.Checkout.open({
+            items: [{ priceId, quantity: 1 }],
+            customer: {
+                email: user.primaryEmailAddress?.emailAddress || ""
+            },
+            customData: {
+                userId: user.id
+            }
+        });
+    }, [paddle, user]);
+
     // Handle Auto-Checkout from Landing Page
     useEffect(() => {
         const checkoutType = searchParams.get("checkout");
@@ -69,21 +82,9 @@ export function BillingContent() {
                 handleCheckout(priceId);
             }
         }
-    }, [paddle, user, isPro, searchParams]);
+    }, [paddle, user, isPro, searchParams, handleCheckout]);
 
-    const handleCheckout = (priceId: string) => {
-        if (!paddle || !user) return;
 
-        paddle.Checkout.open({
-            items: [{ priceId, quantity: 1 }],
-            customer: {
-                email: user.primaryEmailAddress?.emailAddress || ""
-            },
-            customData: {
-                userId: user.id
-            }
-        });
-    };
 
     // Update Payment Method - Opens Paddle Checkout with saved transaction
     const handleUpdatePayment = async () => {
@@ -168,7 +169,6 @@ export function BillingContent() {
                 if (profileRes.ok) {
                     const data = await profileRes.json();
                     setIsPro(data.is_pro || false);
-                    setPaddleCustomerId(data.paddle_customer_id || null);
                 }
 
                 // Fetch lease count

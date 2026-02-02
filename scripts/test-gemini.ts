@@ -19,9 +19,10 @@ async function test() {
         const result = await model.generateContent("Hello, are you there?");
         const response = await result.response;
         console.log("✅ Success! Response:", response.text());
-    } catch (error: any) {
-        console.error("❌ Failed:", error.message);
-        if (error.message.includes("404") || error.message.includes("not found")) {
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error("❌ Failed:", errorMessage);
+        if (errorMessage.includes("404") || errorMessage.includes("not found")) {
             console.log("\n⚠️  The model name seems incorrect or you do not have access to it.");
             console.log("Try 'gemini-2.0-flash-exp' or 'gemini-1.5-flash'");
         }

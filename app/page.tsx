@@ -1,18 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ProPricingCard } from "@/components/landing/pro-pricing-card";
 import { SignUpTrigger } from "@/components/landing/signup-trigger";
-import { SignInTrigger } from "@/components/landing/signin-trigger";
 import { FaqSection } from "@/components/landing/faq-section";
 import {
     CheckCircle2,
     TrendingDown,
     AlertTriangle,
     XCircle,
-    Upload,
     ShieldCheck,
     Lock
 } from "lucide-react";
@@ -206,7 +202,7 @@ export default function LandingPage() {
                                         </div>
                                         <h4 className="text-2xl font-black text-slate-900 mb-4 tracking-tight relative z-10">Stay Informed</h4>
                                         <p className="text-lg text-slate-600 leading-relaxed font-medium relative z-10">
-                                            Get <strong className="text-[#1e3a5f]">email, SMS, and calendar</strong> alerts 90, 60, and 30 days out. Your critical dates sync directly to Outlook or Google Calendar.
+                                            Get <strong className="text-[#1e3a5f]">email and SMS</strong> alerts 90, 60, 30, and 7 days out. Your critical dates sync directly to Outlook or Google Calendar.
                                             <strong className="text-[#1e3a5f] ml-1">Whether you&apos;re at the office or on the golf course</strong>, we help prevent missed revenue opportunities.
                                         </p>
                                     </div>

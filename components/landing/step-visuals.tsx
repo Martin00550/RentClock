@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Upload, CheckCircle2, Bell, Calendar, MousePointer2, ShieldCheck, MessageSquare, Mail, Phone } from "lucide-react";
+import { Upload, CheckCircle2, Bell } from "lucide-react";
 
 export const StepVisual1 = () => (
     <div className="relative group">

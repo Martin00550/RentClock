@@ -9,9 +9,16 @@ import { AdminReferralAudit } from "@/components/admin/referral-audit";
 import { AdminScanLogs } from "@/components/admin/scan-logs";
 import { AdminAuditor } from "@/components/admin/auditor";
 import { AdminMegaphone } from "@/components/admin/megaphone";
+import { ProductHealth } from "@/components/admin/product-health";
 
 // SECURITY: Allowlist
-const ALLOWED_EMAILS = ["support@rentclock.online"];
+// SECURITY: Allowlist from Environment Variable
+const ALLOWED_EMAILS = (process.env.ADMIN_EMAILS || "").split(",").map(e => e.trim()).filter(Boolean);
+
+// Fallback for development safety if env is missing (optional but good for dev)
+if (process.env.NODE_ENV === "development" && ALLOWED_EMAILS.length === 0) {
+    console.warn("⚠️ No ADMIN_EMAILS environment variable set. Admin access disabled.");
+}
 
 export default async function AdminPage() {
     const user = await currentUser();
@@ -40,10 +47,11 @@ export default async function AdminPage() {
     // 3. fetch all leases to filter active ones
     const { data: allLeases } = await supabaseAdmin
         .from("leases")
-        .select("monthly_rent, lease_end_date");
+        .select("monthly_rent, lease_end_date")
+        .returns<{ monthly_rent: number; lease_end_date: string | null }[]>();
 
     const today = new Date().toISOString().split("T")[0];
-    const typedLeases = (allLeases as unknown as { monthly_rent: number; lease_end_date: string | null }[]) || [];
+    const typedLeases = allLeases || [];
 
     // Filter for active leases (no end date or end date in future)
     const activeLeases = typedLeases.filter(lease => !lease.lease_end_date || lease.lease_end_date >= today);
@@ -111,10 +119,23 @@ export default async function AdminPage() {
                     </Card>
                 </div>
 
+                {/* POSTHOG LINK */}
+                <div className="flex justify-end -mt-4">
+                    <a
+                        href="https://us.posthog.com/project/settings"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 transition-colors"
+                    >
+                        View Live Traffic on PostHog &rarr;
+                    </a>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* USER MANAGEMENT */}
                     <div className="lg:col-span-2 space-y-8">
                         <AdminMegaphone />
+                        <ProductHealth />
                         <AdminUserSearch />
                         <AdminScanLogs />
                     </div>

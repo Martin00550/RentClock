@@ -33,7 +33,6 @@ import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
     const startTime = Date.now();
-    let logStatus = "failed";
     let logError = "";
     let fileName = "unknown";
     let userId = "";
@@ -153,7 +152,7 @@ export async function POST(req: NextRequest) {
             } else {
                 data = parsed.data;
             }
-        } catch (jsonError) {
+        } catch {
             logError = "AI returned invalid JSON";
             throw new Error("AI returned invalid JSON");
         }
@@ -181,7 +180,6 @@ export async function POST(req: NextRequest) {
         }
 
         // --- SUCCESS LOGGING ---
-        logStatus = "success";
         const duration = Date.now() - startTime;
 
         // Fire and forget log

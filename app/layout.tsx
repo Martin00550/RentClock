@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import NextTopLoader from 'nextjs-toploader';
 import { StructuredData } from "@/components/landing/structured-data";
 import { BroadcastBanner } from "@/components/dashboard/broadcast-banner";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -65,9 +66,11 @@ export default function RootLayout({
           <StructuredData />
         </head>
         <body className={`${manrope.variable} font-sans antialiased`} suppressHydrationWarning>
-          <NextTopLoader color="#d4a853" showSpinner={false} />
-          <BroadcastBanner />
-          {children}
+          <PostHogProvider>
+            <NextTopLoader color="#d4a853" showSpinner={false} />
+            <BroadcastBanner />
+            {children}
+          </PostHogProvider>
         </body>
       </html>
     </ClerkProvider>
