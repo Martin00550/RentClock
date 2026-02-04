@@ -5,6 +5,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { StructuredData } from "@/components/landing/structured-data";
 import { BroadcastBanner } from "@/components/dashboard/broadcast-banner";
 import { PostHogProvider } from "@/components/providers/posthog-provider";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -71,6 +72,7 @@ export default function RootLayout({
             <BroadcastBanner />
             {children}
           </PostHogProvider>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

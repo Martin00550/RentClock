@@ -1,11 +1,14 @@
 "use server";
 
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { logger } from "@/lib/logger";
+import { currentUser } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { revalidatePath } from "next/cache";
 
+import { APP_CONFIG } from "@/lib/config";
+
 // RE-VERIFY ADMIN ON ACTION (Double Lock)
-const ALLOWED_EMAILS = ["support@rentclock.online"];
+const ALLOWED_EMAILS = APP_CONFIG.ADMIN.ALLOWED_EMAILS;
 
 async function verifyAdmin() {
     const user = await currentUser();
@@ -13,7 +16,7 @@ async function verifyAdmin() {
 
     // Check primary email
     const email = user.emailAddresses.find(e => e.id === user.primaryEmailAddressId)?.emailAddress;
-    return !!(email && ALLOWED_EMAILS.includes(email));
+    return !!(email && (ALLOWED_EMAILS as readonly string[]).includes(email));
 }
 
 export async function searchUserByEmail(email: string) {
@@ -36,7 +39,7 @@ export async function searchUserByEmail(email: string) {
     if (error || !user) {
         // Fallback: Try searching Supabase if we synced it. 
         // If not found, return error.
-        console.error("User search error:", error);
+        logger.error("User search error", { error, email });
         return { error: "User not found in database." };
     }
 
@@ -94,7 +97,7 @@ export async function getReferralAudit() {
         .limit(50);
 
     if (error) {
-        console.error(error);
+        logger.error("Failed to fetch audit log", { error });
         return { error: "Failed to fetch audit log" };
     }
 
@@ -114,7 +117,10 @@ export async function getScanLogs() {
         .order("created_at", { ascending: false })
         .limit(50);
 
-    if (error) return { error: error.message };
+    if (error) {
+        logger.error("AI Scan log fetch error", { error });
+        return { error: error.message };
+    }
     return { logs };
 }
 
@@ -133,7 +139,10 @@ export async function auditorCheck() {
         .select("id, email, created_at, paddle_subscription_id, is_pro")
         .eq("is_pro", true);
 
-    if (error) return { error: error.message };
+    if (error) {
+        logger.error("Auditor check error", { error });
+        return { error: error.message };
+    }
 
     // Client-side filter or refined query:
     // "Suspicious" if they have NO subscription ID. (Manual Grant)

@@ -9,8 +9,12 @@ import { useUser } from "@clerk/nextjs";
 import { COUNTRY_CODES } from "@/lib/countries";
 import { Loader2, Smartphone, Calendar, ArrowRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { Label } from "@/components/ui/label"; export function OnboardingWizard() {
+import { Label } from "@/components/ui/label";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
+
+export function OnboardingWizard() {
     const { user, isLoaded } = useUser();
+    const { startTour, setHasOnboarded } = useTutorial();
     const [open, setOpen] = useState(false);
     const [step, setStep] = useState(1); // 1 = Phone, 2 = Calendar
     const [loading, setLoading] = useState(true);
@@ -41,6 +45,7 @@ import { Label } from "@/components/ui/label"; export function OnboardingWizard(
                 if (data.calendar_token) setCalendarToken(data.calendar_token);
 
                 // If has_onboarded is false and user is PRO, show wizard
+                // NOTE: TutorialProvider is also checking this and BLOCKING tutorials
                 if (!data.has_onboarded && data.is_pro) {
                     setOpen(true);
                 }
@@ -57,6 +62,8 @@ import { Label } from "@/components/ui/label"; export function OnboardingWizard(
     const completeOnboarding = async () => {
         setOpen(false);
         if (!user) return;
+
+        // 1. Tell Backend
         try {
             await fetch("/api/user/profile", {
                 method: "POST",
@@ -66,6 +73,15 @@ import { Label } from "@/components/ui/label"; export function OnboardingWizard(
         } catch (error) {
             console.error("Error completing onboarding:", error);
         }
+
+        // 2. Tell Frontend (TutorialProvider) to unblock status
+        setHasOnboarded(true);
+
+        // 3. Explicitly start the Home Tour immediately
+        // Small delay for dialog close animation
+        setTimeout(() => {
+            startTour("home");
+        }, 500);
     };
 
     const handleSavePhone = async () => {

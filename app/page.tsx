@@ -47,7 +47,7 @@ export default function LandingPage() {
                                 <CheckCircle2 className="h-4 w-4 text-[#d4a853]" />
                                 <span className="text-xs font-bold uppercase tracking-wider">First 3 Leases Free • No Credit Card</span>
                             </div>
-                            <h1 className="text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight text-slate-900">
+                            <h1 className="text-4xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight text-slate-900">
                                 A safety net your commercial portfolio is missing
                             </h1>
                             <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-xl">
@@ -221,42 +221,44 @@ export default function LandingPage() {
                         </div>
 
                         <div className="overflow-hidden rounded-3xl border border-slate-200 shadow-xl shadow-slate-900/5">
-                            <table className="w-full text-left border-collapse">
-                                <thead>
-                                    <tr className="bg-slate-50 border-b border-slate-200">
-                                        <th className="py-6 px-6 md:px-10 text-xs font-black uppercase tracking-widest text-slate-500 w-1/4">Aspect</th>
-                                        <th className="py-6 px-6 md:px-10 text-sm font-black uppercase tracking-widest text-[#1e3a5f] w-1/4 bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">RentClock</th>
-                                        <th className="py-6 px-6 md:px-10 text-xs font-black uppercase tracking-widest text-slate-500 w-1/4">Property Lawyer</th>
-                                        <th className="py-6 px-6 md:px-10 text-xs font-black uppercase tracking-widest text-slate-500 w-1/4">Excel Sheet</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white">
-                                    <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
-                                        <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Annual Cost</td>
-                                        <td className="py-6 px-6 md:px-10 font-black text-[#2d6a4f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10 text-lg">$468/yr</td>
-                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">~$4,800/yr (Est.)</td>
-                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">$0 (Financial)</td>
-                                    </tr>
-                                    <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
-                                        <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Setup Effort</td>
-                                        <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Automated</td>
-                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Days / Weeks</td>
-                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Manual Entry</td>
-                                    </tr>
-                                    <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
-                                        <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Missed Date Risk</td>
-                                        <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Automated Alerts</td>
-                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Low</td>
-                                        <td className="py-6 px-6 md:px-10 text-rose-600 font-bold">High (Human Error)</td>
-                                    </tr>
-                                    <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
-                                        <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Revenue Focus</td>
-                                        <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Profit Protection</td>
-                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Billing / Compliance</td>
-                                        <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">None</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse min-w-[600px]">
+                                    <thead>
+                                        <tr className="bg-slate-50 border-b border-slate-200">
+                                            <th className="py-6 px-6 md:px-10 text-xs font-black uppercase tracking-widest text-slate-500 w-1/4">Aspect</th>
+                                            <th className="py-6 px-6 md:px-10 text-sm font-black uppercase tracking-widest text-[#1e3a5f] w-1/4 bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">RentClock</th>
+                                            <th className="py-6 px-6 md:px-10 text-xs font-black uppercase tracking-widest text-slate-500 w-1/4">Property Lawyer</th>
+                                            <th className="py-6 px-6 md:px-10 text-xs font-black uppercase tracking-widest text-slate-500 w-1/4">Excel Sheet</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white">
+                                        <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                                            <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Annual Cost</td>
+                                            <td className="py-6 px-6 md:px-10 font-black text-[#2d6a4f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10 text-lg">$468/yr</td>
+                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">~$4,800/yr (Est.)</td>
+                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">$0 (Financial)</td>
+                                        </tr>
+                                        <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                                            <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Setup Effort</td>
+                                            <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Automated</td>
+                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Days / Weeks</td>
+                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Manual Entry</td>
+                                        </tr>
+                                        <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                                            <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Missed Date Risk</td>
+                                            <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Automated Alerts</td>
+                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Low</td>
+                                            <td className="py-6 px-6 md:px-10 text-rose-600 font-bold">High (Human Error)</td>
+                                        </tr>
+                                        <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                                            <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Revenue Focus</td>
+                                            <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Profit Protection</td>
+                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Billing / Compliance</td>
+                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">None</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </section>

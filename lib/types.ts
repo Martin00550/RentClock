@@ -36,6 +36,7 @@ export interface UserProfile {
     bonus_leases?: number;
     referral_code?: string;
     referred_by?: string;
+    seen_tutorials?: string[];
 }
 
 export interface ScanLog {

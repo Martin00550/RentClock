@@ -52,7 +52,7 @@ export default async function ProfitProtectionPage() {
             {/* PORTFOLIO HEALTH GRID */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* REVENUE AT RISK CARD - GATED */}
-                <Card className="rounded-[2rem] border-slate-200 shadow-sm bg-[#1e3a5f] text-white relative overflow-hidden group">
+                <Card id="profit-revenue-risk" className="rounded-[2rem] border-slate-200 shadow-sm bg-[#1e3a5f] text-white relative overflow-hidden group">
                     <CardContent className="p-8 flex flex-col gap-4 relative z-10">
                         <div className="bg-white/10 p-3 w-fit rounded-2xl">
                             <DollarSign className="h-6 w-6 text-white" />
@@ -166,7 +166,7 @@ export default async function ProfitProtectionPage() {
                 </div>
 
                 {/* GLOBAL CALCULATOR */}
-                <div className="lg:col-span-5 flex flex-col gap-6">
+                <div className="lg:col-span-5 flex flex-col gap-6" id="profit-cpi-calculator">
                     <h3 className="text-xl font-black text-slate-900 tracking-tight">Global Calculator</h3>
                     <CpiCalculator currentRent={totalPortfolioValue} />
 

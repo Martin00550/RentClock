@@ -30,8 +30,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format, parse, parseISO, isValid, startOfDay } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { addYears } from "date-fns";
+import { toast } from "sonner";
+import { useDropzone } from "react-dropzone";
+import { cn } from "@/lib/utils";
 
 interface AddLeaseFormProps {
     leaseCount?: number;
@@ -105,6 +108,25 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
     const [reminder60DaysSMS, setReminder60DaysSMS] = useState(false);
     const [reminder30DaysSMS, setReminder30DaysSMS] = useState(false);
     const [reminder7DaysSMS, setReminder7DaysSMS] = useState(false);
+
+    const onDrop = useCallback(async (acceptedFiles: File[]) => {
+        const file = acceptedFiles[0];
+        if (!file) return;
+
+        // Manual trigger of existing logic
+        const fakeEvent = { target: { files: [file] } } as unknown as React.ChangeEvent<HTMLInputElement>;
+        handleFileUpload(fakeEvent);
+    }, []);
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: {
+            'application/pdf': ['.pdf'],
+            'image/*': ['.png', '.jpg', '.jpeg', '.webp']
+        },
+        maxFiles: 1,
+        disabled: isScanning
+    });
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log("📂 handleFileUpload triggered");
@@ -214,16 +236,17 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
             const result = await createLease({}, formData);
 
             if (result.error) {
-                alert(result.error);
+                toast.error(result.error);
                 return;
             }
 
+            toast.success("Lease secured successfully!");
             router.push("/dashboard");
             router.refresh();
         } catch (err: unknown) {
             console.error("Error saving lease:", err);
             const errorMessage = err instanceof Error ? err.message : "Unknown error";
-            alert(`Failed to save lease: ${errorMessage}`);
+            toast.error(`Failed to save lease: ${errorMessage}`);
         } finally {
             setIsSaving(false);
         }
@@ -299,457 +322,468 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                         </div>
                         <p className="text-xs font-bold text-[#2d6a4f]">You maintain 100% control. AI suggests, you approve.</p>
                     </div>
-                    <div>
-                        <label className="block cursor-pointer">
-                            <input
-                                type="file"
-                                accept=".pdf,application/pdf,image/*"
-                                className="sr-only"
-                                onChange={handleFileUpload}
-                                disabled={isScanning}
-                            />
-                            <div className="border-2 border-dashed border-[#1e3a5f]/20 bg-[#1e3a5f]/5 rounded-3xl p-12 flex flex-col items-center justify-center text-center group hover:bg-[#1e3a5f]/10 transition-all">
-                                <div className="bg-[#1e3a5f] p-6 rounded-3xl shadow-xl shadow-slate-900/10 group-hover:scale-110 transition-transform">
+                    <div className="flex flex-col gap-6">
+                        <div className="bg-[#2d6a4f]/10 border border-[#2d6a4f]/20 p-4 rounded-xl flex items-center gap-3">
+                            <div className="bg-[#2d6a4f] p-1.5 rounded-lg text-white">
+                                <ShieldCheck className="h-4 w-4" />
+                            </div>
+                            <p className="text-xs font-bold text-[#2d6a4f]">You maintain 100% control. AI suggests, you approve.</p>
+                        </div>
+                        <div>
+                            <div {...getRootProps()} className={cn(
+                                "cursor-pointer border-2 border-dashed rounded-3xl p-12 flex flex-col items-center justify-center text-center transition-all",
+                                isDragActive
+                                    ? "border-[#1e3a5f] bg-[#1e3a5f]/10 scale-[1.02]"
+                                    : "border-[#1e3a5f]/20 bg-[#1e3a5f]/5 hover:bg-[#1e3a5f]/10"
+                            )}>
+                                <input {...getInputProps()} disabled={isScanning} />
+                                <div className={cn(
+                                    "p-6 rounded-3xl shadow-xl shadow-slate-900/10 transition-transform",
+                                    isDragActive ? "bg-[#1e3a5f] scale-110" : "bg-[#1e3a5f]"
+                                )}>
                                     <Upload className="h-10 w-10 text-white" />
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-900 mt-6 tracking-tight">Drop Lease Agreement here</h3>
+                                <h3 className="text-xl font-bold text-slate-900 mt-6 tracking-tight">
+                                    {isDragActive ? "Drop to analyze" : "Drop Lease Agreement here"}
+                                </h3>
                                 <p className="text-slate-500 mt-2 max-w-[240px]">Accepts PDF or high-quality photos. AI will scan for rent increases and renewal windows.</p>
                                 <span className="mt-8 bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-8 h-12 rounded-xl font-bold inline-flex items-center justify-center">
                                     Select File
                                 </span>
                             </div>
-                        </label>
-                    </div>
-
-                    {isScanning && (
-                        <div className="bg-white border border-[#1e3a5f]/20 rounded-2xl p-6 shadow-sm flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-2">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <Loader2 className="h-5 w-5 text-[#1e3a5f] animate-spin" />
-                                    <span className="font-bold text-slate-700">Validating Lease Terms...</span>
-                                </div>
-                                <span className="text-[#1e3a5f] font-extrabold">AI</span>
-                            </div>
-                            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                                <div className="h-full bg-[#1e3a5f] w-full animate-pulse transition-all duration-500"></div>
-                            </div>
-                            <p className="text-[10px] text-slate-400 font-medium italic">RentClock is finding the dates for your final approval. This prevents revenue leakage.</p>
-                        </div>
-                    )}
-
-                    {scanError && (
-                        <div className="bg-red-50 border border-red-200 rounded-2xl p-6 shadow-sm flex flex-col gap-2">
-                            <div className="flex items-center gap-3 text-red-600">
-                                <AlertCircle className="h-5 w-5" />
-                                <span className="font-bold">Scan Error</span>
-                            </div>
-                            <p className="text-sm text-red-500">{scanError}</p>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setScanError(null)}
-                                className="mt-2 w-fit border-red-200 text-red-600 hover:bg-red-100"
-                            >
-                                Dismiss
-                            </Button>
-                        </div>
-                    )}
-                </div>
-
-                {/* RIGHT SIDE: FORM DETAILS */}
-                <Card className="rounded-3xl border-slate-200 shadow-sm overflow-hidden">
-                    <CardHeader className="bg-slate-50/50 border-b border-slate-100 py-6">
-                        <CardTitle className="flex items-center gap-2 text-slate-800">
-                            <FileText className="h-5 w-5 text-[#1e3a5f]" />
-                            Lease Details
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-8 space-y-8">
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-3">
-                                <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Tenant Name</Label>
-                                <div className="relative">
-                                    <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                                    <Input
-                                        placeholder="Sarah Jenkins"
-                                        className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
-                                        value={tenantName}
-                                        onChange={(e) => {
-                                            setTenantName(e.target.value);
-                                            setExtractedFields(prev => prev.filter(f => f !== "tenant_name"));
-                                        }}
-                                    />
-                                    <Sparkle field="tenant_name" />
-                                </div>
-                            </div>
-                            <div className="space-y-3">
-                                <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Current Monthly Rent</Label>
-                                <div className="relative">
-                                    <DollarSign className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                                    <Input
-                                        placeholder="2,450.00"
-                                        className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
-                                        value={monthlyRent}
-                                        onChange={(e) => {
-                                            setMonthlyRent(e.target.value);
-                                            setExtractedFields(prev => prev.filter(f => f !== "monthly_rent"));
-                                        }}
-                                    />
-                                    <Sparkle field="monthly_rent" />
-                                </div>
-                            </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-3">
-                                <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Property Address</Label>
-                                <div className="relative">
-                                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                                    <Input
-                                        placeholder="1242 Magnolia Dr, Austin, TX 78701"
-                                        className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
-                                        value={propertyAddress}
-                                        onChange={(e) => {
-                                            setPropertyAddress(e.target.value);
-                                            setExtractedFields(prev => prev.filter(f => f !== "property_address"));
-                                        }}
-                                    />
-                                    <Sparkle field="property_address" />
-                                </div>
-                            </div>
-                            <div className="space-y-3">
-                                <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Expected Rent Increase ($)</Label>
-                                <div className="relative">
-                                    <DollarSign className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                                    <Input
-                                        placeholder="150.00"
-                                        className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
-                                        value={rentIncreaseAmount}
-                                        onChange={(e) => {
-                                            setRentIncreaseAmount(e.target.value);
-                                            setExtractedFields(prev => prev.filter(f => f !== "rent_increase_amount"));
-                                        }}
-                                    />
-                                    <Sparkle field="rent_increase_amount" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-6">
-                            <div className="space-y-3">
-                                <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Lease Start Date (Optional)</Label>
-                                <div className="relative">
-                                    <Input
-                                        placeholder="MM/DD/YYYY"
-                                        value={startDateInput}
-                                        onChange={(e) => handleDateInput(e.target.value, setLeaseStartDate, setStartDateInput)}
-                                        className="h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12"
-                                    />
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-[#1e3a5f]"
-                                            >
-                                                <CalendarIcon className="h-4 w-4" />
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0 rounded-2xl border-slate-200" align="end">
-                                            <Calendar
-                                                mode="single"
-                                                selected={leaseStartDate}
-                                                onSelect={(d) => {
-                                                    setLeaseStartDate(d);
-                                                    if (d) setStartDateInput(format(d, "MM/dd/yyyy"));
-                                                }}
-                                                initialFocus
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-3">
-                                <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Lease Expiry Date</Label>
-                                <div className="relative">
-                                    <Input
-                                        placeholder="MM/DD/YYYY"
-                                        value={expiryInput}
-                                        onChange={(e) => handleDateInput(e.target.value, setExpiryDate, setExpiryInput)}
-                                        className="h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12"
-                                    />
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-[#1e3a5f]"
-                                            >
-                                                <CalendarIcon className="h-4 w-4" />
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0 rounded-2xl border-slate-200" align="end">
-                                            <Calendar
-                                                mode="single"
-                                                selected={expiryDate}
-                                                onSelect={(d) => {
-                                                    setExpiryDate(d);
-                                                    if (d) setExpiryInput(format(d, "MM/dd/yyyy"));
-                                                }}
-                                                initialFocus
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                </div>
-                            </div>
-                            <div className="space-y-3">
-                                <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Rent Increase Date</Label>
-                                <div className="relative">
-                                    <Input
-                                        placeholder="MM/DD/YYYY"
-                                        value={increaseInput}
-                                        onChange={(e) => handleDateInput(e.target.value, setIncreaseDate, setIncreaseInput)}
-                                        className="h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12"
-                                    />
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-[#1e3a5f]"
-                                            >
-                                                <CalendarIcon className="h-4 w-4" />
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0 rounded-2xl border-slate-200" align="end">
-                                            <Calendar
-                                                mode="single"
-                                                selected={increaseDate}
-                                                onSelect={(d) => {
-                                                    setIncreaseDate(d);
-                                                    if (d) setIncreaseInput(format(d, "MM/dd/yyyy"));
-                                                }}
-                                                initialFocus
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-[#1e3a5f]/10 rounded-2xl p-6 border border-[#1e3a5f]/20 flex flex-col gap-6">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-[#1e3a5f] p-2 rounded-xl shadow-lg shadow-slate-900/10">
-                                        <Bell className="h-4 w-4 text-white" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900 leading-none">Critical Date Reminders</h4>
-                                        <p className="text-[10px] text-slate-500 font-medium mt-1 uppercase tracking-wider">Never miss a renewal window again</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="space-y-4">
-                                {/* 90-Day Alerts */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10">
-                                        <div className="flex items-center gap-3">
-                                            <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
-                                                <Mail className="h-4 w-4 text-[#1e3a5f]" />
-                                            </div>
-                                            <span className="text-sm font-bold text-slate-700">90-day Email</span>
-                                        </div>
-                                        <Switch
-                                            checked={reminder90DaysEmail}
-                                            onCheckedChange={setReminder90DaysEmail}
-                                        />
-                                    </div>
-                                    <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10 relative group">
-                                        {!isPro && (
-                                            <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <Link href="/settings">
-                                                    <Badge className="bg-[#d4a853] text-[#1e3a5f] font-black text-[8px] cursor-pointer hover:scale-105 transition-transform">PRO FEATURE</Badge>
-                                                </Link>
-                                            </div>
-                                        )}
-                                        <div className="flex items-center gap-3">
-                                            <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
-                                                <MessageSquare className="h-4 w-4 text-[#1e3a5f]" />
-                                            </div>
-                                            <span className="text-sm font-bold text-slate-700">90-day SMS</span>
-                                        </div>
-                                        <Switch
-                                            checked={reminder90DaysSMS}
-                                            onCheckedChange={setReminder90DaysSMS}
-                                            disabled={!isPro}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* 60-Day Alerts */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10">
-                                        <div className="flex items-center gap-3">
-                                            <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
-                                                <Mail className="h-4 w-4 text-[#1e3a5f]" />
-                                            </div>
-                                            <span className="text-sm font-bold text-slate-700">60-day Email</span>
-                                        </div>
-                                        <Switch
-                                            checked={reminder60DaysEmail}
-                                            onCheckedChange={setReminder60DaysEmail}
-                                        />
-                                    </div>
-                                    <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10 relative group">
-                                        {!isPro && (
-                                            <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <Link href="/settings">
-                                                    <Badge className="bg-[#d4a853] text-[#1e3a5f] font-black text-[8px] cursor-pointer hover:scale-105 transition-transform">PRO FEATURE</Badge>
-                                                </Link>
-                                            </div>
-                                        )}
-                                        <div className="flex items-center gap-3">
-                                            <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
-                                                <MessageSquare className="h-4 w-4 text-[#1e3a5f]" />
-                                            </div>
-                                            <span className="text-sm font-bold text-slate-700">60-day SMS</span>
-                                        </div>
-                                        <Switch
-                                            checked={reminder60DaysSMS}
-                                            onCheckedChange={setReminder60DaysSMS}
-                                            disabled={!isPro}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* 30-Day Alerts */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10">
-                                        <div className="flex items-center gap-3">
-                                            <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
-                                                <Mail className="h-4 w-4 text-[#1e3a5f]" />
-                                            </div>
-                                            <span className="text-sm font-bold text-slate-700">30-day Email</span>
-                                        </div>
-                                        <Switch
-                                            checked={reminder30DaysEmail}
-                                            onCheckedChange={setReminder30DaysEmail}
-                                        />
-                                    </div>
-                                    <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10 relative group">
-                                        {!isPro && (
-                                            <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <Link href="/settings">
-                                                    <Badge className="bg-[#d4a853] text-[#1e3a5f] font-black text-[8px] cursor-pointer hover:scale-105 transition-transform">PRO FEATURE</Badge>
-                                                </Link>
-                                            </div>
-                                        )}
-                                        <div className="flex items-center gap-3">
-                                            <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
-                                                <MessageSquare className="h-4 w-4 text-[#1e3a5f]" />
-                                            </div>
-                                            <span className="text-sm font-bold text-slate-700">30-day SMS</span>
-                                        </div>
-                                        <Switch
-                                            checked={reminder30DaysSMS}
-                                            onCheckedChange={setReminder30DaysSMS}
-                                            disabled={!isPro}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* 7-Day Alerts */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10">
-                                        <div className="flex items-center gap-3">
-                                            <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
-                                                <Mail className="h-4 w-4 text-[#1e3a5f]" />
-                                            </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-sm font-bold text-slate-700 leading-none">7-day</span>
-                                                <span className="text-sm font-bold text-slate-700 leading-none">Email</span>
-                                            </div>
-                                        </div>
-                                        <Switch
-                                            checked={reminder7DaysEmail}
-                                            onCheckedChange={setReminder7DaysEmail}
-                                        />
-                                    </div>
-                                    <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10 relative group">
-                                        {!isPro && (
-                                            <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <Link href="/settings">
-                                                    <Badge className="bg-[#d4a853] text-[#1e3a5f] font-black text-[8px] cursor-pointer hover:scale-105 transition-transform">PRO FEATURE</Badge>
-                                                </Link>
-                                            </div>
-                                        )}
-                                        <div className="flex items-center gap-3">
-                                            <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
-                                                <MessageSquare className="h-4 w-4 text-[#1e3a5f]" />
-                                            </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-sm font-bold text-slate-700 leading-none">7-day</span>
-                                                <span className="text-sm font-bold text-slate-700 leading-none">SMS</span>
-                                            </div>
-                                        </div>
-                                        <Switch
-                                            checked={reminder7DaysSMS}
-                                            onCheckedChange={setReminder7DaysSMS}
-                                            disabled={!isPro}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* RENT SCHEDULE PREVIEW */}
-                        {rentSchedule.length > 0 && (
-                            <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-700">
+                        {isScanning && (
+                            <div className="bg-white border border-[#1e3a5f]/20 rounded-2xl p-6 shadow-sm flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-2">
                                 <div className="flex items-center justify-between">
-                                    <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Detected Rent Steps</Label>
-                                    <div className="bg-indigo-50 text-indigo-600 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter">AI Lifecycle View</div>
+                                    <div className="flex items-center gap-3">
+                                        <Loader2 className="h-5 w-5 text-[#1e3a5f] animate-spin" />
+                                        <span className="font-bold text-slate-700">Validating Lease Terms...</span>
+                                    </div>
+                                    <span className="text-[#1e3a5f] font-extrabold">AI</span>
                                 </div>
-                                <div className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden shadow-inner">
-                                    <table className="w-full text-left text-xs">
-                                        <thead>
-                                            <tr className="bg-slate-100/50 border-b border-slate-200">
-                                                <th className="px-4 py-3 font-black text-slate-400 uppercase tracking-widest">Effective Date</th>
-                                                <th className="px-4 py-3 font-black text-slate-400 uppercase tracking-widest">New Monthly Rent</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-slate-100">
-                                            {rentSchedule.map((step, idx) => (
-                                                <tr key={idx} className="group hover:bg-white transition-colors">
-                                                    <td className="px-4 py-3 font-bold text-slate-600">{step.date}</td>
-                                                    <td className="px-4 py-3 font-black text-[#1e3a5f]">${step.amount.toLocaleString()}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                                    <div className="h-full bg-[#1e3a5f] w-full animate-pulse transition-all duration-500"></div>
                                 </div>
+                                <p className="text-[10px] text-slate-400 font-medium italic">RentClock is finding the dates for your final approval. This prevents revenue leakage.</p>
                             </div>
                         )}
 
-                        <Button
-                            className="w-full bg-[#1e3a5f] hover:bg-[#2a4a73] text-white h-16 rounded-2xl font-bold text-lg shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3 transition-all hover:scale-[1.02] disabled:opacity-50"
-                            onClick={handleSubmit}
-                            disabled={isSaving || !tenantName || !propertyAddress}
-                        >
-                            {isSaving ? (
-                                <Loader2 className="h-6 w-6 animate-spin" />
-                            ) : (
-                                <Clock className="h-6 w-6" />
+                        {scanError && (
+                            <div className="bg-red-50 border border-red-200 rounded-2xl p-6 shadow-sm flex flex-col gap-2">
+                                <div className="flex items-center gap-3 text-red-600">
+                                    <AlertCircle className="h-5 w-5" />
+                                    <span className="font-bold">Scan Error</span>
+                                </div>
+                                <p className="text-sm text-red-500">{scanError}</p>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setScanError(null)}
+                                    className="mt-2 w-fit border-red-200 text-red-600 hover:bg-red-100"
+                                >
+                                    Dismiss
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* RIGHT SIDE: FORM DETAILS */}
+                    <Card className="rounded-3xl border-slate-200 shadow-sm overflow-hidden">
+                        <CardHeader className="bg-slate-50/50 border-b border-slate-100 py-6">
+                            <CardTitle className="flex items-center gap-2 text-slate-800">
+                                <FileText className="h-5 w-5 text-[#1e3a5f]" />
+                                Lease Details
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-8 space-y-8">
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Tenant Name</Label>
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                                        <Input
+                                            placeholder="Sarah Jenkins"
+                                            className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
+                                            value={tenantName}
+                                            onChange={(e) => {
+                                                setTenantName(e.target.value);
+                                                setExtractedFields(prev => prev.filter(f => f !== "tenant_name"));
+                                            }}
+                                        />
+                                        <Sparkle field="tenant_name" />
+                                    </div>
+                                </div>
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Current Monthly Rent</Label>
+                                    <div className="relative">
+                                        <DollarSign className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                                        <Input
+                                            placeholder="2,450.00"
+                                            className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
+                                            value={monthlyRent}
+                                            onChange={(e) => {
+                                                setMonthlyRent(e.target.value);
+                                                setExtractedFields(prev => prev.filter(f => f !== "monthly_rent"));
+                                            }}
+                                        />
+                                        <Sparkle field="monthly_rent" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Property Address</Label>
+                                    <div className="relative">
+                                        <MapPin className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                                        <Input
+                                            placeholder="1242 Magnolia Dr, Austin, TX 78701"
+                                            className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
+                                            value={propertyAddress}
+                                            onChange={(e) => {
+                                                setPropertyAddress(e.target.value);
+                                                setExtractedFields(prev => prev.filter(f => f !== "property_address"));
+                                            }}
+                                        />
+                                        <Sparkle field="property_address" />
+                                    </div>
+                                </div>
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Expected Rent Increase ($)</Label>
+                                    <div className="relative">
+                                        <DollarSign className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                                        <Input
+                                            placeholder="150.00"
+                                            className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
+                                            value={rentIncreaseAmount}
+                                            onChange={(e) => {
+                                                setRentIncreaseAmount(e.target.value);
+                                                setExtractedFields(prev => prev.filter(f => f !== "rent_increase_amount"));
+                                            }}
+                                        />
+                                        <Sparkle field="rent_increase_amount" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-6">
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Lease Start Date (Optional)</Label>
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="MM/DD/YYYY"
+                                            value={startDateInput}
+                                            onChange={(e) => handleDateInput(e.target.value, setLeaseStartDate, setStartDateInput)}
+                                            className="h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12"
+                                        />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-[#1e3a5f]"
+                                                >
+                                                    <CalendarIcon className="h-4 w-4" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0 rounded-2xl border-slate-200" align="end">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={leaseStartDate}
+                                                    onSelect={(d) => {
+                                                        setLeaseStartDate(d);
+                                                        if (d) setStartDateInput(format(d, "MM/dd/yyyy"));
+                                                    }}
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Lease Expiry Date</Label>
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="MM/DD/YYYY"
+                                            value={expiryInput}
+                                            onChange={(e) => handleDateInput(e.target.value, setExpiryDate, setExpiryInput)}
+                                            className="h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12"
+                                        />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-[#1e3a5f]"
+                                                >
+                                                    <CalendarIcon className="h-4 w-4" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0 rounded-2xl border-slate-200" align="end">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={expiryDate}
+                                                    onSelect={(d) => {
+                                                        setExpiryDate(d);
+                                                        if (d) setExpiryInput(format(d, "MM/dd/yyyy"));
+                                                    }}
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+                                </div>
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Rent Increase Date</Label>
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="MM/DD/YYYY"
+                                            value={increaseInput}
+                                            onChange={(e) => handleDateInput(e.target.value, setIncreaseDate, setIncreaseInput)}
+                                            className="h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12"
+                                        />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-[#1e3a5f]"
+                                                >
+                                                    <CalendarIcon className="h-4 w-4" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0 rounded-2xl border-slate-200" align="end">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={increaseDate}
+                                                    onSelect={(d) => {
+                                                        setIncreaseDate(d);
+                                                        if (d) setIncreaseInput(format(d, "MM/dd/yyyy"));
+                                                    }}
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-[#1e3a5f]/10 rounded-2xl p-6 border border-[#1e3a5f]/20 flex flex-col gap-6">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-[#1e3a5f] p-2 rounded-xl shadow-lg shadow-slate-900/10">
+                                            <Bell className="h-4 w-4 text-white" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-slate-900 leading-none">Critical Date Reminders</h4>
+                                            <p className="text-[10px] text-slate-500 font-medium mt-1 uppercase tracking-wider">Never miss a renewal window again</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {/* 90-Day Alerts */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10">
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
+                                                    <Mail className="h-4 w-4 text-[#1e3a5f]" />
+                                                </div>
+                                                <span className="text-sm font-bold text-slate-700">90-day Email</span>
+                                            </div>
+                                            <Switch
+                                                checked={reminder90DaysEmail}
+                                                onCheckedChange={setReminder90DaysEmail}
+                                            />
+                                        </div>
+                                        <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10 relative group">
+                                            {!isPro && (
+                                                <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <Link href="/settings">
+                                                        <Badge className="bg-[#d4a853] text-[#1e3a5f] font-black text-[8px] cursor-pointer hover:scale-105 transition-transform">PRO FEATURE</Badge>
+                                                    </Link>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
+                                                    <MessageSquare className="h-4 w-4 text-[#1e3a5f]" />
+                                                </div>
+                                                <span className="text-sm font-bold text-slate-700">90-day SMS</span>
+                                            </div>
+                                            <Switch
+                                                checked={reminder90DaysSMS}
+                                                onCheckedChange={setReminder90DaysSMS}
+                                                disabled={!isPro}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* 60-Day Alerts */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10">
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
+                                                    <Mail className="h-4 w-4 text-[#1e3a5f]" />
+                                                </div>
+                                                <span className="text-sm font-bold text-slate-700">60-day Email</span>
+                                            </div>
+                                            <Switch
+                                                checked={reminder60DaysEmail}
+                                                onCheckedChange={setReminder60DaysEmail}
+                                            />
+                                        </div>
+                                        <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10 relative group">
+                                            {!isPro && (
+                                                <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <Link href="/settings">
+                                                        <Badge className="bg-[#d4a853] text-[#1e3a5f] font-black text-[8px] cursor-pointer hover:scale-105 transition-transform">PRO FEATURE</Badge>
+                                                    </Link>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
+                                                    <MessageSquare className="h-4 w-4 text-[#1e3a5f]" />
+                                                </div>
+                                                <span className="text-sm font-bold text-slate-700">60-day SMS</span>
+                                            </div>
+                                            <Switch
+                                                checked={reminder60DaysSMS}
+                                                onCheckedChange={setReminder60DaysSMS}
+                                                disabled={!isPro}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* 30-Day Alerts */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10">
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
+                                                    <Mail className="h-4 w-4 text-[#1e3a5f]" />
+                                                </div>
+                                                <span className="text-sm font-bold text-slate-700">30-day Email</span>
+                                            </div>
+                                            <Switch
+                                                checked={reminder30DaysEmail}
+                                                onCheckedChange={setReminder30DaysEmail}
+                                            />
+                                        </div>
+                                        <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10 relative group">
+                                            {!isPro && (
+                                                <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <Link href="/settings">
+                                                        <Badge className="bg-[#d4a853] text-[#1e3a5f] font-black text-[8px] cursor-pointer hover:scale-105 transition-transform">PRO FEATURE</Badge>
+                                                    </Link>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
+                                                    <MessageSquare className="h-4 w-4 text-[#1e3a5f]" />
+                                                </div>
+                                                <span className="text-sm font-bold text-slate-700">30-day SMS</span>
+                                            </div>
+                                            <Switch
+                                                checked={reminder30DaysSMS}
+                                                onCheckedChange={setReminder30DaysSMS}
+                                                disabled={!isPro}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* 7-Day Alerts */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10">
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
+                                                    <Mail className="h-4 w-4 text-[#1e3a5f]" />
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-sm font-bold text-slate-700 leading-none">7-day</span>
+                                                    <span className="text-sm font-bold text-slate-700 leading-none">Email</span>
+                                                </div>
+                                            </div>
+                                            <Switch
+                                                checked={reminder7DaysEmail}
+                                                onCheckedChange={setReminder7DaysEmail}
+                                            />
+                                        </div>
+                                        <div className="flex items-center justify-between bg-white/50 p-4 rounded-xl border border-[#1e3a5f]/10 relative group">
+                                            {!isPro && (
+                                                <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <Link href="/settings">
+                                                        <Badge className="bg-[#d4a853] text-[#1e3a5f] font-black text-[8px] cursor-pointer hover:scale-105 transition-transform">PRO FEATURE</Badge>
+                                                    </Link>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-[#1e3a5f]/10 p-1.5 rounded-lg">
+                                                    <MessageSquare className="h-4 w-4 text-[#1e3a5f]" />
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-sm font-bold text-slate-700 leading-none">7-day</span>
+                                                    <span className="text-sm font-bold text-slate-700 leading-none">SMS</span>
+                                                </div>
+                                            </div>
+                                            <Switch
+                                                checked={reminder7DaysSMS}
+                                                onCheckedChange={setReminder7DaysSMS}
+                                                disabled={!isPro}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* RENT SCHEDULE PREVIEW */}
+                            {rentSchedule.length > 0 && (
+                                <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-700">
+                                    <div className="flex items-center justify-between">
+                                        <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Detected Rent Steps</Label>
+                                        <div className="bg-indigo-50 text-indigo-600 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter">AI Lifecycle View</div>
+                                    </div>
+                                    <div className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden shadow-inner">
+                                        <table className="w-full text-left text-xs">
+                                            <thead>
+                                                <tr className="bg-slate-100/50 border-b border-slate-200">
+                                                    <th className="px-4 py-3 font-black text-slate-400 uppercase tracking-widest">Effective Date</th>
+                                                    <th className="px-4 py-3 font-black text-slate-400 uppercase tracking-widest">New Monthly Rent</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-100">
+                                                {rentSchedule.map((step, idx) => (
+                                                    <tr key={idx} className="group hover:bg-white transition-colors">
+                                                        <td className="px-4 py-3 font-bold text-slate-600">{step.date}</td>
+                                                        <td className="px-4 py-3 font-black text-[#1e3a5f]">${step.amount.toLocaleString()}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             )}
-                            {isSaving ? "Securing Lease..." : "Save & Activate Alarm"}
-                        </Button>
-                        <p className="text-center text-[10px] text-slate-400 font-medium italic">By saving, you agree to our lease storage and reminder terms.</p>
-                    </CardContent>
-                </Card>
+
+                            <Button
+                                className="w-full bg-[#1e3a5f] hover:bg-[#2a4a73] text-white h-16 rounded-2xl font-bold text-lg shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3 transition-all hover:scale-[1.02] disabled:opacity-50"
+                                onClick={handleSubmit}
+                                disabled={isSaving || !tenantName || !propertyAddress}
+                            >
+                                {isSaving ? (
+                                    <Loader2 className="h-6 w-6 animate-spin" />
+                                ) : (
+                                    <Clock className="h-6 w-6" />
+                                )}
+                                {isSaving ? "Securing Lease..." : "Save & Activate Alarm"}
+                            </Button>
+                            <p className="text-center text-[10px] text-slate-400 font-medium italic">By saving, you agree to our lease storage and reminder terms.</p>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </div>
+
     );
 }

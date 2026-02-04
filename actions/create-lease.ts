@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { revalidatePath } from "next/cache";
+import { logger } from "@/lib/logger";
 
 export type CreateLeaseState = {
     message?: string;
@@ -68,7 +69,7 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
     const parsed = LeaseSchema.safeParse(rawData);
 
     if (!parsed.success) {
-        console.error("Validation failed:", parsed.error.format());
+        logger.error("Validation failed", { errors: parsed.error.format() });
         return { error: "Invalid lease data. Please check expected fields." };
     }
 
@@ -83,7 +84,7 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
         });
 
     if (insertError) {
-        console.error("Insert error:", insertError);
+        logger.error("Insert error in createLease", { error: insertError, userId });
         return { error: "Failed to save lease record." };
     }
 

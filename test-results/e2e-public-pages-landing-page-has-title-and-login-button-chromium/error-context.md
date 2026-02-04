@@ -1,0 +1,336 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "RentClock" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=e7]:
+          - link "The Problem" [ref=e8] [cursor=pointer]:
+            - /url: /#problem
+          - link "How it Works" [ref=e9] [cursor=pointer]:
+            - /url: /#how-it-works
+          - link "Pricing" [ref=e10] [cursor=pointer]:
+            - /url: /#pricing
+          - link "Resources" [ref=e11] [cursor=pointer]:
+            - /url: /blog
+    - main [ref=e12]:
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - img [ref=e17]
+            - generic [ref=e20]: First 3 Leases Free • No Credit Card
+          - heading "A safety net your commercial portfolio is missing" [level=1] [ref=e21]
+          - paragraph [ref=e22]:
+            - text: Spreadsheets don't send reminders. RentClock is the simple
+            - strong [ref=e23]: commercial lease tracker
+            - text: that helps you stay ahead of rent increases and renewal options.
+          - button "Start Tracking for Free" [ref=e26] [cursor=pointer]:
+            - generic [ref=e27]: Start Tracking for Free
+          - generic [ref=e28]:
+            - generic [ref=e29]:
+              - img [ref=e30]
+              - generic [ref=e33]: Secure Encryption
+            - generic [ref=e34]:
+              - img [ref=e35]
+              - generic [ref=e38]: Private Data Handling
+        - generic [ref=e42]:
+          - generic [ref=e44]:
+            - img [ref=e45]
+            - generic [ref=e48]: Revenue Leakage Calculator
+          - generic [ref=e49]:
+            - generic [ref=e50]:
+              - generic [ref=e51]:
+                - generic [ref=e52]: Your Monthly Rent
+                - generic [ref=e53]: Try it now
+              - generic [ref=e54]:
+                - img [ref=e55]
+                - textbox "e.g. 5,000" [ref=e57]
+              - generic [ref=e58]:
+                - generic [ref=e59]: "Examples:"
+                - button "$2,500" [ref=e60] [cursor=pointer]
+                - button "$5,500" [ref=e61] [cursor=pointer]
+                - button "$12,000" [ref=e62] [cursor=pointer]
+            - generic [ref=e63]:
+              - generic [ref=e64]: "Live CPI-U Rate:"
+              - img [ref=e66]
+            - generic [ref=e68]:
+              - button "Check My Potential Savings" [disabled]:
+                - text: Check My Potential Savings
+                - img
+            - generic [ref=e69]:
+              - paragraph [ref=e70]: Calculations are estimates for informative purposes.
+              - generic [ref=e71]:
+                - img [ref=e72]
+                - paragraph [ref=e75]: First 3 Leases Free • No Credit Card
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - heading "The Cost of Inaction" [level=2] [ref=e79]
+          - heading "Managing property is a professional duty" [level=3] [ref=e80]
+          - paragraph [ref=e81]: Don't let a busy schedule compromise your returns. Commercial leases are full of traps, and a single missed window can lock you into old rates for years.
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - img [ref=e85]
+            - heading "The 3% Leak" [level=4] [ref=e88]
+            - paragraph [ref=e89]: It's not just one month. It's a permanent reduction in your property's value. Miss a 3% bump on a $5,000 lease? That's $1,800/year you never get back.
+          - generic [ref=e90]:
+            - img [ref=e92]
+            - heading "The Holdover Trap" [level=4] [ref=e94]
+            - paragraph [ref=e95]: Don't let leases expire into month-to-month terms without your knowledge. Lose your leverage and risk sudden vacancies.
+          - generic [ref=e96]:
+            - img [ref=e98]
+            - heading "The Spreadsheet Crash" [level=4] [ref=e102]
+            - paragraph [ref=e103]: Excel is great for math, but terrible for alerts. It relies on constant manual checking. RentClock doesn't.
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - heading "The Process" [level=2] [ref=e107]
+          - heading "Start tracking today. Simple by design." [level=3] [ref=e108]:
+            - text: Start tracking today.
+            - text: Simple by design.
+          - paragraph [ref=e109]: If you can use email, you can use RentClock. Built for growing portfolios.
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - generic [ref=e117]:
+              - generic [ref=e120]:
+                - img [ref=e122]
+                - img [ref=e126]
+              - generic [ref=e130]: LEASE.PDF
+            - generic [ref=e135]:
+              - generic: "01"
+              - heading "Securely Upload Lease" [level=4] [ref=e136]
+              - paragraph [ref=e137]:
+                - text: Simply drag and drop your PDF. RentClock's AI extracts key dates, rent steps, and expiration windows for you to review.
+                - strong [ref=e138]: You check and approve every detail.
+                - text: Fast, private, and automated.
+          - generic [ref=e139]:
+            - generic [ref=e142]:
+              - generic [ref=e144]:
+                - img [ref=e146]
+                - generic [ref=e149]: VERIFIED
+              - generic [ref=e150]:
+                - generic [ref=e152]: 90 Day
+                - generic [ref=e156]: 60 Day
+            - generic [ref=e159]:
+              - generic: "02"
+              - heading "Verify Key Dates" [level=4] [ref=e160]
+              - paragraph [ref=e161]:
+                - text: Review the high-precision suggestions. Correct dates if needed and set your preferred lead times.
+                - strong [ref=e162]: Nothing is active until you confirm.
+                - text: You stay in complete control of your data.
+          - generic [ref=e163]:
+            - img [ref=e172]
+            - generic [ref=e175]:
+              - generic: "03"
+              - heading "Stay Informed" [level=4] [ref=e176]
+              - paragraph [ref=e177]:
+                - text: Get
+                - strong [ref=e178]: email and SMS
+                - text: alerts 90, 60, 30, and 7 days out. Your critical dates sync directly to Outlook or Google Calendar.
+                - strong [ref=e179]: Whether you're at the office or on the golf course
+                - text: ", we help prevent missed revenue opportunities."
+      - generic [ref=e181]:
+        - generic [ref=e182]:
+          - heading "The Smart Choice" [level=2] [ref=e183]
+          - heading "Why RentClock wins" [level=3] [ref=e184]
+          - paragraph [ref=e185]: Stop paying for overpriced hours or relying on fragile spreadsheets.
+        - table [ref=e188]:
+          - rowgroup [ref=e189]:
+            - row "Aspect RentClock Property Lawyer Excel Sheet" [ref=e190]:
+              - columnheader "Aspect" [ref=e191]
+              - columnheader "RentClock" [ref=e192]
+              - columnheader "Property Lawyer" [ref=e193]
+              - columnheader "Excel Sheet" [ref=e194]
+          - rowgroup [ref=e195]:
+            - row "Annual Cost $468/yr ~$4,800/yr (Est.) $0 (Financial)" [ref=e196]:
+              - cell "Annual Cost" [ref=e197]
+              - cell "$468/yr" [ref=e198]
+              - cell "~$4,800/yr (Est.)" [ref=e199]
+              - cell "$0 (Financial)" [ref=e200]
+            - row "Setup Effort Automated Days / Weeks Manual Entry" [ref=e201]:
+              - cell "Setup Effort" [ref=e202]
+              - cell "Automated" [ref=e203]
+              - cell "Days / Weeks" [ref=e204]
+              - cell "Manual Entry" [ref=e205]
+            - row "Missed Date Risk Automated Alerts Low High (Human Error)" [ref=e206]:
+              - cell "Missed Date Risk" [ref=e207]
+              - cell "Automated Alerts" [ref=e208]
+              - cell "Low" [ref=e209]
+              - cell "High (Human Error)" [ref=e210]
+            - row "Revenue Focus Profit Protection Billing / Compliance None" [ref=e211]:
+              - cell "Revenue Focus" [ref=e212]
+              - cell "Profit Protection" [ref=e213]
+              - cell "Billing / Compliance" [ref=e214]
+              - cell "None" [ref=e215]
+      - generic [ref=e217]:
+        - generic [ref=e218]:
+          - heading "Fair pricing for peace of mind" [level=2] [ref=e219]
+          - paragraph [ref=e220]: Start free. Upgrade when you need more.
+        - generic [ref=e221]:
+          - generic [ref=e222]:
+            - generic [ref=e223]:
+              - heading "Free" [level=3] [ref=e224]
+              - generic [ref=e225]:
+                - generic [ref=e226]: $0
+                - generic [ref=e227]: /month
+            - list [ref=e228]:
+              - listitem [ref=e229]:
+                - img [ref=e230]
+                - strong [ref=e234]: 3 Active Leases
+              - listitem [ref=e235]:
+                - img [ref=e236]
+                - generic [ref=e239]: Profit Protection Analytics
+              - listitem [ref=e240]:
+                - img [ref=e241]
+                - generic [ref=e244]: Auto-Generates PDF Notices
+              - listitem [ref=e245]:
+                - img [ref=e246]
+                - generic [ref=e249]: Automated Lease Entry
+              - listitem [ref=e250]:
+                - img [ref=e251]
+                - generic [ref=e254]: Lease & Rent Increase Alerts (Email)
+              - listitem [ref=e255]:
+                - img [ref=e256]
+                - generic [ref=e259]: Lease & Rent Increase Alerts (SMS) (Pro)
+              - listitem [ref=e260]:
+                - img [ref=e261]
+                - generic [ref=e264]: Calendar Sync (Pro)
+            - button "Get Started Free" [ref=e266] [cursor=pointer]
+          - generic [ref=e267]:
+            - generic:
+              - generic: Save $120 Per Year
+            - generic [ref=e268]:
+              - heading "Pro" [level=3] [ref=e269]
+              - generic [ref=e270]:
+                - button "Monthly" [ref=e271] [cursor=pointer]
+                - button "Annual" [ref=e272] [cursor=pointer]
+              - generic [ref=e273]:
+                - generic [ref=e274]: $39
+                - generic [ref=e275]: /month
+                - generic [ref=e276]: $49
+              - paragraph [ref=e277]: Less than 15 mins of a lawyer's billable hour
+              - paragraph [ref=e278]: Billed annually at $468/year
+            - list [ref=e279]:
+              - listitem [ref=e280]:
+                - img [ref=e281]
+                - strong [ref=e285]: Unlimited Leases
+              - listitem [ref=e286]:
+                - img [ref=e287]
+                - generic [ref=e290]: Profit Protection Analytics
+              - listitem [ref=e291]:
+                - img [ref=e292]
+                - generic [ref=e295]: Auto-Generates PDF Notices
+              - listitem [ref=e296]:
+                - img [ref=e297]
+                - generic [ref=e300]: Automated Lease Entry
+              - listitem [ref=e301]:
+                - img [ref=e302]
+                - generic [ref=e305]: Lease & Rent Increase Alerts (Email)
+              - listitem [ref=e306]:
+                - img [ref=e307]
+                - generic [ref=e310]: Lease & Rent Increase Alerts (SMS)
+              - listitem [ref=e311]:
+                - img [ref=e312]
+                - generic [ref=e315]: Calendar Sync
+            - button "Start 7-Day Free Trial" [ref=e317] [cursor=pointer]
+            - paragraph [ref=e318]: Trial is free. Payments covered by 14-day money-back guarantee.
+        - generic [ref=e319]: "State-Specific Notice: Lease notification requirements vary by state (e.g., California has specific notice periods). Please consult with legal counsel before relying solely on RentClock for compliance."
+      - generic [ref=e321]:
+        - heading "Move beyond static spreadsheets." [level=2] [ref=e322]
+        - paragraph [ref=e323]: Start tracking your first 3 leases today. Help stop revenue leakage.
+        - generic [ref=e324]:
+          - button "Set My Safety Net For Free" [ref=e326] [cursor=pointer]:
+            - generic [ref=e327]: Set My Safety Net For Free
+          - generic [ref=e328]:
+            - generic [ref=e329]:
+              - img [ref=e331]
+              - generic [ref=e334]: No credit card required
+            - generic [ref=e335]:
+              - img [ref=e337]
+              - generic [ref=e340]: Start tracking today
+      - generic [ref=e342]:
+        - generic [ref=e343]:
+          - heading "Frequently Asked Questions" [level=2] [ref=e344]
+          - paragraph [ref=e345]: Common questions about automated lease tracking.
+        - generic [ref=e346]:
+          - button "Is RentClock a full lease management software?" [ref=e348] [cursor=pointer]:
+            - heading "Is RentClock a full lease management software?" [level=4] [ref=e349]
+            - img [ref=e351]
+          - button "Where is my data stored and who can see it?" [ref=e354] [cursor=pointer]:
+            - heading "Where is my data stored and who can see it?" [level=4] [ref=e355]
+            - img [ref=e357]
+          - button "Can it handle non-standard or hand-annotated leases?" [ref=e360] [cursor=pointer]:
+            - heading "Can it handle non-standard or hand-annotated leases?" [level=4] [ref=e361]
+            - img [ref=e363]
+          - button "What triggers a critical date alert?" [ref=e366] [cursor=pointer]:
+            - heading "What triggers a critical date alert?" [level=4] [ref=e367]
+            - img [ref=e369]
+          - button "Is there a setup fee or long-term contract?" [ref=e372] [cursor=pointer]:
+            - heading "Is there a setup fee or long-term contract?" [level=4] [ref=e373]
+            - img [ref=e375]
+    - contentinfo [ref=e377]:
+      - generic [ref=e378]:
+        - generic [ref=e379]:
+          - heading "RentClock" [level=2] [ref=e381]
+          - paragraph [ref=e382]: RentClock helps you protect your investment income with modern technology and extreme simplicity.
+        - generic [ref=e383]:
+          - heading "Product" [level=5] [ref=e384]
+          - list [ref=e385]:
+            - listitem [ref=e386]:
+              - link "Pricing" [ref=e387] [cursor=pointer]:
+                - /url: /#pricing
+            - listitem [ref=e388]:
+              - link "How it works" [ref=e389] [cursor=pointer]:
+                - /url: /#how-it-works
+            - listitem [ref=e390]:
+              - link "Lease Tracking Software" [ref=e391] [cursor=pointer]:
+                - /url: /lease-tracking-software
+        - generic [ref=e392]:
+          - heading "Resources" [level=5] [ref=e393]
+          - list [ref=e394]:
+            - listitem [ref=e395]:
+              - link "Blog" [ref=e396] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e397]:
+              - link "Lease Tracking Guide" [ref=e398] [cursor=pointer]:
+                - /url: /blog/ultimate-guide-commercial-lease-tracking
+            - listitem [ref=e399]:
+              - link "Contact Support" [ref=e400] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e401]:
+          - heading "Legal" [level=5] [ref=e402]
+          - list [ref=e403]:
+            - listitem [ref=e404]:
+              - link "Privacy Policy" [ref=e405] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e406]:
+              - link "Terms of Service" [ref=e407] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e408]:
+              - link "Refund Policy" [ref=e409] [cursor=pointer]:
+                - /url: /refund-policy
+      - generic [ref=e411]:
+        - generic [ref=e412]:
+          - generic [ref=e413]:
+            - heading "AI Disclosure & Affiliation" [level=6] [ref=e414]
+            - paragraph [ref=e415]: RentClock is an independent service built on top of advanced AI models to simplify lease management and critical date tracking. The platform offers a user-friendly interface to enhance usability and provide specialized portfolio protection features. RentClock is an independent product and is not affiliated with, endorsed by, or sponsored by Google, OpenAI, or any other model providers.
+          - generic [ref=e416]:
+            - generic [ref=e417]: "© 2026 MARTIN VASKO • TRNAVA, SLOVAKIA • IČO: 56440553"
+            - generic [ref=e418]:
+              - generic [ref=e419]:
+                - img [ref=e420]
+                - generic [ref=e423]: Secure Encryption (TLS/SSL)
+              - generic [ref=e424]:
+                - img [ref=e425]
+                - generic [ref=e428]: Private Data Handling
+        - generic [ref=e430]:
+          - generic [ref=e431]: Need help?
+          - link "support@rentclock.online" [ref=e432] [cursor=pointer]:
+            - /url: mailto:support@rentclock.online
+            - text: support@rentclock.online
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e439] [cursor=pointer]:
+    - img [ref=e440]
+  - alert [ref=e443]
+```

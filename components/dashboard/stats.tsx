@@ -97,7 +97,7 @@ export function DashboardStats({ leases }: { leases: Lease[] }) {
                     variant={urgentCount > 0 ? "urgent" : "default"}
                 />
             </Link>
-            <Link href="/profit-protection" className="block">
+            <Link href="/profit-protection" className="block" id="dashboard-kpi-revenue">
                 <StatCard
                     title="Revenue Protection Potential"
                     value={formatCurrency(yearlyProtection)}

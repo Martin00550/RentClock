@@ -1,5 +1,6 @@
 "use server";
 
+import { logger } from "@/lib/logger";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { revalidatePath } from "next/cache";
@@ -34,35 +35,28 @@ export async function uploadLeaseDocument(leaseId: string, formData: FormData) {
             });
 
         if (uploadError) {
-            console.error("Upload error:", uploadError);
+            logger.error("Storage upload error", uploadError, { fileName, userId });
             return { error: "Failed to upload file to storage" };
         }
 
-        // 2. Get Public URL
-        const { data: publicUrlData } = supabaseAdmin
-            .storage
-            .from("leases-pdf")
-            .getPublicUrl(fileName);
-
-        const pdfUrl = publicUrlData.publicUrl;
-
-        // 3. Update Lease Record
+        // 2. Update Lease Record with PATH (Secure)
+        // We now store the path "userId/uuid.pdf" instead of the public URL.
         const { error: updateError } = await supabaseAdmin
             .from("leases")
-            .update({ pdf_url: pdfUrl })
+            .update({ pdf_url: fileName }) // Storing the path in the pdf_url column for now
             .eq("id", leaseId)
             .eq("user_id", userId); // Security check
 
         if (updateError) {
-            console.error("Database update error:", updateError);
+            logger.error("Database update error", updateError, { leaseId, userId });
             return { error: "Failed to update lease record" };
         }
 
         revalidatePath(`/leases/${leaseId}`);
-        return { success: true, pdfUrl };
+        return { success: true, pdfUrl: fileName };
 
     } catch (error) {
-        console.error("Server action error:", error);
-        return { error: "Internal server error" };
+        logger.error("Server action error", error, { leaseId, userId });
+        return { error: "Failed to upload document" };
     }
 }

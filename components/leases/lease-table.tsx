@@ -57,6 +57,7 @@ export function LeaseTable({ leases }: { leases: Lease[] }) {
             <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                 <Input
+                    id="leases-search"
                     placeholder="Search by tenant or address..."
                     className="pl-10 h-10 w-full max-w-sm bg-white border-slate-200 focus-visible:ring-[#1e3a5f] rounded-xl"
                     value={searchQuery}

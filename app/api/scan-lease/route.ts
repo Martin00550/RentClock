@@ -4,6 +4,7 @@ import { z } from "zod";
 import { checkRateLimit } from "@/lib/ratelimit";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { v4 as uuidv4 } from "uuid";
+import { logger } from "@/lib/logger";
 
 const LeaseSchema = z.object({
     tenant_name: z.string().default("Unknown Tenant"),
@@ -170,14 +171,12 @@ export async function POST(req: NextRequest) {
                 upsert: false
             });
 
-        let pdfUrl = "";
-        if (!uploadError) {
-            const { data: publicUrlData } = supabaseAdmin
-                .storage
-                .from("leases-pdf")
-                .getPublicUrl(storageFileName);
-            pdfUrl = publicUrlData.publicUrl;
+        if (uploadError) {
+            logger.error("Failed to upload lease", { error: uploadError });
         }
+
+        // Store the path, not the public URL
+        const pdfUrl = storageFileName;
 
         // --- SUCCESS LOGGING ---
         const duration = Date.now() - startTime;
@@ -196,7 +195,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true, data, used_model: usedModel, pdf_url: pdfUrl });
 
     } catch (error: unknown) {
-        console.error("Scan error:", error);
+        logger.error("Scan error", { error, userId, fileName: fileName || "unknown" });
         const errorMessage = error instanceof Error ? error.message : "Failed to process lease";
 
         // --- ERROR LOGGING ---

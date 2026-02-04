@@ -1,3 +1,4 @@
+import { getSignedLeaseUrl } from "@/lib/storage";
 import { EditTenantDialog } from "@/components/leases/edit-tenant-dialog";
 // import { DeleteLeaseDialog } from "@/components/leases/delete-lease-dialog";
 import { AddToCalendar } from "@/components/ui/add-to-calendar";
@@ -49,6 +50,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 }
 
 export default async function LeaseDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+    // ... existing setup ...
     const { id } = await params;
     const { userId } = await auth();
 
@@ -78,14 +80,16 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
     }
 
     const isPro = userData?.is_pro || false;
-
     const lease: Lease = data;
+
+    // SECURE SIGNED URL GENERATION
+    const signedPdfUrl = await getSignedLeaseUrl(lease.pdf_url);
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     // Derived Calculations
     const startDate = lease.lease_start_date ? new Date(lease.lease_start_date) : new Date(lease.created_at);
-
 
     // Status
     const status = getLeaseStatus(lease);
@@ -109,10 +113,13 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                 ? "Due Today"
                 : `Action required in ${daysUntilEvent} days`;
 
+    // ... (rest of the component) ...
+
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <LeaseSplitView pdfUrl={lease.pdf_url || ""} leaseId={lease.id}>
+            <LeaseSplitView pdfUrl={signedPdfUrl || ""} leaseId={lease.id}>
                 <div className="flex flex-col gap-10">
+
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <Link href="/leases">

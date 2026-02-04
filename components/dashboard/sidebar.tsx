@@ -20,13 +20,13 @@ import { useSidebar } from "./sidebar-context";
 import { useTutorial } from "@/components/tutorial/tutorial-provider";
 
 const NAV_ITEMS = [
-    { name: "Command Center", href: "/dashboard", icon: BarChart3, color: "text-blue-500" },
-    { name: "Lease Portfolio", href: "/leases", icon: FileText, color: "text-indigo-500" },
-    { name: "New Lease", href: "/ai-import", icon: PlusCircle, color: "text-[#2d6a4f]" },
-    { name: "Profit Protection", href: "/profit-protection", icon: Sparkles, color: "text-[#d4a853]" },
-    { name: "Billing", href: "/billing", icon: CreditCard, color: "text-rose-500" },
-    { name: "Settings", href: "/settings", icon: Settings, color: "text-slate-500" },
-    { name: "Support", href: "mailto:support@rentclock.online", icon: LifeBuoy, color: "text-emerald-500" },
+    { name: "Command Center", href: "/dashboard", icon: BarChart3, color: "text-blue-500", id: "sidebar-home" },
+    { name: "Lease Portfolio", href: "/leases", icon: FileText, color: "text-indigo-500", id: "sidebar-leases" },
+    { name: "New Lease", href: "/ai-import", icon: PlusCircle, color: "text-[#2d6a4f]", id: "sidebar-new-lease" },
+    { name: "Profit Protection", href: "/profit-protection", icon: Sparkles, color: "text-[#d4a853]", id: "sidebar-profit" },
+    { name: "Billing", href: "/billing", icon: CreditCard, color: "text-rose-500", id: "sidebar-billing" },
+    { name: "Settings", href: "/settings", icon: Settings, color: "text-slate-500", id: "sidebar-settings" },
+    { name: "Support", href: "mailto:support@rentclock.online", icon: LifeBuoy, color: "text-emerald-500", id: "sidebar-support" },
 ];
 
 export function Sidebar() {
@@ -70,6 +70,7 @@ export function Sidebar() {
                         <Link
                             key={item.href}
                             href={item.href}
+                            id={item.id}
                             title={isCollapsed ? item.name : ""}
                             className={cn(
                                 "group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all relative",

@@ -37,7 +37,7 @@ export default async function LeasesPage() {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                     <ExportLeasesButton leases={typedLeases} />
-                    <Link href="/ai-import" className="w-full sm:w-auto">
+                    <Link href="/ai-import" className="w-full sm:w-auto" id="leases-add-button">
                         <Button className="w-full sm:w-auto bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-6 h-12 rounded-xl font-bold shadow-lg shadow-slate-200 flex items-center justify-center gap-2 transition-all">
                             <Plus className="h-5 w-5" />
                             Add New Lease

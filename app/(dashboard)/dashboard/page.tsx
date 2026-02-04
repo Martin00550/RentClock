@@ -59,7 +59,7 @@ export default async function DashboardPage() {
                     <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Portfolio Safety Net</h1>
                     <p className="text-slate-500 text-base md:text-lg font-medium">Protecting your properties from the invisible bleed.</p>
                 </div>
-                <Link href="/ai-import" className="w-full md:w-auto">
+                <Link href="/ai-import" className="w-full md:w-auto" id="dashboard-quick-add">
                     <Button className="w-full md:w-auto bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-8 h-12 md:h-14 rounded-2xl font-bold font-display text-base md:text-lg shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3 transition-all">
                         <Plus className="h-5 w-5 md:h-6 md:w-6" strokeWidth={3} />
                         Protect a New Lease

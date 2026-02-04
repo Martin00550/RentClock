@@ -47,7 +47,7 @@ export function LeaseSplitView({ pdfUrl, leaseId, children }: LeaseSplitViewProp
     return (
         <div className="relative min-h-screen">
             {/* TOGGLE BUTTON - Floating */}
-            <div className="fixed bottom-8 right-8 z-50">
+            <div className="fixed bottom-28 md:bottom-8 right-6 md:right-8 z-50">
                 <Button
                     onClick={() => setIsOpen(!isOpen)}
                     className={cn(

@@ -2,137 +2,90 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getProductHealth, ProductHealthStats } from "@/actions/get-admin-stats";
-import { Cpu, Users, MapPin, TrendingUp, Loader2 } from "lucide-react";
-import { formatCurrency } from "@/lib/lease-utils";
+import { getHealthStats, HealthStats } from "@/actions/get-health-stats";
+import { Loader2, Activity, Users, ShieldCheck, Zap } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 export function ProductHealth() {
-    const [stats, setStats] = useState<ProductHealthStats | null>(null);
+    const [stats, setStats] = useState<HealthStats | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchStats() {
-            try {
-                const data = await getProductHealth();
-                setStats(data);
-            } catch (error) {
-                console.error("Failed to fetch product stats:", error);
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchStats();
+        getHealthStats().then(res => {
+            if (res.stats) setStats(res.stats);
+            setLoading(false);
+        });
     }, []);
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center p-12">
-                <Loader2 className="h-8 w-8 text-[#1e3a5f] animate-spin" />
+            <div className="flex justify-center p-12">
+                <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
             </div>
         );
     }
 
-    if (!stats) return null;
+    if (!stats) return <div className="p-4 text-red-500">Failed to load health stats.</div>;
 
     return (
         <div className="space-y-6">
-            <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-indigo-600" />
-                Product Health & Intelligence
+            <h2 className="text-xl font-bold flex items-center gap-2">
+                <Activity className="h-5 w-5 text-emerald-500" />
+                Live Vitals
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* AI Reliability */}
-                <Card className="rounded-2xl border-indigo-100 shadow-sm overflow-hidden">
-                    <div className="bg-indigo-50/50 p-4 border-b border-indigo-100 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <Cpu className="h-4 w-4 text-indigo-600" />
-                            <span className="font-bold text-indigo-900 text-sm">AI Core Reliability</span>
-                        </div>
-                        <span className="text-[10px] font-mono text-indigo-400 uppercase">{stats.aiTotalScans} Scans Processed</span>
-                    </div>
-                    <CardContent className="p-6">
-                        <div className="flex items-baseline gap-2">
-                            <span className="text-4xl font-black text-slate-900">{stats.aiSuccessRate.toFixed(1)}%</span>
-                            <span className="text-sm font-medium text-slate-500">Success Rate</span>
-                        </div>
-                        <div className="mt-4 h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                            <div
-                                className="h-full bg-indigo-500 rounded-full transition-all duration-1000"
-                                style={{ width: `${stats.aiSuccessRate}%` }}
-                            />
-                        </div>
-                        <p className="mt-3 text-xs text-slate-400">
-                            Measures the accuracy of the Gemini lease extraction engine.
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* 1. AI Reliability */}
+                <Card className="border-slate-200">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-slate-500 flex justify-between">
+                            AI Reliability (24h)
+                            <Zap className="h-4 w-4 text-amber-500" />
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{stats.ai_success_rate_24h}%</div>
+                        <Progress value={stats.ai_success_rate_24h} className="h-2 mt-2"
+                            indicatorClassName={stats.ai_success_rate_24h > 90 ? "bg-emerald-500" : "bg-red-500"}
+                        />
+                        <p className="text-xs text-slate-400 mt-2">
+                            Target: &gt;95% lease scan success
                         </p>
                     </CardContent>
                 </Card>
 
-                {/* Sticky Factor */}
-                <Card className="rounded-2xl border-emerald-100 shadow-sm overflow-hidden">
-                    <div className="bg-emerald-50/50 p-4 border-b border-emerald-100 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <Users className="h-4 w-4 text-emerald-600" />
-                            <span className="font-bold text-emerald-900 text-sm">Sticky Factor</span>
-                        </div>
-                        <span className="text-[10px] font-mono text-emerald-400 uppercase">Retention KPI</span>
-                    </div>
-                    <CardContent className="p-6">
-                        <div className="flex items-baseline gap-2">
-                            <span className="text-4xl font-black text-slate-900">{stats.stickyUserPercent.toFixed(1)}%</span>
-                            <span className="text-sm font-medium text-slate-500">Multi-Lease Users</span>
-                        </div>
-                        <div className="mt-4 h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                            <div
-                                className="h-full bg-emerald-500 rounded-full transition-all duration-1000"
-                                style={{ width: `${stats.stickyUserPercent}%` }}
-                            />
-                        </div>
-                        <p className="mt-3 text-xs text-slate-400">
-                            Percentage of active users managing more than one property.
+                {/* 2. Sticky Factor */}
+                <Card className="border-slate-200">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-slate-500 flex justify-between">
+                            Sticky Users
+                            <Users className="h-4 w-4 text-blue-500" />
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{stats.sticky_users}</div>
+                        <p className="text-xs text-slate-400 mt-2">
+                            Users with &gt;1 active lease
+                        </p>
+                    </CardContent>
+                </Card>
+
+                {/* 3. Monetization */}
+                <Card className="border-slate-200 bg-slate-50">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-slate-500 flex justify-between">
+                            Active Pros
+                            <ShieldCheck className="h-4 w-4 text-[#d4a853]" />
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold text-[#1e3a5f]">{stats.active_subscribers}</div>
+                        <p className="text-xs text-slate-400 mt-2">
+                            Total active subscriptions
                         </p>
                     </CardContent>
                 </Card>
             </div>
-
-            {/* Top Markets */}
-            <Card className="rounded-2xl border-slate-200 shadow-sm">
-                <CardHeader className="border-b border-slate-100 py-4">
-                    <CardTitle className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-slate-400" />
-                        Top Performing Markets
-                    </CardTitle>
-                </CardHeader>
-                <div className="p-0">
-                    <table className="w-full text-sm">
-                        <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-medium">
-                            <tr>
-                                <th className="px-6 py-3 text-left">State</th>
-                                <th className="px-6 py-3 text-left">Leases</th>
-                                <th className="px-6 py-3 text-right">Portfolio Value</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                            {stats.topMarkets.map((market, i) => (
-                                <tr key={market.state} className="hover:bg-slate-50/50">
-                                    <td className="px-6 py-4 font-bold text-slate-800">{market.state}</td>
-                                    <td className="px-6 py-4 text-slate-600">{market.count}</td>
-                                    <td className="px-6 py-4 text-right font-mono text-slate-700">
-                                        {formatCurrency(market.value)}
-                                    </td>
-                                </tr>
-                            ))}
-                            {stats.topMarkets.length === 0 && (
-                                <tr>
-                                    <td colSpan={3} className="text-center py-8 text-slate-400 italic">
-                                        Not enough data to determine top markets
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </Card>
         </div>
     );
 }
