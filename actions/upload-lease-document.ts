@@ -35,7 +35,7 @@ export async function uploadLeaseDocument(leaseId: string, formData: FormData) {
             });
 
         if (uploadError) {
-            logger.error("Storage upload error", uploadError, { fileName, userId });
+            logger.error("Storage upload error", { error: uploadError, fileName, userId });
             return { error: "Failed to upload file to storage" };
         }
 
@@ -48,7 +48,7 @@ export async function uploadLeaseDocument(leaseId: string, formData: FormData) {
             .eq("user_id", userId); // Security check
 
         if (updateError) {
-            logger.error("Database update error", updateError, { leaseId, userId });
+            logger.error("Database update error", { error: updateError, leaseId, userId });
             return { error: "Failed to update lease record" };
         }
 
@@ -56,7 +56,7 @@ export async function uploadLeaseDocument(leaseId: string, formData: FormData) {
         return { success: true, pdfUrl: fileName };
 
     } catch (error) {
-        logger.error("Server action error", error, { leaseId, userId });
+        logger.error("Server action error", { error, leaseId, userId });
         return { error: "Failed to upload document" };
     }
 }

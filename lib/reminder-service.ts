@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { resend } from "@/lib/resend";
 import { sendSms } from "@/lib/sms";
-import { differenceInDays, parseISO, startOfDay, addDays } from "date-fns";
+import { differenceInDays, parseISO, startOfDay } from "date-fns";
 
 export async function processLeaseReminders() {
     const today = startOfDay(new Date());
