@@ -45,21 +45,21 @@ export default function DashboardLayout({
                         </main>
 
                         {/* Mobile Bottom Navigation */}
-                        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex items-center justify-between px-2 pt-2 pb-6 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
-                            <MobileNavItem href="/dashboard" icon={BarChart3} label="Home" />
-                            <MobileNavItem href="/leases" icon={FileText} label="Leases" />
+                        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex items-center justify-between px-2 pt-2 pb-[calc(1.5rem+env(safe-area-inset-bottom))] z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+                            <MobileNavItem id="sidebar-home" href="/dashboard" icon={BarChart3} label="Home" />
+                            <MobileNavItem id="sidebar-leases" href="/leases" icon={FileText} label="Leases" />
 
                             {/* Primary Action Button */}
                             <div className="-mt-10 relative">
-                                <Link href="/ai-import">
+                                <Link href="/ai-import" id="sidebar-new-lease">
                                     <div className="bg-[#1e3a5f] p-4 rounded-full shadow-2xl shadow-[#1e3a5f]/40 text-white border-4 border-slate-50 active:scale-90 transition-transform">
                                         <PlusCircle className="h-7 w-7" />
                                     </div>
                                 </Link>
                             </div>
 
-                            <MobileNavItem href="/profit-protection" icon={Sparkles} label="Profit" />
-                            <MobileNavItem href="/billing" icon={CreditCard} label="Billing" />
+                            <MobileNavItem id="sidebar-profit" href="/profit-protection" icon={Sparkles} label="Profit" />
+                            <MobileNavItem id="sidebar-billing" href="/billing" icon={CreditCard} label="Billing" />
                         </nav>
                     </div>
                     <OnboardingWizard />
@@ -69,9 +69,9 @@ export default function DashboardLayout({
     );
 }
 
-function MobileNavItem({ href, icon: Icon, label }: { href: string; icon: React.ElementType; label: string }) {
+function MobileNavItem({ id, href, icon: Icon, label }: { id?: string; href: string; icon: React.ElementType; label: string }) {
     return (
-        <Link href={href} className="flex flex-col items-center gap-1 group">
+        <Link href={href} id={id} className="flex flex-col items-center gap-1 group">
             <Icon className="h-5 w-5 text-slate-400 group-hover:text-[#1e3a5f] transition-colors" />
             <span className="text-[10px] font-bold text-slate-500 group-hover:text-[#1e3a5f]">{label}</span>
         </Link>

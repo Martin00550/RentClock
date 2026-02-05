@@ -128,7 +128,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                 </Button>
                             </Link>
                             <div className="flex items-center gap-3">
-                                <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">{lease.tenant_name}</h1>
+                                <h1 className="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">{lease.tenant_name}</h1>
                                 <Badge className={
                                     status === "urgent" ? "bg-red-100 text-red-700 border-red-200" :
                                         status === "warning" ? "bg-amber-100 text-amber-700 border-amber-200" :
@@ -146,7 +146,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
 
                     {/* SECTION 1: TOP STATS */}
                     <div className="grid grid-cols-1 md:grid-cols-3 group-data-[is-split=true]/content:grid-cols-1 gap-6 transition-all duration-500">
-                        <div className="bg-white border-2 border-slate-100 rounded-[2rem] p-8 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="bg-white border-2 border-slate-100 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow" style={{ borderRadius: 'var(--fluid-radius)', padding: 'var(--fluid-p)' }}>
                             <div className="bg-[#1e3a5f]/10 p-3 w-fit rounded-2xl">
                                 <Calendar className="h-6 w-6 text-[#1e3a5f]" />
                             </div>
@@ -155,7 +155,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                 <div className="text-3xl font-black text-slate-900 mt-1">{leaseAgeYears} Years</div>
                             </div>
                         </div>
-                        <div className="bg-white border-2 border-slate-100 rounded-[2rem] p-8 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="bg-white border-2 border-slate-100 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow" style={{ borderRadius: 'var(--fluid-radius)', padding: 'var(--fluid-p)' }}>
                             <div className="bg-[#1e3a5f]/10 p-3 w-fit rounded-2xl">
                                 <Clock className="h-6 w-6 text-[#1e3a5f]" />
                             </div>
@@ -166,7 +166,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-[#2d6a4f]/5 border-2 border-[#2d6a4f]/10 rounded-[2rem] p-8 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="bg-[#2d6a4f]/5 border-2 border-[#2d6a4f]/10 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow" style={{ borderRadius: 'var(--fluid-radius)', padding: 'var(--fluid-p)' }}>
                             <div className="bg-[#2d6a4f]/10 p-3 w-fit rounded-2xl">
                                 <DollarSign className="h-6 w-6 text-[#2d6a4f]" />
                             </div>
@@ -181,8 +181,8 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                     <div className="grid gap-8 lg:grid-cols-12 group-data-[is-split=true]/content:grid-cols-1 items-start transition-all duration-500">
                         {/* LEFT: TENANT INFO */}
                         <div className="lg:col-span-4 group-data-[is-split=true]/content:col-span-1 h-full">
-                            <Card className="rounded-[2.5rem] border-slate-200 shadow-sm h-full overflow-hidden">
-                                <CardHeader className="bg-slate-50/50 border-b border-slate-100 p-8">
+                            <Card className="border-slate-200 shadow-sm h-full overflow-hidden" style={{ borderRadius: 'var(--fluid-radius)' }}>
+                                <CardHeader className="bg-slate-50/50 border-b border-slate-100" style={{ padding: 'var(--fluid-p)' }}>
                                     <div className="flex items-center gap-4">
                                         <div className="bg-[#1e3a5f] p-3 rounded-2xl shadow-lg shadow-slate-900/10">
                                             <User className="h-5 w-5 text-white" />
@@ -193,7 +193,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                         </div>
                                     </div>
                                 </CardHeader>
-                                <CardContent className="p-8 space-y-8">
+                                <CardContent className="space-y-8" style={{ padding: 'var(--fluid-p)' }}>
                                     <div className="space-y-2">
                                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Primary Location</span>
                                         <div className="text-lg font-bold text-slate-800 leading-tight">
@@ -224,12 +224,12 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
 
                         {/* RIGHT: LIFECYCLE */}
                         <div className="lg:col-span-8 group-data-[is-split=true]/content:col-span-1 h-full">
-                            <Card className="rounded-[2.5rem] border-slate-200 shadow-sm h-full overflow-hidden">
-                                <CardHeader className="bg-slate-50/50 border-b border-slate-100 p-8">
+                            <Card id="lease-timeline" className="border-slate-200 shadow-sm h-full overflow-hidden" style={{ borderRadius: 'var(--fluid-radius)' }}>
+                                <CardHeader className="bg-slate-50/50 border-b border-slate-100" style={{ padding: 'var(--fluid-p)' }}>
                                     <CardTitle className="text-2xl font-black text-slate-900 tracking-tight">Lease Pulse-line</CardTitle>
                                 </CardHeader>
-                                <CardContent className="p-10">
-                                    <div className="relative pl-10 space-y-16 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-100">
+                                <CardContent style={{ padding: 'var(--fluid-p)' }}>
+                                    <div className="relative space-y-16 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-100" style={{ paddingLeft: 'var(--fluid-p)' }}>
                                         {/* TIMELINE ITEM 1: Created */}
                                         <div className="relative">
                                             <div className="absolute -left-[51px] top-1 bg-white border-2 border-slate-200 rounded-full p-2.5 z-10">

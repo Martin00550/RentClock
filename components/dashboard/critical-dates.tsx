@@ -44,7 +44,7 @@ export function ImminentCriticalDates({ leases }: { leases: Lease[] }) {
         .slice(0, 5); // Top 5
 
     return (
-        <div className="rounded-xl border bg-white shadow-sm overflow-x-auto">
+        <div className="rounded-lg md:rounded-xl border bg-white shadow-sm overflow-x-auto">
             <div className="p-6 border-b flex items-center justify-between sticky left-0 bg-white z-10">
                 <div>
                     <h2 className="text-xl font-bold text-slate-900 tracking-tight">Active Profit Protection Alarms</h2>
@@ -56,85 +56,145 @@ export function ImminentCriticalDates({ leases }: { leases: Lease[] }) {
                     </Button>
                 </Link>
             </div>
-            <Table className="min-w-[700px] md:min-w-full">
-                <TableHeader className="bg-slate-50">
-                    <TableRow>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider">Tenant & Property</TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-center">Event</TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider">Due Date</TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider">Countdown</TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {criticalLeases.length === 0 ? (
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+                <Table>
+                    <TableHeader className="bg-slate-50">
                         <TableRow>
-                            <TableCell colSpan={6} className="h-24 text-center text-slate-500">
-                                No upcoming critical dates found.
-                            </TableCell>
+                            <TableHead className="font-semibold text-xs uppercase tracking-wider">Tenant & Property</TableHead>
+                            <TableHead className="font-semibold text-xs uppercase tracking-wider text-center">Event</TableHead>
+                            <TableHead className="font-semibold text-xs uppercase tracking-wider">Due Date</TableHead>
+                            <TableHead className="font-semibold text-xs uppercase tracking-wider">Countdown</TableHead>
+                            <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">Actions</TableHead>
                         </TableRow>
-                    ) : (
-                        criticalLeases.map((lease) => (
-                            <TableRow key={lease.id} className="hover:bg-slate-50/50 transition-colors">
-                                <TableCell className="py-4">
-                                    <Link href={`/leases/${lease.id}`} className="hover:underline">
-                                        <div className="font-bold text-slate-900 leading-tight">{lease.tenant_name}</div>
-                                    </Link>
-                                    <div className="text-[10px] text-slate-400 font-medium">{lease.property_address}</div>
-                                </TableCell>
-                                <TableCell className="py-4 text-center">
-                                    <div className="flex flex-col items-center gap-1">
-                                        <Badge variant="secondary" className="bg-[#1e3a5f]/10 text-[#1e3a5f] border-[#1e3a5f]/20 font-bold text-[10px] px-2">
-                                            {lease.eventType}
-                                        </Badge>
-                                        {lease.eventType === "Rent Increase" && (
-                                            <span className="text-[9px] font-black text-[#2d6a4f] uppercase tracking-tighter">
-                                                ROI Impact: {lease.rent_increase_amount ? formatCurrency(lease.rent_increase_amount) : "High"}
-                                            </span>
-                                        )}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="py-4 font-bold text-slate-700 text-sm">
-                                    {format(lease.eventDate, "MM/dd/yyyy")}
-                                </TableCell>
-                                <TableCell className="py-4">
-                                    <div className="flex items-center gap-2">
-                                        <div className={cn(
-                                            "h-2 w-2 rounded-full",
-                                            lease.computedStatus === "urgent" ? "bg-red-500 animate-pulse" :
-                                                lease.computedStatus === "warning" ? "bg-amber-500" : "bg-slate-300"
-                                        )} />
-                                        <span className={cn(
-                                            "text-xs",
-                                            lease.computedStatus === "urgent" ? "text-red-600 font-black" :
-                                                lease.computedStatus === "warning" ? "text-amber-600 font-bold" : "text-slate-500 font-medium"
-                                        )}>
-                                            In {lease.daysUntil} days
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                <TableCell className="py-4 text-right">
-                                    <div className="flex items-center gap-2 justify-end">
-                                        <div className="flex gap-1 mr-2">
-                                            {(lease.reminder_60_days_email || lease.reminder_30_days_email) && (
-                                                <Mail className="h-3 w-3 text-slate-400" />
-                                            )}
-                                            {(lease.reminder_60_days_sms || lease.reminder_30_days_sms) && (
-                                                <MessageSquare className="h-3 w-3 text-slate-400" />
-                                            )}
-                                        </div>
-                                        <Link href={`/leases/${lease.id}`}>
-                                            <Button size="sm" className="bg-[#1e3a5f]/10 text-[#1e3a5f] hover:bg-[#1e3a5f]/20 font-black text-[10px] tracking-tight uppercase border border-[#1e3a5f]/20 h-8 rounded-lg">
-                                                {lease.computedStatus === "urgent" ? "Resolve" : "Review"}
-                                            </Button>
-                                        </Link>
-                                    </div>
+                    </TableHeader>
+                    <TableBody>
+                        {criticalLeases.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={6} className="h-24 text-center text-slate-500">
+                                    No upcoming critical dates found.
                                 </TableCell>
                             </TableRow>
-                        ))
-                    )}
-                </TableBody>
-            </Table>
+                        ) : (
+                            criticalLeases.map((lease) => (
+                                <TableRow key={lease.id} className="hover:bg-slate-50/50 transition-colors">
+                                    <TableCell className="py-4">
+                                        <Link href={`/leases/${lease.id}`} className="hover:underline">
+                                            <div className="font-bold text-slate-900 leading-tight">{lease.tenant_name}</div>
+                                        </Link>
+                                        <div className="text-[10px] text-slate-400 font-medium">{lease.property_address}</div>
+                                    </TableCell>
+                                    <TableCell className="py-4 text-center">
+                                        <div className="flex flex-col items-center gap-1">
+                                            <Badge variant="secondary" className="bg-[#1e3a5f]/10 text-[#1e3a5f] border-[#1e3a5f]/20 font-bold text-[10px] px-2">
+                                                {lease.eventType}
+                                            </Badge>
+                                            {lease.eventType === "Rent Increase" && (
+                                                <span className="text-[9px] font-black text-[#2d6a4f] uppercase tracking-tighter">
+                                                    ROI Impact: {lease.rent_increase_amount ? formatCurrency(lease.rent_increase_amount) : "High"}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="py-4 font-bold text-slate-700 text-sm">
+                                        {format(lease.eventDate, "MM/dd/yyyy")}
+                                    </TableCell>
+                                    <TableCell className="py-4">
+                                        <div className="flex items-center gap-2">
+                                            <div className={cn(
+                                                "h-2 w-2 rounded-full",
+                                                lease.computedStatus === "urgent" ? "bg-red-500 animate-pulse" :
+                                                    lease.computedStatus === "warning" ? "bg-amber-500" : "bg-slate-300"
+                                            )} />
+                                            <span className={cn(
+                                                "text-xs",
+                                                lease.computedStatus === "urgent" ? "text-red-600 font-black" :
+                                                    lease.computedStatus === "warning" ? "text-amber-600 font-bold" : "text-slate-500 font-medium"
+                                            )}>
+                                                In {lease.daysUntil} days
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="py-4 text-right">
+                                        <div className="flex items-center gap-2 justify-end">
+                                            <div className="flex gap-1 mr-2">
+                                                {(lease.reminder_60_days_email || lease.reminder_30_days_email) && (
+                                                    <Mail className="h-3 w-3 text-slate-400" />
+                                                )}
+                                                {(lease.reminder_60_days_sms || lease.reminder_30_days_sms) && (
+                                                    <MessageSquare className="h-3 w-3 text-slate-400" />
+                                                )}
+                                            </div>
+                                            <Link href={`/leases/${lease.id}`}>
+                                                <Button size="sm" className="bg-[#1e3a5f]/10 text-[#1e3a5f] hover:bg-[#1e3a5f]/20 font-black text-[10px] tracking-tight uppercase border border-[#1e3a5f]/20 h-8 rounded-lg">
+                                                    {lease.computedStatus === "urgent" ? "Resolve" : "Review"}
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden divide-y divide-slate-100">
+                {criticalLeases.length === 0 ? (
+                    <div className="p-12 text-center text-slate-500 text-sm">
+                        No upcoming critical dates found.
+                    </div>
+                ) : (
+                    criticalLeases.map((lease) => (
+                        <div key={lease.id} className="p-4 space-y-4">
+                            <div className="flex items-start justify-between">
+                                <div className="space-y-1">
+                                    <Link href={`/leases/${lease.id}`}>
+                                        <div className="font-bold text-slate-900 leading-tight">{lease.tenant_name}</div>
+                                    </Link>
+                                    <div className="text-[10px] text-slate-400 font-medium truncate max-w-[200px]">{lease.property_address}</div>
+                                </div>
+                                <Badge variant="secondary" className="bg-[#1e3a5f]/10 text-[#1e3a5f] border-[#1e3a5f]/20 font-bold text-[10px] px-2 shrink-0">
+                                    {lease.eventType}
+                                </Badge>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Due Date</span>
+                                        <span className="text-sm font-bold text-slate-700">{format(lease.eventDate, "MM/dd/yyyy")}</span>
+                                    </div>
+                                    <div className="h-8 w-px bg-slate-100" />
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Countdown</span>
+                                        <div className="flex items-center gap-1.5">
+                                            <div className={cn(
+                                                "h-1.5 w-1.5 rounded-full",
+                                                lease.computedStatus === "urgent" ? "bg-red-500 animate-pulse" :
+                                                    lease.computedStatus === "warning" ? "bg-amber-500" : "bg-slate-300"
+                                            )} />
+                                            <span className={cn(
+                                                "text-xs font-bold",
+                                                lease.computedStatus === "urgent" ? "text-red-600" :
+                                                    lease.computedStatus === "warning" ? "text-amber-600" : "text-slate-500"
+                                            )}>
+                                                {lease.daysUntil} days
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <Link href={`/leases/${lease.id}`}>
+                                    <Button size="sm" className="bg-[#1e3a5f] text-white font-black text-[10px] uppercase tracking-wider h-10 rounded-xl px-6">
+                                        Open
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
         </div>
     );
 }

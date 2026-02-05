@@ -33,7 +33,7 @@ export function LandingHeader() {
                             <Button variant="ghost" className="text-sm font-bold text-slate-600">Log in</Button>
                         </SignInTrigger>
                         <SignUpTrigger>
-                            <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-lg shadow-slate-900/10">
+                            <Button className="hidden sm:flex bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-lg shadow-slate-900/10">
                                 Start Tracking for Free
                             </Button>
                         </SignUpTrigger>

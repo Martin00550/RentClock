@@ -64,11 +64,13 @@ export function ExportLeasesButton({ leases }: ExportLeasesButtonProps) {
 
     return (
         <Button
+            id="leases-export-button"
             variant="outline"
             className="h-12 px-6 rounded-xl font-bold border-2 border-slate-200 text-slate-600 hover:border-[#1e3a5f] hover:text-[#1e3a5f] flex items-center gap-2"
             onClick={handleExport}
             disabled={leases.length === 0}
         >
+
             <Download className="h-4 w-4" />
             Export CSV
         </Button>

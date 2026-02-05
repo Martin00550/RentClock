@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:live": "cross-env BASE_URL=https://rentclock.online npx playwright test"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.9",
@@ -60,6 +61,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "15.5.9",

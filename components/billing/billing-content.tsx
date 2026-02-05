@@ -322,7 +322,7 @@ export function BillingContent() {
 
                         <div className="lg:col-span-7 flex flex-col gap-8 pt-6">
                             {!isPro && (
-                                <div className="space-y-6">
+                                <div id="billing-usage-gauge" className="space-y-6">
                                     <div className="flex items-center justify-between">
                                         <span className="font-extrabold text-slate-800 text-lg">Lease Limit Usage</span>
                                         <span className="font-black text-[#1e3a5f] text-lg">{Math.round((leaseCount / 3) * 100)}%</span>
@@ -348,6 +348,7 @@ export function BillingContent() {
                                         </div>
                                     )}
                                 </div>
+
                             )}
                             {isPro && (
                                 <div className="space-y-6">

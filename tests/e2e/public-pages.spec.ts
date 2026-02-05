@@ -7,10 +7,10 @@ test('landing page has title and login button', async ({ page }) => {
     await expect(page).toHaveTitle(/RentClock/);
 
     // Check for call to action
-    await expect(page.getByRole('link', { name: /Start Free/i }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /Start Tracking/i }).first()).toBeVisible();
 });
 
 test('pricing section is visible', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByText('Simple, Transparent Pricing')).toBeVisible();
+    await expect(page.getByText(/Fair pricing/i)).toBeVisible();
 });

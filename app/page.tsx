@@ -35,7 +35,7 @@ export default function LandingPage() {
 
             <main>
                 {/* HERO */}
-                <section className="relative pt-24 pb-20 px-6 bg-slate-50">
+                <section className="relative pt-12 md:pt-24 pb-20 px-6 bg-slate-50">
                     <motion.div
                         className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start"
                         initial={{ opacity: 0, y: 20 }}
@@ -55,7 +55,7 @@ export default function LandingPage() {
                             </p>
                             <div className="flex flex-col sm:flex-row items-center gap-6">
                                 <SignUpTrigger>
-                                    <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-10 py-5 rounded-3xl font-bold text-xl transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2 w-fit h-auto">
+                                    <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-10 py-5 rounded-3xl font-bold text-xl transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2 w-full sm:w-fit h-auto">
                                         <span>Start Tracking for Free</span>
                                     </Button>
                                 </SignUpTrigger>
@@ -63,7 +63,7 @@ export default function LandingPage() {
                             </div>
 
                             {/* HERO TRUST SIGNALS */}
-                            <div className="flex flex-wrap items-center gap-6 pt-2">
+                            <div className="flex flex-row flex-wrap items-center gap-x-8 gap-y-4 pt-2">
                                 <div className="flex items-center gap-2 text-slate-500 whitespace-nowrap">
                                     <ShieldCheck className="h-4 w-4 text-[#2d6a4f]" />
                                     <span className="text-[11px] font-bold uppercase tracking-wider">Secure Encryption</span>
@@ -126,7 +126,7 @@ export default function LandingPage() {
                     </motion.div>
                 </section>
 
-                <section className="py-32 bg-slate-50 relative overflow-hidden" id="how-it-works">
+                <section className="bg-slate-50 relative overflow-hidden" id="how-it-works" style={{ paddingTop: 'var(--fluid-p)', paddingBottom: 'var(--fluid-p)' }}>
                     {/* Background decoration */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-[#1e3a5f]/5 rounded-full blur-3xl z-0 opacity-40 pointer-events-none" />
 
@@ -162,7 +162,7 @@ export default function LandingPage() {
                                     <div className="shrink-0 flex items-center justify-center relative w-32">
                                         <StepVisual1 />
                                     </div>
-                                    <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-100/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-4px_rgba(0,0,0,0.1)] transition-all grow group-hover:-translate-y-1 duration-300 relative overflow-hidden">
+                                    <div className="bg-white p-6 md:p-10 rounded-[2rem] border border-slate-100/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-4px_rgba(0,0,0,0.1)] transition-all grow group-hover:-translate-y-1 duration-300 relative overflow-hidden">
                                         <div className="absolute -top-10 -right-4 p-6 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity select-none pointer-events-none">
                                             <span className="text-9xl font-black text-[#1e3a5f] tracking-tighter">01</span>
                                         </div>
@@ -179,7 +179,7 @@ export default function LandingPage() {
                                     <div className="shrink-0 flex items-center justify-center relative w-32">
                                         <StepVisual2 />
                                     </div>
-                                    <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-100/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-4px_rgba(0,0,0,0.1)] transition-all grow group-hover:-translate-y-1 duration-300 relative overflow-hidden">
+                                    <div className="bg-white p-6 md:p-10 rounded-[2rem] border border-slate-100/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-4px_rgba(0,0,0,0.1)] transition-all grow group-hover:-translate-y-1 duration-300 relative overflow-hidden">
                                         <div className="absolute -top-10 -right-4 p-6 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity select-none pointer-events-none">
                                             <span className="text-9xl font-black text-[#1e3a5f] tracking-tighter">02</span>
                                         </div>
@@ -196,7 +196,7 @@ export default function LandingPage() {
                                     <div className="shrink-0 flex items-center justify-center relative w-32">
                                         <StepVisual3 />
                                     </div>
-                                    <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-100/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-4px_rgba(0,0,0,0.1)] transition-all grow group-hover:-translate-y-1 duration-300 relative overflow-hidden">
+                                    <div className="bg-white p-6 md:p-10 rounded-[2rem] border border-slate-100/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-4px_rgba(0,0,0,0.1)] transition-all grow group-hover:-translate-y-1 duration-300 relative overflow-hidden">
                                         <div className="absolute -top-10 -right-4 p-6 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity select-none pointer-events-none">
                                             <span className="text-9xl font-black text-[#1e3a5f] tracking-tighter">03</span>
                                         </div>
@@ -259,6 +259,20 @@ export default function LandingPage() {
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                        <div className="mt-10 bg-white border-2 border-[#d4a853]/20 rounded-2xl p-8 max-w-[700px] mx-auto text-center shadow-xl shadow-[#d4a853]/5 relative overflow-hidden group hover:border-[#d4a853]/40 transition-colors">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#d4a853] to-transparent opacity-50" />
+                            <h4 className="text-[#1e3a5f] font-black uppercase tracking-widest text-xs mb-3 flex items-center justify-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#d4a853]" />
+                                ROI Reality Check
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#d4a853]" />
+                            </h4>
+                            <p className="text-xl text-slate-700 leading-relaxed font-bold">
+                                Missing just one 3% increase on a $3,000 lease <br className="hidden md:block" />costs <strong className="text-rose-600 underline decoration-rose-200 underline-offset-4">$1,080</strong> annually.
+                            </p>
+                            <p className="text-slate-500 text-sm mt-3 font-medium">
+                                That single error costs <strong className="text-[#1e3a5f]">2.3x more</strong> than a year of RentClock.
+                            </p>
                         </div>
                     </div>
                 </section>

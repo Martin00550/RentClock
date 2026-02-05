@@ -51,6 +51,8 @@ export default function PrivacyPage() {
                         Ulica Jozefa Adamca 9983/24
                         <br />
                         917 01 Trnava, Slovakia
+                        <br />
+                        IČO: 56440553
                     </p>
                 </div>
             </div>

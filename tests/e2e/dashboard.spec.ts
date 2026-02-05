@@ -3,19 +3,13 @@ import { test, expect } from '@playwright/test';
 // NOTE: This test requires a valid auth state in 'playwright/.auth/user.json'
 // test.use({ storageState: 'playwright/.auth/user.json' });
 
-test('dashboard loads for authenticated user', async () => {
-    // Mocking auth for demonstration (User needs to setup auth.setup.ts properly)
-    console.log("Skipping real login check - requires configuration.");
-
-    /*
+test('dashboard loads for authenticated user', async ({ page }) => {
     await page.goto('/dashboard');
     await expect(page).toHaveTitle(/Dashboard/);
-    await expect(page.getByText('Active Leases')).toBeVisible();
-    
-    // Test Feature: Add Lease Button
-    await page.getByRole('button', { name: 'Add Lease' }).click();
-    await expect(page.getByRole('dialog')).toBeVisible();
-    */
+
+    // Check for core dashboard components
+    await expect(page.getByText(/Leases/i)).toBeVisible();
+    await expect(page.getByText(/AI Brain/i)).toBeVisible();
 });
 
 test('guest is redirected to sign-in', async ({ page }) => {

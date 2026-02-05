@@ -68,7 +68,8 @@ export default async function DashboardPage() {
             </div>
 
             {/* PROFIT PROTECTION TEASER */}
-            <div className="bg-linear-to-r from-[#1e3a5f] to-[#2a4a73] p-6 md:p-10 rounded-3xl text-white relative overflow-hidden shadow-2xl shadow-[#1e3a5f]/20 group cursor-pointer transition-transform hover:scale-[1.01]">
+            <div id="dashboard-profit-teaser" className="bg-linear-to-r from-[#1e3a5f] to-[#2a4a73] p-6 md:p-10 rounded-premium text-white relative overflow-hidden shadow-2xl shadow-[#1e3a5f]/20 group cursor-pointer transition-transform hover:scale-[1.01]">
+                {/* ... existing content ... */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
 
                 <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8">
@@ -106,7 +107,10 @@ export default async function DashboardPage() {
                 />
             )}
 
-            <ImminentCriticalDates leases={leases} />
+            <div id="dashboard-critical-dates">
+                <ImminentCriticalDates leases={leases} />
+            </div>
+
         </div>
     );
 }

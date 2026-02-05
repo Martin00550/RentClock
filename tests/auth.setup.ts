@@ -1,27 +1,38 @@
 import { test as setup } from '@playwright/test';
+import fs from 'fs';
+import path from 'path';
 
-
+const authFile = 'playwright/.auth/user.json';
 
 setup('authenticate', async ({ page }) => {
-    // NOTE: You must provide a valid test user here.
-    // Mocking auth completely with Clerk is complex, so we typically login via UI once.
+    const email = process.env.TEST_EMAIL;
+    const password = process.env.TEST_PASSWORD;
 
-
-    if (!process.env.TEST_EMAIL) {
-        console.log('Skipping auth setup: No TEST_EMAIL provided.');
+    if (!email || !password) {
+        console.log('Skipping auth setup: TEST_EMAIL or TEST_PASSWORD not provided.');
         return;
     }
 
     await page.goto('/sign-in');
 
-    // Interaction steps depend on Clerk's specific UI, which changes.
-    // This is a placeholder structure.
-    // await page.getByLabel('Email address').fill(email);
-    // await page.getByRole('button', { name: 'Continue' }).click();
-    // await page.getByLabel('Password').fill(password);
-    // await page.getByRole('button', { name: 'Continue' }).click();
+    // Clerk typically uses these labels or identifiers
+    await page.getByLabel('Email address').fill(email);
+    await page.getByRole('button', { name: /continue|sign in/i }).click();
 
-    // Wait for dashboard
-    // await page.waitForURL('/dashboard');
-    // await page.context().storageState({ path: authFile });
+    // Wait for password field to appear
+    await page.getByLabel('Password', { exact: true }).fill(password);
+    await page.getByRole('button', { name: /continue|sign in/i }).click();
+
+    // Wait for dashboard to confirm successful login
+    await page.waitForURL(/\/dashboard/, { timeout: 30000 });
+
+    // Ensure directory exists
+    const dirname = path.dirname(authFile);
+    if (!fs.existsSync(dirname)) {
+        fs.mkdirSync(dirname, { recursive: true });
+    }
+
+    // Save state
+    await page.context().storageState({ path: authFile });
+    console.log('✓ Authentication state saved for', email);
 });

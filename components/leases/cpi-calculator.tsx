@@ -42,8 +42,9 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
     const displayPercentage = Math.max(0.03, yoyChange) * 100;
 
     return (
-        <Card className="rounded-[2.5rem] border-slate-200 bg-white shadow-2xl shadow-slate-200/50 overflow-hidden group transition-all duration-500 hover:shadow-indigo-500/5">
-            <CardHeader className="bg-linear-to-br from-slate-50 to-white border-b border-slate-100 p-8 space-y-4">
+        <Card id="cpi-calculator-card" className="border-slate-200 bg-white shadow-2xl shadow-slate-200/50 overflow-hidden group transition-all duration-500 hover:shadow-indigo-500/5" style={{ borderRadius: 'var(--fluid-radius)' }}>
+
+            <CardHeader className="bg-linear-to-br from-slate-50 to-white border-b border-slate-100 space-y-4" style={{ padding: 'var(--fluid-p)' }}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="bg-[#1e3a5f] p-3 rounded-2xl shadow-xl shadow-slate-900/10 transition-transform group-hover:scale-110 duration-500">
@@ -72,7 +73,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                 )}
             </CardHeader>
 
-            <CardContent className="p-8 space-y-8">
+            <CardContent className="space-y-8" style={{ padding: 'var(--fluid-p)' }}>
                 {/* INFO ALERT */}
                 <div className="bg-indigo-50/50 border border-indigo-100 p-5 rounded-3xl flex gap-4 transition-colors hover:bg-indigo-50 duration-300">
                     <div className="bg-white p-1.5 h-fit rounded-lg shadow-sm">
@@ -84,7 +85,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                 </div>
 
                 {/* INPUTS */}
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
                         <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Current Rent</Label>
                         <div className="relative group/input">
@@ -108,7 +109,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                 {/* RESULTS */}
                 {calculatedRent ? (
                     <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                        <div className="bg-[#2d6a4f] p-8 rounded-[2rem] shadow-2xl shadow-[#2d6a4f]/20 relative overflow-hidden group/result">
+                        <div className="bg-[#2d6a4f] rounded-3xl shadow-2xl shadow-[#2d6a4f]/20 relative overflow-hidden group/result" style={{ padding: 'var(--fluid-p)' }}>
                             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover/result:rotate-12 transition-transform duration-700">
                                 <TrendingUp className="h-24 w-24 text-white" />
                             </div>
