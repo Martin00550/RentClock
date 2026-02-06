@@ -11,6 +11,7 @@ import { Loader2, Smartphone, Calendar, ArrowRight, ShieldCheck } from "lucide-r
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { useTutorial } from "@/components/tutorial/tutorial-provider";
+import { completeOnboardingAction } from "@/actions/tutorial-actions";
 
 export function OnboardingWizard() {
     const { user, isLoaded } = useUser();
@@ -64,12 +65,9 @@ export function OnboardingWizard() {
         if (!user) return;
 
         // 1. Tell Backend
+        // 1. Tell Backend via Server Action
         try {
-            await fetch("/api/user/profile", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ has_onboarded: true })
-            });
+            await completeOnboardingAction();
         } catch (error) {
             console.error("Error completing onboarding:", error);
         }

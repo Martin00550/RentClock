@@ -35,6 +35,8 @@ import { addYears } from "date-fns";
 import { toast } from "sonner";
 import { useDropzone } from "react-dropzone";
 import { cn } from "@/lib/utils";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
+import { ConnectPhoneDialog } from "@/components/settings/connect-phone-dialog";
 
 interface AddLeaseFormProps {
     leaseCount?: number;
@@ -108,6 +110,36 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
     const [reminder60DaysSMS, setReminder60DaysSMS] = useState(false);
     const [reminder30DaysSMS, setReminder30DaysSMS] = useState(false);
     const [reminder7DaysSMS, setReminder7DaysSMS] = useState(false);
+
+    const { hasPhone } = useTutorial();
+    const [connectPhoneOpen, setConnectPhoneOpen] = useState(false);
+    const [pendingSmsToggle, setPendingSmsToggle] = useState<{ days: number, val: boolean } | null>(null);
+
+    const handleSmsToggle = (days: number, val: boolean) => {
+        if (!isPro) return;
+
+        // If turning ON and no phone, show dialog
+        if (val && !hasPhone) {
+            setPendingSmsToggle({ days, val });
+            setConnectPhoneOpen(true);
+            return;
+        }
+
+        if (days === 90) setReminder90DaysSMS(val);
+        else if (days === 60) setReminder60DaysSMS(val);
+        else if (days === 30) setReminder30DaysSMS(val);
+        else if (days === 7) setReminder7DaysSMS(val);
+    };
+
+    const handlePhoneConnected = () => {
+        if (pendingSmsToggle) {
+            if (pendingSmsToggle.days === 90) setReminder90DaysSMS(pendingSmsToggle.val);
+            else if (pendingSmsToggle.days === 60) setReminder60DaysSMS(pendingSmsToggle.val);
+            else if (pendingSmsToggle.days === 30) setReminder30DaysSMS(pendingSmsToggle.val);
+            else if (pendingSmsToggle.days === 7) setReminder7DaysSMS(pendingSmsToggle.val);
+            setPendingSmsToggle(null);
+        }
+    };
 
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -604,7 +636,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                         </div>
                                         <Switch
                                             checked={reminder90DaysSMS}
-                                            onCheckedChange={setReminder90DaysSMS}
+                                            onCheckedChange={(val) => handleSmsToggle(90, val)}
                                             disabled={!isPro}
                                         />
                                     </div>
@@ -640,7 +672,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                         </div>
                                         <Switch
                                             checked={reminder60DaysSMS}
-                                            onCheckedChange={setReminder60DaysSMS}
+                                            onCheckedChange={(val) => handleSmsToggle(60, val)}
                                             disabled={!isPro}
                                         />
                                     </div>
@@ -676,7 +708,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                         </div>
                                         <Switch
                                             checked={reminder30DaysSMS}
-                                            onCheckedChange={setReminder30DaysSMS}
+                                            onCheckedChange={(val) => handleSmsToggle(30, val)}
                                             disabled={!isPro}
                                         />
                                     </div>
@@ -718,7 +750,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                         </div>
                                         <Switch
                                             checked={reminder7DaysSMS}
-                                            onCheckedChange={setReminder7DaysSMS}
+                                            onCheckedChange={(val) => handleSmsToggle(7, val)}
                                             disabled={!isPro}
                                         />
                                     </div>
@@ -770,7 +802,14 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                     </CardContent>
                 </Card>
             </div>
-        </div>
+
+
+            <ConnectPhoneDialog
+                open={connectPhoneOpen}
+                onOpenChange={setConnectPhoneOpen}
+                onSuccess={handlePhoneConnected}
+            />
+        </div >
     );
 }
 

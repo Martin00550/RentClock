@@ -73,7 +73,7 @@ export function ReferralCTA({ referralCode, isPro, bonusLeases }: ReferralCTAPro
                     </div>
                     <h3 className="text-2xl font-black tracking-tight">Unlock +1 Free Lease Slot</h3>
                     <p className="text-emerald-100 font-medium leading-relaxed">
-                        Help a friend stop the bleed. When they join using your link, you instantly get
+                        Help a friend stop the bleed. When they join using your link, you get
                         <span className="font-bold text-white"> +1 free slot </span>
                         added to your account.
                         <span className="mt-1 opacity-75 text-sm font-bold bg-black/20 inline-block px-2 py-0.5 rounded-lg">Current Bonuses Unlocked: {bonusLeases}</span>

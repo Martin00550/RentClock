@@ -13,6 +13,8 @@ import { Lease } from "@/lib/types";
 
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
+import { ConnectPhoneDialog } from "@/components/settings/connect-phone-dialog";
 
 interface EditTenantDialogProps {
     lease: Lease;
@@ -23,6 +25,10 @@ export function EditTenantDialog({ lease, isPro = false }: EditTenantDialogProps
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+
+    const { hasPhone } = useTutorial();
+    const [connectPhoneOpen, setConnectPhoneOpen] = useState(false);
+    const [pendingSmsToggle, setPendingSmsToggle] = useState<{ days: number, val: boolean } | null>(null);
 
     const [tenantName, setTenantName] = useState(lease.tenant_name);
     const [propertyAddress, setPropertyAddress] = useState(lease.property_address || "");
@@ -38,6 +44,32 @@ export function EditTenantDialog({ lease, isPro = false }: EditTenantDialogProps
     const [reminder60DaysSMS, setReminder60DaysSMS] = useState(lease.reminder_60_days_sms ?? false);
     const [reminder30DaysSMS, setReminder30DaysSMS] = useState(lease.reminder_30_days_sms ?? false);
     const [reminder7DaysSMS, setReminder7DaysSMS] = useState(lease.reminder_7_days_sms ?? false);
+
+    const handleSmsToggle = (days: number, val: boolean) => {
+        if (!isPro) return;
+
+        // If turning ON and no phone, show dialog
+        if (val && !hasPhone) {
+            setPendingSmsToggle({ days, val });
+            setConnectPhoneOpen(true);
+            return;
+        }
+
+        if (days === 90) setReminder90DaysSMS(val);
+        else if (days === 60) setReminder60DaysSMS(val);
+        else if (days === 30) setReminder30DaysSMS(val);
+        else if (days === 7) setReminder7DaysSMS(val);
+    };
+
+    const handlePhoneConnected = () => {
+        if (pendingSmsToggle) {
+            if (pendingSmsToggle.days === 90) setReminder90DaysSMS(pendingSmsToggle.val);
+            else if (pendingSmsToggle.days === 60) setReminder60DaysSMS(pendingSmsToggle.val);
+            else if (pendingSmsToggle.days === 30) setReminder30DaysSMS(pendingSmsToggle.val);
+            else if (pendingSmsToggle.days === 7) setReminder7DaysSMS(pendingSmsToggle.val);
+            setPendingSmsToggle(null);
+        }
+    };
 
     const handleSave = async () => {
         setIsLoading(true);
@@ -179,7 +211,7 @@ export function EditTenantDialog({ lease, isPro = false }: EditTenantDialogProps
                                                     <span className="text-[10px] font-bold">SMS</span>
                                                     <Switch
                                                         checked={days === 90 ? reminder90DaysSMS : days === 60 ? reminder60DaysSMS : days === 30 ? reminder30DaysSMS : reminder7DaysSMS}
-                                                        onCheckedChange={days === 90 ? setReminder90DaysSMS : days === 60 ? setReminder60DaysSMS : days === 30 ? setReminder30DaysSMS : setReminder7DaysSMS}
+                                                        onCheckedChange={(val) => handleSmsToggle(days, val)}
                                                         disabled={!isPro}
                                                     />
                                                 </div>
@@ -214,6 +246,11 @@ export function EditTenantDialog({ lease, isPro = false }: EditTenantDialogProps
                         </Button>
                     </div>
                 </div>
+                <ConnectPhoneDialog
+                    open={connectPhoneOpen}
+                    onOpenChange={setConnectPhoneOpen}
+                    onSuccess={handlePhoneConnected}
+                />
             </DialogContent>
         </Dialog>
     );

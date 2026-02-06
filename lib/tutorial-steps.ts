@@ -64,7 +64,7 @@ export const LEASES_STEPS: DriveStep[] = [
     {
         element: "#leases-search",
         popover: {
-            title: "Find Leases Instantly",
+            title: "Find Leases",
             description: "Search by tenant name, address, or even lease expiry date.",
             side: "bottom",
         }

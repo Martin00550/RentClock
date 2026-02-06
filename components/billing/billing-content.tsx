@@ -368,7 +368,7 @@ export function BillingContent() {
                                     <h4 className="font-extrabold text-slate-900 tracking-tight">Upgrade to Pro</h4>
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between p-4 bg-white border-2 border-[#1e3a5f] rounded-2xl relative">
-                                            <div className="absolute -top-3 left-4 bg-[#d4a853] text-[#1e3a5f] text-[10px] font-bold px-2 py-0.5 rounded-full">Save 20%</div>
+                                            <div className="absolute -top-3 left-4 bg-[#d4a853] text-[#1e3a5f] text-[10px] font-bold px-2 py-0.5 rounded-full">Save $120/year</div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm font-bold text-slate-900">Annual <span className="text-[#2d6a4f]">(Recommended)</span></span>
                                                 <span className="text-2xl font-black text-slate-900">$39<span className="text-sm text-slate-500 font-medium">/mo</span></span>

@@ -9,8 +9,7 @@ import {
     TrendingDown,
     AlertTriangle,
     XCircle,
-    ShieldCheck,
-    Lock
+    ShieldCheck
 } from "lucide-react";
 import { HeroCalculator } from "@/components/landing/hero-calculator";
 import { motion } from "framer-motion";
@@ -35,9 +34,9 @@ export default function LandingPage() {
 
             <main>
                 {/* HERO */}
-                <section className="relative pt-12 md:pt-24 pb-20 px-6 bg-slate-50">
+                <section className="relative overflow-hidden" style={{ paddingTop: 'calc(var(--fluid-p) * 2)', paddingBottom: 'var(--fluid-p)' }}>
                     <motion.div
-                        className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start"
+                        className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start px-6"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
@@ -59,7 +58,6 @@ export default function LandingPage() {
                                         <span>Start Tracking for Free</span>
                                     </Button>
                                 </SignUpTrigger>
-
                             </div>
 
                             {/* HERO TRUST SIGNALS */}
@@ -67,11 +65,6 @@ export default function LandingPage() {
                                 <div className="flex items-center gap-2 text-slate-500 whitespace-nowrap">
                                     <ShieldCheck className="h-4 w-4 text-[#2d6a4f]" />
                                     <span className="text-[11px] font-bold uppercase tracking-wider">Secure Encryption</span>
-                                </div>
-
-                                <div className="flex items-center gap-2 text-slate-500 whitespace-nowrap">
-                                    <Lock className="h-4 w-4 text-[#2d6a4f]" />
-                                    <span className="text-[11px] font-bold uppercase tracking-wider">Private Data Handling</span>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +75,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* PROBLEM */}
-                <section className="py-24 bg-slate-50" id="problem">
+                <section className="bg-slate-50 border-t border-slate-100" style={{ paddingTop: 'var(--fluid-p)', paddingBottom: 'var(--fluid-p)' }} id="problem">
                     <motion.div
                         className="max-w-[1200px] mx-auto px-6"
                         {...revealProps}
@@ -94,8 +87,8 @@ export default function LandingPage() {
                                 Don&apos;t let a busy schedule compromise your returns. Commercial leases are full of traps, and a single missed window can lock you into old rates for years.
                             </p>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 'var(--fluid-gap)' }}>
+                            <div className="bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow" style={{ padding: 'var(--fluid-p)', borderRadius: 'var(--fluid-radius)' }}>
                                 <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-lg flex items-center justify-center mb-6">
                                     <TrendingDown className="h-6 w-6" />
                                 </div>
@@ -104,7 +97,7 @@ export default function LandingPage() {
                                     It&apos;s not just one month. It&apos;s a permanent reduction in your property&apos;s value. Miss a 3% bump on a $5,000 lease? That&apos;s $1,800/year you never get back.
                                 </p>
                             </div>
-                            <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div className="bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow" style={{ padding: 'var(--fluid-p)', borderRadius: 'var(--fluid-radius)' }}>
                                 <div className="w-12 h-12 bg-amber-50 text-amber-500 rounded-lg flex items-center justify-center mb-6">
                                     <AlertTriangle className="h-6 w-6" />
                                 </div>
@@ -113,7 +106,7 @@ export default function LandingPage() {
                                     Don&apos;t let leases expire into month-to-month terms without your knowledge. Lose your leverage and risk sudden vacancies.
                                 </p>
                             </div>
-                            <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div className="bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow" style={{ padding: 'var(--fluid-p)', borderRadius: 'var(--fluid-radius)' }}>
                                 <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-lg flex items-center justify-center mb-6">
                                     <XCircle className="h-6 w-6" />
                                 </div>
@@ -346,7 +339,6 @@ export default function LandingPage() {
 
                 {/* FINAL CTA BAND */}
                 <section className="py-20 bg-[#1e3a5f] relative overflow-hidden">
-                    {/* Subtle Abstract Background Pattern */}
                     <div className="absolute inset-0 opacity-10 pointer-events-none">
                         <div className="absolute -top-24 -left-24 w-96 h-96 border-40 border-white rounded-full" />
                         <div className="absolute -bottom-24 -right-24 w-96 h-96 border-40 border-white rounded-full" />
@@ -385,10 +377,10 @@ export default function LandingPage() {
 
                 {/* FAQ */}
                 <FaqSection />
-            </main >
+            </main>
 
             {/* FOOTER */}
             <LandingFooter />
-        </div >
+        </div>
     );
 }

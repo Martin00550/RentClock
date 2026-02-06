@@ -44,8 +44,14 @@ export function ImminentCriticalDates({ leases }: { leases: Lease[] }) {
         .slice(0, 5); // Top 5
 
     return (
-        <div className="rounded-lg md:rounded-xl border bg-white shadow-sm overflow-x-auto">
-            <div className="p-6 border-b flex items-center justify-between sticky left-0 bg-white z-10">
+        <div
+            className="border bg-white shadow-sm overflow-hidden"
+            style={{ borderRadius: 'var(--fluid-radius)' }}
+        >
+            <div
+                className="border-b flex items-center justify-between bg-white z-10"
+                style={{ padding: 'var(--fluid-p)' }}
+            >
                 <div>
                     <h2 className="text-xl font-bold text-slate-900 tracking-tight">Active Profit Protection Alarms</h2>
                     <p className="text-sm text-slate-500">Upcoming events requiring your final approval.</p>

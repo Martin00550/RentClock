@@ -14,6 +14,8 @@ interface TutorialContextType {
     completedTours: string[];
     resetTours: () => void;
     setHasOnboarded: (val: boolean) => void;
+    hasPhone: boolean;
+    setHasPhone: (val: boolean) => void;
 }
 
 const TutorialContext = createContext<TutorialContextType>({
@@ -21,6 +23,8 @@ const TutorialContext = createContext<TutorialContextType>({
     completedTours: [],
     resetTours: () => { },
     setHasOnboarded: () => { },
+    hasPhone: false,
+    setHasPhone: () => { },
 });
 
 export const useTutorial = () => useContext(TutorialContext);
@@ -34,6 +38,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
     // Blocking State
     const [isPro, setIsPro] = useState(false);
     const [hasOnboarded, setHasOnboarded] = useState(true); // Default true to not block unless confirmed false
+    const [hasPhone, setHasPhone] = useState(false);
 
     // LOAD STATE (Server First, no local storage fallback needed for persistent auth)
     useEffect(() => {
@@ -46,6 +51,9 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
             // Only update if explicit boolean, careful with undefined
             if (typeof data.has_onboarded === 'boolean') {
                 setHasOnboarded(data.has_onboarded);
+            }
+            if (typeof data.has_phone === 'boolean') {
+                setHasPhone(data.has_phone);
             }
             setHasLoaded(true);
         };
@@ -129,7 +137,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
     }, [pathname, hasLoaded, completedTours, startTour, isPro, hasOnboarded]);
 
     return (
-        <TutorialContext.Provider value={{ startTour, completedTours, resetTours, setHasOnboarded }}>
+        <TutorialContext.Provider value={{ startTour, completedTours, resetTours, setHasOnboarded, hasPhone, setHasPhone }}>
             {children}
         </TutorialContext.Provider>
     );

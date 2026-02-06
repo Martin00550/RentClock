@@ -118,9 +118,9 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <LeaseSplitView pdfUrl={signedPdfUrl || ""} leaseId={lease.id}>
-                <div className="flex flex-col gap-10">
+                <div className="flex flex-col py-8 transition-all" style={{ gap: 'var(--fluid-gap)', paddingLeft: 'var(--fluid-p)', paddingRight: 'var(--fluid-p)' }}>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <Link href="/leases">
                                 <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-slate-100">
@@ -145,7 +145,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                     </div>
 
                     {/* SECTION 1: TOP STATS */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 group-data-[is-split=true]/content:grid-cols-1 gap-6 transition-all duration-500">
+                    <div className="grid grid-cols-1 md:grid-cols-3 group-data-[is-split=true]/content:grid-cols-1 transition-all duration-500" style={{ gap: 'var(--fluid-gap)' }}>
                         <div className="bg-white border-2 border-slate-100 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow" style={{ borderRadius: 'var(--fluid-radius)', padding: 'var(--fluid-p)' }}>
                             <div className="bg-[#1e3a5f]/10 p-3 w-fit rounded-2xl">
                                 <Calendar className="h-6 w-6 text-[#1e3a5f]" />
@@ -203,7 +203,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
 
                                     <div className="pt-8 border-t border-slate-100 flex flex-col gap-4">
                                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Financial Baseline</span>
-                                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                                        <div className="bg-slate-50 border border-slate-100" style={{ padding: 'var(--fluid-p)', borderRadius: 'var(--fluid-radius)' }}>
                                             <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Base Monthly Rent</span>
                                             <div className="text-4xl font-black text-slate-900 mt-2 tracking-tighter">
                                                 {formatCurrency(lease.monthly_rent)}
@@ -232,7 +232,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                     <div className="relative space-y-16 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-100" style={{ paddingLeft: 'var(--fluid-p)' }}>
                                         {/* TIMELINE ITEM 1: Created */}
                                         <div className="relative">
-                                            <div className="absolute -left-[51px] top-1 bg-white border-2 border-slate-200 rounded-full p-2.5 z-10">
+                                            <div className="absolute -left-[calc(1.5*var(--fluid-p))] top-1 bg-white border-2 border-slate-200 rounded-full p-2.5 z-10" style={{ transform: 'translateX(-50%)' }}>
                                                 <CheckCircle2 className="h-5 w-5 text-slate-300" />
                                             </div>
                                             <div className="flex flex-col gap-2">
@@ -247,7 +247,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                         {/* TIMELINE ITEM 2 (ACTIVE) */}
                                         {nextEventDate && (
                                             <div className="relative">
-                                                <div className="absolute -left-[51px] top-1 bg-[#1e3a5f] rounded-full p-2.5 z-10 shadow-xl shadow-slate-900/20">
+                                                <div className="absolute -left-[calc(1.5*var(--fluid-p))] top-1 bg-[#1e3a5f] rounded-full p-2.5 z-10 shadow-xl shadow-slate-900/20" style={{ transform: 'translateX(-50%)' }}>
                                                     <Clock className="h-5 w-5 text-white" />
                                                 </div>
                                                 <div className="pt-2 flex flex-col gap-4">
@@ -260,7 +260,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                                             Target: {format(nextEventDate, "MMM d, yyyy")}
                                                         </span>
                                                     </div>
-                                                    <div className="flex items-center justify-between gap-10">
+                                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                                                         <div>
                                                             <h4 className="text-3xl font-black text-slate-900 tracking-tighter italic">{nextEventName}</h4>
                                                             <p className={isOverdue ? "text-red-500 font-bold text-sm mt-2 max-w-sm" : "text-slate-500 font-medium text-sm mt-2 max-w-sm"}>

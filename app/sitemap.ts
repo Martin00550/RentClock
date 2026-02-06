@@ -28,9 +28,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/blog/ultimate-guide-commercial-lease-tracking`,
-            lastModified: new Date('2026-01-15'), // Original publish date approx
+            lastModified: new Date('2026-01-15'),
             changeFrequency: 'monthly',
-            priority: 0.9, // High priority as it's a pillar page
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/#pricing`,
+            lastModified: lastModified,
+            changeFrequency: 'monthly',
+            priority: 0.7,
         },
         // Legal pages
         {

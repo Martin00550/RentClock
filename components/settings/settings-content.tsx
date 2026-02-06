@@ -14,9 +14,9 @@ import {
     ChevronDown,
     Search,
     Lock,
-    Mail,
-    MessageSquare
+    Mail
 } from "lucide-react";
+
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { UserProfile, useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
@@ -321,7 +321,7 @@ export function SettingsContent() {
                                                                 </div>
                                                                 <div className="flex items-start gap-3 text-xs text-slate-600">
                                                                     <span className="shrink-0 w-5 h-5 bg-white border border-slate-200 rounded-full flex items-center justify-center font-bold text-slate-900 shadow-sm">3</span>
-                                                                    <p className="pt-0.5">Choose the downloaded file to add all lease events instantly.</p>
+                                                                    <p className="pt-0.5">Choose the downloaded file to add all lease events.</p>
                                                                 </div>
                                                             </TabsContent>
                                                         </Tabs>
@@ -492,6 +492,10 @@ export function SettingsContent() {
                                                         {isPro ? "Your SMS alerts are active." : "Upgrade to Pro to activate SMS alerts."}
                                                     </p>
                                                 </div>
+                                                <p className="text-slate-400 text-[10px] mt-4 leading-relaxed max-w-md">
+                                                    By providing your phone number, you agree to receive automated transactional text messages (alerts and reminders) from RentClock. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for more information. View our <Link href="/privacy" className="underline">Privacy Policy</Link> and <Link href="/terms" className="underline">Terms of Service</Link>.
+                                                </p>
+
                                             </div>
                                         </div>
                                     </div>

@@ -8,6 +8,7 @@ import { formatCurrency, calculateRevenueImpact } from "@/lib/lease-utils";
 import { CpiCalculator } from "@/components/leases/cpi-calculator";
 import { Lease } from "@/lib/types";
 import { ActionMenu } from "@/components/leases/action-menu";
+import { fetchCPIStats } from "@/lib/cpi";
 
 export default async function ProfitProtectionPage() {
     const { userId } = await auth();
@@ -27,6 +28,11 @@ export default async function ProfitProtectionPage() {
         console.error("Error fetching leases:", error);
     }
 
+    // Fetch CPI Data
+    const { yoyChange, error: cpiError } = await fetchCPIStats();
+    const isOutpacing = yoyChange > 0.03;
+    const inflationRate = (yoyChange * 100).toFixed(1);
+
     const typedLeases = (leases as Lease[]) || [];
 
     // Calculate Portfolio Metrics
@@ -35,7 +41,7 @@ export default async function ProfitProtectionPage() {
     const leasesWithOpportunity = typedLeases.filter(lease => calculateRevenueImpact(lease) > 0);
 
     return (
-        <div className="flex flex-col gap-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col max-w-7xl mx-auto py-8 transition-all" style={{ gap: 'var(--fluid-gap)', paddingLeft: 'var(--fluid-p)', paddingRight: 'var(--fluid-p)' }}>
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
                     <div className="bg-[#d4a853]/10 p-2 rounded-xl">
@@ -45,15 +51,15 @@ export default async function ProfitProtectionPage() {
                 </div>
                 <h1 className="text-3xl font-black text-slate-900 tracking-tight">Portfolio Safety Net</h1>
                 <p className="text-slate-500 text-lg max-w-2xl">
-                    Analyze your entire portfolio against inflation. Identify revenue leakage and execute rent adjustments instantly.
+                    Analyze your entire portfolio against inflation. Identify revenue leakage and execute rent adjustments.
                 </p>
             </div>
 
             {/* PORTFOLIO HEALTH GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 'var(--fluid-gap)' }}>
                 {/* REVENUE AT RISK CARD - GATED */}
-                <Card id="profit-revenue-risk" className="rounded-[2rem] border-slate-200 shadow-sm bg-[#1e3a5f] text-white relative overflow-hidden group">
-                    <CardContent className="p-8 flex flex-col gap-4 relative z-10">
+                <Card id="profit-revenue-risk" className="border-slate-200 shadow-sm bg-[#1e3a5f] text-white relative overflow-hidden group" style={{ borderRadius: 'var(--fluid-radius)' }}>
+                    <CardContent className="flex flex-col gap-4 relative z-10" style={{ padding: 'var(--fluid-p)' }}>
                         <div className="bg-white/10 p-3 w-fit rounded-2xl">
                             <DollarSign className="h-6 w-6 text-white" />
                         </div>
@@ -66,8 +72,8 @@ export default async function ProfitProtectionPage() {
                     </CardContent>
                 </Card>
 
-                <Card className="rounded-[2rem] border-slate-200 shadow-sm">
-                    <CardContent className="p-8 flex flex-col gap-4">
+                <Card className="border-slate-200 shadow-sm" style={{ borderRadius: 'var(--fluid-radius)' }}>
+                    <CardContent className="flex flex-col gap-4" style={{ padding: 'var(--fluid-p)' }}>
                         <div className="bg-slate-100 p-3 w-fit rounded-2xl">
                             <BarChart3 className="h-6 w-6 text-slate-600" />
                         </div>
@@ -83,8 +89,8 @@ export default async function ProfitProtectionPage() {
                     </CardContent>
                 </Card>
 
-                <Card className="rounded-[2rem] border-slate-200 shadow-sm bg-linear-to-br from-indigo-50 to-white">
-                    <CardContent className="p-8 flex flex-col gap-4 h-full">
+                <Card className="border-slate-200 shadow-sm bg-linear-to-br from-indigo-50 to-white" style={{ borderRadius: 'var(--fluid-radius)' }}>
+                    <CardContent className="flex flex-col gap-4 h-full" style={{ padding: 'var(--fluid-p)' }}>
                         <div className="flex items-center gap-2 mb-2">
                             <span className="h-2.5 w-2.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]"></span>
                             <span className="text-[10px] text-indigo-600 font-black uppercase tracking-[0.2em]">Live Market Signal</span>
@@ -92,10 +98,13 @@ export default async function ProfitProtectionPage() {
 
                         <div className="flex-1 flex flex-col justify-center">
                             <p className="text-2xl font-black text-indigo-950 leading-tight">
-                                CPI-U Index is trending <span className="text-indigo-600">Upwards</span>.
+                                CPI-U Index is trending <span className="text-indigo-600">{yoyChange >= 0 ? "Upwards" : "Downwards"}</span>.
                             </p>
                             <p className="text-sm text-indigo-800/60 mt-2 font-medium">
-                                Inflation is currently outpacing fixed 3% increases in 4 regions.
+                                {isOutpacing
+                                    ? `Inflation (${inflationRate}%) is currently outpacing fixed 3% increases.`
+                                    : `Inflation (${inflationRate}%) is currently within the standard 3% floor.`
+                                }
                             </p>
                         </div>
                     </CardContent>

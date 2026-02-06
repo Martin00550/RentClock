@@ -29,15 +29,21 @@ export function StatCard({ title, value, subtextText, subtextTrend, icon, varian
     };
 
     return (
-        <Card className={`shadow-sm ${variantStyles[variant]}`}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card
+            className={`shadow-sm ${variantStyles[variant]}`}
+            style={{ borderRadius: 'var(--fluid-radius)' }}
+        >
+            <CardHeader
+                className="flex flex-row items-center justify-between space-y-0 pb-2"
+                style={{ padding: 'var(--fluid-p)', paddingBottom: '0.5rem' }}
+            >
                 <CardTitle className={`text-sm font-medium ${titleStyles[variant]}`}>{title}</CardTitle>
                 <div className={variant === "default" ? "text-slate-400" : variant === "urgent" ? "text-red-500" : "text-amber-500"}>
                     {icon}
                 </div>
             </CardHeader>
-            <CardContent>
-                <div className="text-3xl font-bold tracking-tight">{value}</div>
+            <CardContent style={{ padding: 'var(--fluid-p)', paddingTop: 0 }}>
+                <div className="text-3xl font-black tracking-tighter">{value}</div>
                 {subtextText && (
                     <p className="mt-1 flex items-center text-xs text-slate-500">
                         {subtextTrend === "up" && <TrendingUp className="mr-1 h-3 w-3 text-[#2d6a4f]" />}
@@ -51,7 +57,7 @@ export function StatCard({ title, value, subtextText, subtextTrend, icon, varian
 
 import { Lease } from "@/lib/types";
 
-export function DashboardStats({ leases }: { leases: Lease[] }) {
+export function DashboardStats({ leases, protectedCount }: { leases: Lease[]; protectedCount: number }) {
     // Calculate stats
     const totalLeases = leases.length;
 
@@ -78,12 +84,12 @@ export function DashboardStats({ leases }: { leases: Lease[] }) {
     }, 0);
 
     return (
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid " style={{ gap: 'var(--fluid-gap)', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
             <Link href="/leases" className="block">
                 <StatCard
                     title="Protected Leases"
-                    value={totalLeases}
-                    subtextText="Safe & Tracked"
+                    value={protectedCount}
+                    subtextText={`Out of ${totalLeases} total`}
                     subtextTrend="up"
                     icon={<Hash className="h-4 w-4" />}
                 />
