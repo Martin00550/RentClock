@@ -3,7 +3,7 @@ import { ImminentCriticalDates } from "@/components/dashboard/critical-dates";
 import { ReferralCTA } from "@/components/dashboard/referral-cta";
 import { ReferralClaimer } from "@/components/dashboard/referral-claimer";
 import { Button } from "@/components/ui/button";
-import { Plus, TrendingUp, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
+import { Plus, TrendingUp, ArrowRight, ShieldCheck } from "lucide-react";
 import { WealthProjectionCard } from "@/components/dashboard/wealth-projection-card";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
@@ -122,7 +122,7 @@ export default async function DashboardPage() {
             {/* DYNAMIC SAFETY NET BANNER */}
             {/* EMPTY STATE */}
             {portfolioStatus === 'empty' && (
-                <div id="dashboard-safety-net-empty" className="bg-slate-100 border-2 border-slate-200 border-dashed p-6 md:p-10 rounded-premium text-slate-800 relative overflow-hidden group">
+                <div id="dashboard-safety-net-empty" className="bg-slate-50 border-2 border-slate-200 border-dashed p-6 md:p-10 rounded-premium text-slate-800 relative overflow-hidden group">
                     <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8">
                         <div className="space-y-4 max-w-xl">
                             <div className="flex items-center gap-3">
@@ -149,25 +149,26 @@ export default async function DashboardPage() {
 
             {/* AT RISK STATE */}
             {portfolioStatus === 'at_risk' && (
-                <div id="dashboard-safety-net-risk" className="bg-linear-to-r from-amber-600 to-orange-600 p-6 md:p-10 rounded-premium text-white relative overflow-hidden shadow-2xl shadow-orange-600/20 group cursor-pointer transition-transform hover:scale-[1.01]">
+                <div id="dashboard-safety-net-risk" className="bg-linear-to-br from-[#1e3a5f] via-[#2a4a73] to-[#d4a853] p-6 md:p-10 rounded-premium text-white relative overflow-hidden shadow-2xl shadow-indigo-900/40 group cursor-pointer transition-transform hover:scale-[1.01]">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#d4a853]/10 rounded-full -ml-16 -mb-16 blur-2xl"></div>
                     <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8">
                         <div className="space-y-4 max-w-xl">
                             <div className="flex items-center gap-3">
-                                <div className="bg-white/20 p-1.5 rounded-lg">
-                                    <TrendingUp className="h-4 w-4 text-white" />
+                                <div className="bg-white/10 backdrop-blur-md p-2 rounded-xl border border-white/20">
+                                    <TrendingUp className="h-4 w-4 text-[#d4a853]" />
                                 </div>
-                                <span className="text-amber-100 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs">Safety Net Warning</span>
+                                <span className="text-[#d4a853] font-black uppercase tracking-[0.2em] text-[10px] md:text-xs">Safety Net Warning</span>
                             </div>
                             <h2 className="text-2xl md:text-3xl font-black tracking-tight leading-tight">
-                                You have <span className="text-white border-b-4 border-white/30">Revenue at Risk</span>.
+                                You have <span className="text-white border-b-4 border-[#d4a853]/50">Revenue at Risk</span>.
                             </h2>
                             <p className="text-white/90 font-medium text-base md:text-lg">
                                 Inflation has risen by {inflationRate}% this year. Check which leases are eligible for a rent adjustment.
                             </p>
                         </div>
                         <Link href="/profit-protection" className="w-full md:w-auto">
-                            <Button className="w-full md:w-auto h-14 md:h-16 px-8 rounded-2xl bg-white text-orange-700 font-black text-base md:text-lg hover:bg-amber-50 transition-colors shadow-lg shadow-black/20 group-hover:shadow-white/10">
+                            <Button className="w-full md:w-auto h-14 md:h-16 px-8 rounded-2xl bg-[#d4a853] text-[#1e3a5f] font-black text-base md:text-lg hover:bg-white hover:text-[#1e3a5f] transition-all shadow-lg shadow-black/20 group-hover:shadow-[#d4a853]/30 border-2 border-[#d4a853]">
                                 View Opportunities <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>
@@ -177,25 +178,25 @@ export default async function DashboardPage() {
 
             {/* PROTECTED STATE */}
             {portfolioStatus === 'protected' && (
-                <div id="dashboard-safety-net-protected" className="bg-linear-to-r from-emerald-600 to-teal-600 p-6 md:p-10 rounded-premium text-white relative overflow-hidden shadow-2xl shadow-emerald-600/20 group cursor-pointer transition-transform hover:scale-[1.01]">
+                <div id="dashboard-safety-net-protected" className="bg-linear-to-br from-emerald-700 via-teal-700 to-emerald-600 p-6 md:p-10 rounded-premium text-white relative overflow-hidden shadow-2xl shadow-emerald-900/30 group cursor-pointer transition-transform hover:scale-[1.01]">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
                     <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8">
                         <div className="space-y-4 max-w-xl">
                             <div className="flex items-center gap-3">
-                                <div className="bg-white/20 p-1.5 rounded-lg">
-                                    <ShieldCheck className="h-4 w-4 text-white" />
+                                <div className="bg-white/10 backdrop-blur-md p-2 rounded-xl border border-white/20">
+                                    <ShieldCheck className="h-4 w-4 text-emerald-300" />
                                 </div>
                                 <span className="text-emerald-100 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs">Safety Net Active</span>
                             </div>
                             <h2 className="text-2xl md:text-3xl font-black tracking-tight leading-tight">
-                                Portfolio <span className="text-white border-b-4 border-white/30">Protected</span>.
+                                Portfolio <span className="text-white border-b-4 border-emerald-400/30">Protected</span>.
                             </h2>
                             <p className="text-white/90 font-medium text-base md:text-lg">
                                 All leases are tracking with market rates. We&apos;ll notify you when the next opportunity arises.
                             </p>
                         </div>
                         <Link href="/profit-protection" className="w-full md:w-auto">
-                            <Button className="w-full md:w-auto h-14 md:h-16 px-8 rounded-2xl bg-white text-emerald-700 font-black text-base md:text-lg hover:bg-emerald-50 transition-colors shadow-lg shadow-black/20 group-hover:shadow-white/10">
+                            <Button className="w-full md:w-auto h-14 md:h-16 px-8 rounded-2xl bg-white text-emerald-900 font-black text-base md:text-lg hover:bg-emerald-50 transition-colors shadow-lg shadow-black/20 group-hover:shadow-white/10">
                                 View Portfolio Health <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>

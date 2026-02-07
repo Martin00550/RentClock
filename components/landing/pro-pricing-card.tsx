@@ -94,8 +94,8 @@ export function ProPricingCard() {
                     Start 7-Day Free Trial
                 </Button>
             </SignUpTrigger>
-            <p className="text-center text-slate-400 text-sm mt-4 leading-relaxed px-4">
-                Trial is free. Payments covered by 14-day money-back guarantee.
+            <p className="text-center text-slate-400 text-[10px] mt-4 leading-relaxed px-4 font-medium italic">
+                Trial is free. Payments covered by 14-day money-back guarantee. By starting your trial, you agree to our Terms and get immediate access to the service.
             </p>
         </div >
     );

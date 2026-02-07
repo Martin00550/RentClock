@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 
-const CPI_SERIES_ID = "CUUR0000SA0";
+
 import { fetchCPIStats } from "@/lib/cpi";
 
 export async function GET() {

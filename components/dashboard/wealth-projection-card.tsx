@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { formatCurrency } from "@/lib/lease-utils";
 import { Lease } from "@/lib/types";
-import { TrendingUp, ArrowUpRight, LucideIcon, Info } from "lucide-react";
+import { TrendingUp, ArrowUpRight, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -46,6 +46,38 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
     const finalDelta = data[data.length - 1].delta;
     const maxVal = data[data.length - 1].annualProtected;
     const minVal = data[0].annualFlat;
+
+    // SVG CONFIGURATION
+    const WIDTH = 1000;
+    const HEIGHT = 300;
+    const PADDING_Y = 40; // Space for stroke caps and improved visuals
+
+    // Scale functions
+    const getX = (year: number) => (year / years) * WIDTH;
+    // Map value to Y coordinate (inverted because SVG Y=0 is top)
+    // We add padding to avoid clipping at the very top/bottom
+    const getY = (val: number) => {
+        const domain = maxVal - minVal || 1; // avoid divide by zero
+        // effective height is HEIGHT - (2 * PADDING_Y)
+        const range = HEIGHT - (2 * PADDING_Y);
+        const normalized = (val - minVal) / domain;
+        return HEIGHT - PADDING_Y - (normalized * range);
+    };
+
+    // Generate Path Commands
+    const protectedPathD = `
+        M 0 ${getY(minVal)}
+        ${data.map(d => `L ${getX(d.year)} ${getY(d.annualProtected)}`).join(' ')}
+    `;
+
+    const areaPathD = `
+        ${protectedPathD}
+        L ${WIDTH} ${HEIGHT}
+        L 0 ${HEIGHT}
+        Z
+    `;
+
+    const flatLineY = getY(minVal);
 
     return (
         <Card
@@ -127,68 +159,117 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
                         </div>
                     </div>
 
-                    <div className="lg:col-span-8 relative h-[200px] md:h-[300px] w-full flex items-end">
-                        <svg viewBox={`0 0 ${years} 100`} className="w-full h-full overflow-visible" preserveAspectRatio="none">
-                            {/* Gradients */}
-                            <defs>
-                                <linearGradient id="protectedGradient" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor="#1e3a5f" stopOpacity="0.1" />
-                                    <stop offset="100%" stopColor="#1e3a5f" stopOpacity="0" />
-                                </linearGradient>
-                            </defs>
+                    <div className="lg:col-span-8 relative w-full aspect-[2/1] md:aspect-[3/1] flex items-center bg-slate-50/50 rounded-3xl border border-slate-100 overflow-hidden">
 
-                            {/* Flat Path Line */}
-                            <line
-                                x1="0"
-                                y1={100 - ((minVal / maxVal) * 80)}
-                                x2={years}
-                                y2={100 - ((minVal / maxVal) * 80)}
-                                stroke="#cbd5e1"
-                                strokeWidth="0.5"
-                                strokeDasharray="1 1"
-                            />
+                        {/* CHART CONTAINER */}
+                        <div className="absolute inset-0 p-6">
+                            <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="protectedGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#1e3a5f" stopOpacity="0.15" />
+                                        <stop offset="100%" stopColor="#1e3a5f" stopOpacity="0" />
+                                    </linearGradient>
+                                    {/* Mask for grid lines to not overlap with area if needed, skipping for cleaner look */}
+                                </defs>
 
-                            {/* Protected Path Area */}
-                            <path
-                                d={`M 0 ${100 - ((minVal / maxVal) * 80)} ${data.map(d => `L ${d.year} ${100 - ((d.annualProtected / maxVal) * 80)}`).join(' ')} L ${years} 100 L 0 100 Z`}
-                                fill="url(#protectedGradient)"
-                            />
+                                {/* GRID LINES (Vertical) */}
+                                {data.map((d, i) => (
+                                    <line
+                                        key={`grid-v-${i}`}
+                                        x1={getX(d.year)}
+                                        y1={0}
+                                        x2={getX(d.year)}
+                                        y2={HEIGHT}
+                                        stroke="#e2e8f0" // slate-200
+                                        strokeWidth="1"
+                                        strokeDasharray="4 4"
+                                        opacity={0.5}
+                                    />
+                                ))}
 
-                            {/* Protected Path Line */}
-                            <path
-                                d={`M 0 ${100 - ((minVal / maxVal) * 80)} ${data.map(d => `L ${d.year} ${100 - ((d.annualProtected / maxVal) * 80)}`).join(' ')}`}
-                                fill="none"
-                                stroke="#1e3a5f"
-                                strokeWidth="1"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-
-                            {/* Data Points */}
-                            {data.map((d, i) => (
-                                <circle
-                                    key={i}
-                                    cx={d.year}
-                                    cy={100 - ((d.annualProtected / maxVal) * 80)}
-                                    r="0.5"
-                                    fill="white"
-                                    stroke="#1e3a5f"
-                                    strokeWidth="0.2"
+                                {/* AREA FILL */}
+                                <path
+                                    d={areaPathD}
+                                    fill="url(#protectedGradient)"
                                 />
-                            ))}
-                        </svg>
 
-                        {/* Legend / Axes labels */}
-                        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                            <div className="flex justify-between text-[8px] font-black text-slate-400 uppercase tracking-widest">
-                                <span>{formatCurrency(maxVal)} (Annually)</span>
-                                <span>YEAR {years}</span>
-                            </div>
-                            <div className="flex justify-between items-end border-b border-slate-100 pb-1 text-[8px] font-black text-slate-400 uppercase tracking-widest">
-                                <span>{formatCurrency(minVal)} (Annually)</span>
-                                <span>YEAR 0</span>
-                            </div>
+                                {/* FLAT LINE (Baseline) */}
+                                <line
+                                    x1="0"
+                                    y1={flatLineY}
+                                    x2={WIDTH}
+                                    y2={flatLineY}
+                                    stroke="#94a3b8" // slate-400
+                                    strokeWidth="2"
+                                    strokeDasharray="6 6"
+                                    vectorEffect="non-scaling-stroke"
+                                />
+
+                                {/* PROTECTED LINE (The Growth) */}
+                                <path
+                                    d={protectedPathD}
+                                    fill="none"
+                                    stroke="#1e3a5f"
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    vectorEffect="non-scaling-stroke"
+                                    className="drop-shadow-md"
+                                />
+
+                                {/* DATA POINTS */}
+                                {data.map((d, i) => {
+                                    const isLast = i === data.length - 1;
+                                    const isFirst = i === 0;
+
+                                    // Only show first, last, and middle points to avoid clutter
+                                    if (!isLast && !isFirst && i % Math.ceil(years / 2) !== 0) return null;
+
+                                    return (
+                                        <g key={`point-${i}`}>
+                                            {isLast && (
+                                                <>
+                                                    <circle
+                                                        cx={getX(d.year)}
+                                                        cy={getY(d.annualProtected)}
+                                                        r="12"
+                                                        fill="#1e3a5f"
+                                                        opacity="0.1"
+                                                        className="animate-pulse"
+                                                    />
+                                                    <circle
+                                                        cx={getX(d.year)}
+                                                        cy={getY(d.annualProtected)}
+                                                        r="8"
+                                                        fill="#1e3a5f"
+                                                        opacity="0.2"
+                                                    />
+                                                </>
+                                            )}
+                                            <circle
+                                                cx={getX(d.year)}
+                                                cy={getY(d.annualProtected)}
+                                                r={isLast ? "4" : "3"}
+                                                fill="white"
+                                                stroke="#1e3a5f"
+                                                strokeWidth="2"
+                                            />
+                                        </g>
+                                    );
+                                })}
+                            </svg>
                         </div>
+
+                        {/* AXIS LABELS OVERLAY */}
+                        <div className="absolute inset-x-6 bottom-2 flex justify-between text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                            <span>Year 0</span>
+                            <span>Year {years}</span>
+                        </div>
+                        <div className="absolute inset-y-6 right-2 flex flex-col justify-between items-end text-[9px] font-black text-slate-400 uppercase tracking-widest pointer-events-none">
+                            <span className="bg-white/80 backdrop-blur-sm px-1 rounded">{formatCurrency(maxVal)}</span>
+                            <span className="bg-white/80 backdrop-blur-sm px-1 rounded">{formatCurrency(minVal)}</span>
+                        </div>
+
                     </div>
                 </div>
 
@@ -204,5 +285,6 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
         </Card>
     );
 }
+
 
 import Link from "next/link";

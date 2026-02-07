@@ -36,6 +36,7 @@ export function LandingFooter() {
                     <ul className="space-y-4 text-slate-500">
                         <li><Link className="hover:text-[#1e3a5f] transition-colors" href="/privacy">Privacy Policy</Link></li>
                         <li><Link className="hover:text-[#1e3a5f] transition-colors" href="/terms">Terms of Service</Link></li>
+                        <li><Link className="hover:text-[#1e3a5f] transition-colors" href="/imprint">Imprint</Link></li>
                         <li><Link className="hover:text-[#1e3a5f] transition-colors" href="/refund-policy">Refund Policy</Link></li>
                     </ul>
                 </div>

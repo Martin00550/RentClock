@@ -1,7 +1,10 @@
 "use client";
 
+import Link from "next/link";
+import Image from "next/image";
+
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@clerk/nextjs";
@@ -77,6 +80,10 @@ export function ConnectPhoneDialog({ open, onOpenChange, onSuccess }: ConnectPho
                 </div>
 
                 <div className="p-8 space-y-6">
+                    <div className="flex items-center gap-3 mb-2">
+                        <Image src="/icon-192.png" alt="RentClock" width={24} height={24} className="rounded-lg shadow-sm" />
+                        <span className="text-[12px] font-black text-[#1e3a5f] uppercase tracking-widest">RentClock</span>
+                    </div>
                     <div className="space-y-2">
                         <Label className="text-xs font-black text-slate-500 uppercase tracking-wider">Mobile Number</Label>
                         <div className="flex gap-2">
@@ -98,7 +105,7 @@ export function ConnectPhoneDialog({ open, onOpenChange, onSuccess }: ConnectPho
                         </div>
                         <p className="text-slate-600 text-sm">RentClock is verifying your setup... Only critical alarms.</p>
                         <p className="text-slate-400 text-[10px] mt-2 leading-relaxed">
-                            By providing your phone number, you agree to receive automated transactional text messages (alerts and reminders) from RentClock. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to cancel.
+                            By providing your phone number, you agree to receive automated transactional text messages (alerts and reminders) from RentClock. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for more information. View our <Link href="/privacy" className="underline">Privacy Policy</Link> and <Link href="/terms" className="underline">Terms of Service</Link>.
                         </p>
 
                     </div>

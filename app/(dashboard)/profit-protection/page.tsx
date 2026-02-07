@@ -29,7 +29,7 @@ export default async function ProfitProtectionPage() {
     }
 
     // Fetch CPI Data
-    const { yoyChange, error: cpiError } = await fetchCPIStats();
+    const { yoyChange } = await fetchCPIStats();
     const isOutpacing = yoyChange > 0.03;
     const inflationRate = (yoyChange * 100).toFixed(1);
 

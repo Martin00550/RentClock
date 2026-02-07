@@ -6,6 +6,7 @@ import { StructuredData } from "@/components/landing/structured-data";
 import { BroadcastBanner } from "@/components/dashboard/broadcast-banner";
 import { PostHogProvider } from "@/components/providers/posthog-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieConsent } from "@/components/landing/cookie-consent";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -82,6 +83,7 @@ export default function RootLayout({
             <NextTopLoader color="#d4a853" showSpinner={false} />
             <BroadcastBanner />
             {children}
+            <CookieConsent />
           </PostHogProvider>
           <Toaster />
         </body>

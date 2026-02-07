@@ -203,15 +203,22 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
 
                                     <div className="pt-8 border-t border-slate-100 flex flex-col gap-4">
                                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Financial Baseline</span>
-                                        <div className="bg-slate-50 border border-slate-100" style={{ padding: 'var(--fluid-p)', borderRadius: 'var(--fluid-radius)' }}>
-                                            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Base Monthly Rent</span>
-                                            <div className="text-4xl font-black text-slate-900 mt-2 tracking-tighter">
+                                        <div className="bg-white border-2 border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 group/fin relative overflow-hidden" style={{ padding: 'var(--fluid-p)', borderRadius: 'var(--fluid-radius)' }}>
+                                            {/* Subtle brand glow */}
+                                            <div className="absolute top-0 right-0 w-24 h-24 bg-[#1e3a5f]/5 rounded-full -mr-12 -mt-12 blur-2xl group-hover/fin:bg-[#d4a853]/10 transition-colors duration-500" />
+
+                                            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest relative z-10">Base Monthly Rent</span>
+                                            <div className="text-4xl md:text-5xl font-black text-slate-900 mt-2 tracking-tighter relative z-10">
                                                 {formatCurrency(lease.monthly_rent)}
                                             </div>
+
                                             {lease.rent_increase_amount && (
-                                                <div className="mt-3 flex items-center gap-2">
-                                                    <span className="bg-[#2d6a4f] text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase">Adjustment Active</span>
-                                                    <p className="text-[10px] text-[#2d6a4f] font-black">
+                                                <div className="mt-4 flex items-center gap-3 relative z-10">
+                                                    <div className="flex items-center gap-1.5 bg-[#2d6a4f]/10 text-[#2d6a4f] px-3 py-1 rounded-full border border-[#2d6a4f]/20">
+                                                        <div className="w-1.5 h-1.5 bg-[#2d6a4f] rounded-full animate-pulse" />
+                                                        <span className="text-[10px] font-black uppercase tracking-wider">Adjustment Active</span>
+                                                    </div>
+                                                    <p className="text-sm text-[#2d6a4f] font-black italic">
                                                         +{formatCurrency(lease.rent_increase_amount)}
                                                     </p>
                                                 </div>

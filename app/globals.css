@@ -166,4 +166,8 @@
   .card-premium {
     @apply bg-white border border-slate-200 shadow-sm rounded-[2.5rem] max-md:rounded-[1.5rem] overflow-hidden;
   }
+
+  .rounded-premium {
+    border-radius: var(--fluid-radius);
+  }
 }

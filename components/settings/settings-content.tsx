@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -25,7 +26,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+
 
 import { COUNTRY_CODES } from "@/lib/countries";
 
@@ -404,6 +405,10 @@ export function SettingsContent() {
                                         </div>
                                         <div className="flex-1 w-full space-y-6">
                                             <div>
+                                                <div className="flex items-center gap-3 mb-1">
+                                                    <Image src="/icon-192.png" alt="RentClock" width={24} height={24} className="rounded-lg shadow-sm" />
+                                                    <span className="text-[12px] font-black text-[#1e3a5f] uppercase tracking-widest">RentClock</span>
+                                                </div>
                                                 <h4 className="text-xl md:text-2xl font-black text-slate-900 leading-tight tracking-tighter">SMS Configuration</h4>
                                                 <p className="text-sm md:text-base text-slate-500 font-medium mt-1">Manage the phone number used for profit protection alerts.</p>
                                             </div>

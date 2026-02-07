@@ -30,7 +30,7 @@ export default function PrivacyPage() {
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">3. Data Storage & Security</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        Your data is encrypted at rest and in transit using industry-standard TLS. Documents are stored in private, access-controlled cloud storage (Supabase). RentClock does not sell or share your data with third parties for marketing purposes.
+                        Your data is encrypted at rest and in transit using industry-standard TLS. Documents are stored in private, access-controlled cloud storage (Supabase). RentClock does not sell or share your data with third parties for marketing purposes. No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. All the above categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">4. Your Rights</h2>
