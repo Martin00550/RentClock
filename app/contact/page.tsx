@@ -80,9 +80,9 @@ export default function ContactPage() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 py-2 px-4 bg-emerald-50 rounded-xl border border-emerald-100 w-fit">
+<div className="flex items-center gap-3 py-2 px-4 bg-emerald-50 rounded-xl border border-emerald-100 w-fit">
                                 <ShieldCheck className="h-5 w-5 text-emerald-600" />
-                                <span className="text-sm font-bold text-emerald-800 tracking-tight">Enterprise-grade support included for all users</span>
+                                <span className="text-sm font-bold text-emerald-800 tracking-tight">Responsive support included for all users</span>
                             </div>
                         </div>
 

@@ -43,7 +43,7 @@ export function LeaseTable({ leases }: { leases: Lease[] }) {
                     <p className="text-slate-600 mb-6">You haven&apos;t added any leases yet.</p> Start your <span className="text-[#1e3a5f] font-bold">Safety Net</span> today by uploading your first document.
                     <br /><span className="text-[10px] uppercase font-black tracking-widest text-slate-400 mt-2 block">First 3 Leases are Free Forever</span>
                 </p>
-                <Link href="/ai-import">
+                <Link href="/quick-add">
                     <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-8 h-14 rounded-2xl font-black shadow-xl shadow-slate-900/10 flex items-center gap-3 transition-all hover:scale-105 active:scale-95">
                         <Plus className="h-5 w-5" />
                         Protect Your First Lease

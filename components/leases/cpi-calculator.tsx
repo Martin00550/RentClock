@@ -34,12 +34,12 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
     }, []);
 
     const handleCalculate = () => {
-        // Most CRE leases are "Greater of 3% or CPI increase"
-        const increase = Math.max(0.03, yoyChange);
+        // Most CRE leases are "Greater of 3.5% or CPI increase"
+        const increase = Math.max(0.035, yoyChange);
         setCalculatedRent(baseRent * (1 + increase));
     };
 
-    const displayPercentage = Math.max(0.03, yoyChange) * 100;
+    const displayPercentage = Math.max(0.035, yoyChange) * 100;
 
     return (
         <Card id="cpi-calculator-card" className="border-slate-200 bg-white shadow-2xl shadow-slate-200/50 overflow-hidden group transition-all duration-500 hover:shadow-indigo-500/5" style={{ borderRadius: 'var(--fluid-radius)' }}>
@@ -80,7 +80,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                         <Info className="h-4 w-4 text-indigo-600" />
                     </div>
                     <p className="text-xs text-indigo-900/80 leading-relaxed font-semibold">
-                        Most commercial leases include a <span className="text-indigo-900 font-black">&quot;Greater of CPI or 3%&quot;</span> clause. Use this tool to ensure you aren&apos;t leaving money on the table.
+                        Most commercial leases include a <span className="text-indigo-900 font-black">&quot;Greater of CPI or 3.5%&quot;</span> clause. Use this tool to ensure you aren&apos;t leaving money on the table.
                     </p>
                 </div>
 
@@ -101,7 +101,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                     <div className="space-y-3">
                         <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Strategy</Label>
                         <div className="h-14 flex items-center px-4 bg-white border-2 border-slate-100 rounded-2xl text-xs font-black text-slate-400 uppercase tracking-widest shadow-inner cursor-not-allowed">
-                            3% Floor + CPI
+                            3.5% Floor + CPI
                         </div>
                     </div>
                 </div>
@@ -119,7 +119,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                                     {formatCurrency(calculatedRent)}
                                 </div>
                                 <p className="text-xs text-indigo-100 font-medium">
-                                    The calculation uses the higher of 3% or CPI ({cpiData?.value ?? "3.4"}%) for this calculation.
+                                    The calculation uses the higher of 3.5% or CPI ({cpiData?.value ?? "3.4"}%) for this calculation.
                                     This matches the &quot;Greater of X% or CPI&quot; clause often found in commercial leases.
                                 </p>
                                 <div className="flex items-center gap-2 mt-2">

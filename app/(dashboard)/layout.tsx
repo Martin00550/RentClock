@@ -51,7 +51,7 @@ export default function DashboardLayout({
 
                             {/* Primary Action Button */}
                             <div className="-mt-10 relative">
-                                <Link href="/ai-import" id="sidebar-new-lease">
+                                <Link href="/quick-add" id="sidebar-new-lease">
                                     <div className="bg-[#1e3a5f] p-4 rounded-full shadow-2xl shadow-[#1e3a5f]/40 text-white border-4 border-slate-50 active:scale-90 transition-transform">
                                         <PlusCircle className="h-7 w-7" />
                                     </div>

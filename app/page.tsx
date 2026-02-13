@@ -17,6 +17,7 @@ import { StepVisual1, StepVisual2, StepVisual3 } from "@/components/landing/step
 
 import { LandingHeader } from "@/components/landing/landing-header";
 import { LandingFooter } from "@/components/landing/landing-footer";
+import { FeatureScroller } from "@/components/landing/feature-scroller";
 
 const revealProps = {
     initial: { opacity: 0, y: 30 },
@@ -61,18 +62,20 @@ export default function LandingPage() {
                             </div>
 
                             {/* HERO TRUST SIGNALS */}
-                            <div className="flex flex-row flex-wrap items-center gap-x-8 gap-y-4 pt-2">
+                            <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-4 pt-2">
                                 <div className="flex items-center gap-2 text-slate-500 whitespace-nowrap">
                                     <ShieldCheck className="h-4 w-4 text-[#2d6a4f]" />
-                                    <span className="text-[11px] font-bold uppercase tracking-wider">Secure Encryption</span>
+                                    <span className="text-[11px] font-bold uppercase tracking-wider">secure portfolio storage</span>
                                 </div>
                             </div>
                         </div>
-                        <div className="relative group">
+                        <div className="relative group" id="calculator">
                             <HeroCalculator />
                         </div>
                     </motion.div>
                 </section>
+
+                <FeatureScroller />
 
                 {/* PROBLEM */}
                 <section className="bg-slate-50 border-t border-slate-100" style={{ paddingTop: 'var(--fluid-p)', paddingBottom: 'var(--fluid-p)' }} id="problem">
@@ -92,9 +95,9 @@ export default function LandingPage() {
                                 <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-lg flex items-center justify-center mb-6">
                                     <TrendingDown className="h-6 w-6" />
                                 </div>
-                                <h4 className="text-xl font-bold text-slate-900 mb-3">The 3% Leak</h4>
+                                <h4 className="text-xl font-bold text-slate-900 mb-3">The 3.5% Leak</h4>
                                 <p className="text-slate-600 leading-relaxed">
-                                    It&apos;s not just one month. It&apos;s a permanent reduction in your property&apos;s value. Miss a 3% bump on a $5,000 lease? That&apos;s $1,800/year you never get back.
+                                    It&apos;s not just one month. It&apos;s a permanent reduction in your property&apos;s value. Miss a 3.5% bump on a $5,000/mo lease? That&apos;s $2,100/year you never get back.
                                 </p>
                             </div>
                             <div className="bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow" style={{ padding: 'var(--fluid-p)', borderRadius: 'var(--fluid-radius)' }}>
@@ -195,7 +198,7 @@ export default function LandingPage() {
                                         </div>
                                         <h4 className="text-2xl font-black text-slate-900 mb-4 tracking-tight relative z-10">Stay Informed</h4>
                                         <p className="text-lg text-slate-600 leading-relaxed font-medium relative z-10">
-                                            Get <strong className="text-[#1e3a5f]">email and SMS</strong> alerts 90, 60, 30, and 7 days out. Your critical dates sync directly to Outlook or Google Calendar.
+                                            Get <strong className="text-[#1e3a5f]">email and SMS</strong> alerts 90, 60, 30, 7, and 0 days out. Your critical dates sync directly to Outlook or Google Calendar.
                                             <strong className="text-[#1e3a5f] ml-1">Whether you&apos;re at the office or on the golf course</strong>, we help prevent missed revenue opportunities.
                                         </p>
                                     </div>
@@ -261,10 +264,10 @@ export default function LandingPage() {
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#d4a853]" />
                             </h4>
                             <p className="text-xl text-slate-700 leading-relaxed font-bold">
-                                Missing just one 3% increase on a $3,000 lease <br className="hidden md:block" />costs <strong className="text-rose-600 underline decoration-rose-200 underline-offset-4">$1,080</strong> annually.
+                                Missing just one 3.5% increase on a $3,900/mo lease <br className="hidden md:block" />costs <strong className="text-rose-600 underline decoration-rose-200 underline-offset-4">$1,638</strong> annually.
                             </p>
                             <p className="text-slate-500 text-sm mt-3 font-medium">
-                                That single error costs <strong className="text-[#1e3a5f]">2.3x more</strong> than a year of RentClock.
+                                That single error costs <strong className="text-[#1e3a5f]">3.5x more</strong> than a year of RentClock.
                             </p>
                         </div>
                     </div>

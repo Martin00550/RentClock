@@ -30,7 +30,7 @@ export default async function ProfitProtectionPage() {
 
     // Fetch CPI Data
     const { yoyChange } = await fetchCPIStats();
-    const isOutpacing = yoyChange > 0.03;
+    const isOutpacing = yoyChange > 0.035;
     const inflationRate = (yoyChange * 100).toFixed(1);
 
     const typedLeases = (leases as Lease[]) || [];
@@ -102,8 +102,8 @@ export default async function ProfitProtectionPage() {
                             </p>
                             <p className="text-sm text-indigo-800/60 mt-2 font-medium">
                                 {isOutpacing
-                                    ? `Inflation (${inflationRate}%) is currently outpacing fixed 3% increases.`
-                                    : `Inflation (${inflationRate}%) is currently within the standard 3% floor.`
+                                    ? `Inflation (${inflationRate}%) is currently outpacing fixed 3.5% increases.`
+                                    : `Inflation (${inflationRate}%) is currently within the standard 3.5% floor.`
                                 }
                             </p>
                         </div>

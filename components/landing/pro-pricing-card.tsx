@@ -88,14 +88,22 @@ export function ProPricingCard() {
                     <CheckCircle2 className="h-5 w-5 text-[#2d6a4f] shrink-0" />
                     <span>Calendar Sync</span>
                 </li>
-            </ul>
+</ul>
+            <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-center">
+                <p className="text-sm font-bold text-emerald-800">
+                    14-Day Money-Back Guarantee
+                </p>
+                <p className="text-xs text-emerald-700 mt-1">
+                    Not satisfied? Full refund, no questions asked.
+                </p>
+            </div>
             <SignUpTrigger redirectUrl={`/billing?checkout=${isAnnual ? 'pro_annual' : 'pro_monthly'}`}>
                 <Button className="w-full bg-[#1e3a5f] hover:bg-[#2a4a73] text-white py-5 h-auto rounded-xl font-bold text-lg transition-colors shadow-lg shadow-slate-900/10">
                     Start 7-Day Free Trial
                 </Button>
             </SignUpTrigger>
             <p className="text-center text-slate-400 text-[10px] mt-4 leading-relaxed px-4 font-medium italic">
-                Trial is free. Payments covered by 14-day money-back guarantee. By starting your trial, you agree to our Terms and get immediate access to the service.
+                Cancel anytime.
             </p>
         </div >
     );

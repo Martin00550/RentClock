@@ -30,7 +30,7 @@ export function FaqSection() {
                     />
                     <FaqItem
                         question="Is there a setup fee or long-term contract?"
-                        answer="No. RentClock is built on a 'Utility First' model. You can track your first 3 leases for free forever, with no credit card required. Upgrade to Pro only when your portfolio grows. No implementation fees, no homework."
+                        answer="No. RentClock is built on a 'Utility First' model. You can track your first 3 leases for free, with no credit card required. Upgrade to Pro for unlimited leases. No implementation fees, no contracts."
                     />
                 </div>
             </div>

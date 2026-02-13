@@ -66,7 +66,7 @@ export default function LeaseTrackingSoftwarePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900">Automated Date Tracking</h3>
                                 <p className="text-slate-600 leading-relaxed">
-                                    Never calculate a notice window manually again. Our <strong>lease tracker</strong> automatically calculates 90/60/30 day alerts for every renewal and expiration.
+                                    Never calculate a notice window manually again. Our <strong>lease tracker</strong> automatically calculates 90/60/30/7/0 day alerts for every renewal and expiration.
                                 </p>
                             </div>
                             <div className="space-y-4">

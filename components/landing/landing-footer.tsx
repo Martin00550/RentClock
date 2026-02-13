@@ -57,7 +57,7 @@ export function LandingFooter() {
                             <div className="flex items-center gap-4 opacity-40 grayscale">
                                 <div className="flex items-center gap-1">
                                     <Lock className="h-2.5 w-2.5" />
-                                    <span className="text-[8px] font-bold uppercase tracking-widest">Secure Encryption (TLS/SSL)</span>
+                                    <span className="text-[8px] font-bold uppercase tracking-widest">secure portfolio storage (TLS/SSL)</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <ShieldCheck className="h-2.5 w-2.5" />

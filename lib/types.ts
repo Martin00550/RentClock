@@ -19,6 +19,8 @@ export interface Lease {
     reminder_30_days_sms?: boolean;
     reminder_7_days_sms?: boolean;
     reminder_90_days_sms?: boolean;
+    last_expiry_alert_sent?: number;
+    last_increase_alert_sent?: number;
     status: "active" | "warning" | "urgent"; // Calculated field, not in DB ideally but useful for UI
 }
 

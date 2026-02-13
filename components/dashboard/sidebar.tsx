@@ -22,7 +22,7 @@ import { useTutorial } from "@/components/tutorial/tutorial-provider";
 const NAV_ITEMS = [
     { name: "Command Center", href: "/dashboard", icon: BarChart3, color: "text-blue-500", id: "sidebar-home" },
     { name: "Lease Portfolio", href: "/leases", icon: FileText, color: "text-indigo-500", id: "sidebar-leases" },
-    { name: "New Lease", href: "/ai-import", icon: PlusCircle, color: "text-[#2d6a4f]", id: "sidebar-new-lease" },
+    { name: "New Lease", href: "/quick-add", icon: PlusCircle, color: "text-[#2d6a4f]", id: "sidebar-new-lease" },
     { name: "Profit Protection", href: "/profit-protection", icon: Sparkles, color: "text-[#d4a853]", id: "sidebar-profit" },
     { name: "Billing", href: "/billing", icon: CreditCard, color: "text-rose-500", id: "sidebar-billing" },
     { name: "Settings", href: "/settings", icon: Settings, color: "text-slate-500", id: "sidebar-settings" },

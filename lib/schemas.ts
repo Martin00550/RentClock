@@ -26,6 +26,8 @@ export const LeaseSchema = z.object({
     reminder_60_days_sms: z.boolean().default(false),
     reminder_30_days_sms: z.boolean().default(false),
     reminder_7_days_sms: z.boolean().default(false),
+    last_expiry_alert_sent: z.number().int().default(1000),
+    last_increase_alert_sent: z.number().int().default(1000),
     pdf_url: z.string().nullable().optional(),
 });
 

@@ -5,7 +5,7 @@ const isProtectedRoute = createRouteMatcher([
     "/dashboard(.*)",
     "/leases(.*)",
     "/settings(.*)",
-    "/ai-import(.*)",
+    "/quick-add(.*)",
     "/profit-protection(.*)",
     "/api/scan-lease",
     "/api/calendar(.*)"

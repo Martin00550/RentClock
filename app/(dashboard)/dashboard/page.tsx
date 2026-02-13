@@ -12,6 +12,7 @@ import { Lease } from "@/lib/types";
 import { redirect } from "next/navigation";
 import { differenceInDays, parseISO, isPast, isFuture } from "date-fns";
 import { fetchCPIStats } from "@/lib/cpi";
+import { calculateAtRiskAmount, formatCurrency } from "@/lib/lease-utils";
 
 export default async function DashboardPage() {
     const { userId } = await auth();
@@ -88,6 +89,8 @@ export default async function DashboardPage() {
         }
     }
 
+    const atRiskAmount = calculateAtRiskAmount(leases);
+
     const protectedCount = leases.filter(lease => {
         // Rent Increase Date in past => risk
         if (lease.rent_increase_date && isPast(parseISO(lease.rent_increase_date)) && !isFuture(parseISO(lease.rent_increase_date))) {
@@ -111,7 +114,7 @@ export default async function DashboardPage() {
                     <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Portfolio Safety Net</h1>
                     <p className="text-slate-500 text-base md:text-lg font-medium">Protecting your properties from the invisible bleed.</p>
                 </div>
-                <Link href="/ai-import" className="w-full md:w-auto" id="dashboard-quick-add">
+                <Link href="/quick-add" className="w-full md:w-auto" id="dashboard-quick-add">
                     <Button className="w-full md:w-auto bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-8 h-12 md:h-14 rounded-2xl font-bold font-display text-base md:text-lg shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3 transition-all">
                         <Plus className="h-5 w-5 md:h-6 md:w-6" strokeWidth={3} />
                         Protect a New Lease
@@ -138,7 +141,7 @@ export default async function DashboardPage() {
                                 Add your first lease to start tracking revenue risks and critical dates automatically.
                             </p>
                         </div>
-                        <Link href="/ai-import" className="w-full md:w-auto">
+                        <Link href="/quick-add" className="w-full md:w-auto">
                             <Button className="w-full md:w-auto h-14 md:h-16 px-8 rounded-2xl bg-[#1e3a5f] text-white font-black text-base md:text-lg hover:bg-[#2a4a73] transition-colors shadow-lg shadow-[#1e3a5f]/20">
                                 Add First Property <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
@@ -161,7 +164,7 @@ export default async function DashboardPage() {
                                 <span className="text-[#d4a853] font-black uppercase tracking-[0.2em] text-[10px] md:text-xs">Safety Net Warning</span>
                             </div>
                             <h2 className="text-2xl md:text-3xl font-black tracking-tight leading-tight">
-                                You have <span className="text-white border-b-4 border-[#d4a853]/50">Revenue at Risk</span>.
+                                You have <span className="text-white border-b-4 border-[#d4a853]/50">{formatCurrency(atRiskAmount)} in potential rent increases</span> at risk.
                             </h2>
                             <p className="text-white/90 font-medium text-base md:text-lg">
                                 Inflation has risen by {inflationRate}% this year. Check which leases are eligible for a rent adjustment.
@@ -169,7 +172,7 @@ export default async function DashboardPage() {
                         </div>
                         <Link href="/profit-protection" className="w-full md:w-auto">
                             <Button className="w-full md:w-auto h-14 md:h-16 px-8 rounded-2xl bg-[#d4a853] text-[#1e3a5f] font-black text-base md:text-lg hover:bg-white hover:text-[#1e3a5f] transition-all shadow-lg shadow-black/20 group-hover:shadow-[#d4a853]/30 border-2 border-[#d4a853]">
-                                View Opportunities <ArrowRight className="ml-2 h-5 w-5" />
+                                View {formatCurrency(atRiskAmount)} in Missed Revenue <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>
                     </div>

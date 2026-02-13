@@ -20,12 +20,12 @@ export function HeroCalculator() {
                 const res = await fetch("/api/cpi");
                 if (res.ok) {
                     const data = await res.json();
-                    setCpiRate(data.rate || 3.5);
+                    setCpiRate(data.yoyChange ? data.yoyChange * 100 : 4.2);
                 } else {
-                    setCpiRate(3.5); // Fallback
+                    setCpiRate(4.2); // Fallback higher than standard
                 }
             } catch {
-                setCpiRate(3.5); // Fallback
+                setCpiRate(4.2); // Fallback higher than standard
             } finally {
                 setIsLoading(false);
             }
@@ -33,22 +33,34 @@ export function HeroCalculator() {
         fetchCPI();
     }, []);
 
-    // Calculate potential loss when rent changes
+    // Calculate potential outcomes when rent changes
+    const [stats, setStats] = useState<{ leakage: number; total: number } | null>(null);
+
     useEffect(() => {
         if (!monthlyRent || !cpiRate) {
-            setPotentialLoss(null);
+            setStats(null);
             return;
         }
         const rent = parseFloat(monthlyRent.replace(/,/g, ""));
         if (isNaN(rent) || rent <= 0) {
-            setPotentialLoss(null);
+            setStats(null);
             return;
         }
-        // Use the "Greater of 3% or CPI" strategy
-        const effectiveRate = Math.max(3, cpiRate);
-        const monthlyIncrease = rent * (effectiveRate / 100);
-        const annualLoss = monthlyIncrease * 12;
-        setPotentialLoss(Math.round(annualLoss));
+
+        const industryStandard = 3;
+        const rentClockStandard = 3.5;
+
+        const annualIndustry = rent * (industryStandard / 100) * 12;
+        const annualRentClock = rent * (rentClockStandard / 100) * 12;
+        const annualCpi = rent * (cpiRate / 100) * 12;
+
+        const totalPotential = Math.max(annualRentClock, annualCpi);
+        const annualLeakage = totalPotential - annualIndustry;
+
+        setStats({
+            leakage: Math.max(0, Math.round(annualLeakage)),
+            total: Math.round(totalPotential)
+        });
     }, [monthlyRent, cpiRate]);
 
     const formatNumber = (num: number) => {
@@ -120,36 +132,48 @@ export function HeroCalculator() {
                         {isLoading ? (
                             <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
                         ) : (
-                            <span className="bg-[#2d6a4f]/10 text-[#2d6a4f] font-bold px-2 py-1 rounded-full">
-                                {cpiRate?.toFixed(1)}% YoY
-                            </span>
+                            <div className="flex flex-col items-end">
+                                <span className="bg-[#2d6a4f]/10 text-[#2d6a4f] font-bold px-2 py-1 rounded-full">
+                                    {cpiRate?.toFixed(1)}% YoY
+                                </span>
+                                <span className="text-[8px] text-slate-400 font-bold uppercase mt-1 tracking-tighter">
+                                    Auto-updates daily via BLS API
+                                </span>
+                            </div>
                         )}
                     </div>
 
                     {/* Result */}
                     <AnimatePresence>
-                        {potentialLoss !== null && (
+                        {stats !== null && (
                             <motion.div
                                 initial={{ opacity: 0, height: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, height: "auto", scale: 1 }}
                                 exit={{ opacity: 0, height: 0, scale: 0.95 }}
                                 className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4 overflow-hidden"
                             >
-                                <div className="flex items-start gap-3">
-                                    <div className="bg-amber-100 p-2 rounded-lg mt-0.5">
-                                        <AlertTriangle className="h-5 w-5 text-amber-600" />
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex items-start gap-3">
+                                        <div className="bg-amber-100 p-2 rounded-lg mt-0.5">
+                                            <AlertTriangle className="h-5 w-5 text-amber-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-black text-amber-800 uppercase tracking-widest mb-1">
+                                                Annual Profit Boost
+                                            </p>
+                                            <p className="text-4xl md:text-5xl font-black text-amber-900 tracking-tighter">
+                                                {formatNumber(stats.leakage)}
+                                                <span className="text-lg font-bold text-amber-600 ml-2">/year</span>
+                                            </p>
+                                            <p className="text-[10px] text-amber-700 mt-2 leading-relaxed font-semibold">
+                                                RentClock&apos;s 3.5% floor vs. the industry-standard 3% increase.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="text-xs font-black text-amber-800 uppercase tracking-widest mb-1">
-                                            Potential Annual Savings
-                                        </p>
-                                        <p className="text-4xl md:text-5xl font-black text-amber-900 tracking-tighter">
-                                            {formatNumber(potentialLoss)}
-                                            <span className="text-lg font-bold text-amber-600 ml-2">/year</span>
-                                        </p>
-                                        <p className="text-[10px] text-amber-700 mt-2 leading-relaxed">
-                                            Estimated per lease based on standard CPI increases. Actual savings depend on your specific lease execution and tenant negotiations.
-                                        </p>
+
+                                    <div className="pt-3 border-t border-amber-200/50 flex items-center justify-between text-amber-900/60">
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Total Revenue Protection (0% vs 3.5%):</span>
+                                        <span className="text-sm font-black">{formatNumber(stats.total)}/yr</span>
                                     </div>
                                 </div>
                             </motion.div>
@@ -160,7 +184,7 @@ export function HeroCalculator() {
                     <SignUpTrigger>
                         <Button
                             className="w-full bg-[#1e3a5f] hover:bg-[#2a4a73] text-white h-14 rounded-xl font-bold text-base transition-all shadow-lg flex items-center justify-center gap-2"
-                            disabled={!potentialLoss}
+                            disabled={!stats}
                         >
                             Check My Potential Savings
                             <ArrowRight className="h-5 w-5" />

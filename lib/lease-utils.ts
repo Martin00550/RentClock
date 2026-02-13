@@ -1,5 +1,5 @@
 import { Lease } from "./types";
-import { differenceInDays, parseISO } from "date-fns";
+import { differenceInDays, parseISO, isPast, isFuture } from "date-fns";
 
 export function getLeaseStatus(lease: Partial<Lease>): "active" | "warning" | "urgent" {
     if (!lease.lease_end_date && !lease.rent_increase_date) return "active";
@@ -60,4 +60,25 @@ export function getNextRelevantEvent(lease: Lease): { date: Date; type: "Rent In
         date: events[0].dateObj,
         type: events[0].type
     };
+}
+export function calculateAtRiskAmount(leases: Lease[]): number {
+    return leases.reduce((total, lease) => {
+        let isAtRisk = false;
+
+        // Same logic as dashboard/page.tsx for consistency
+        if (lease.rent_increase_date && isPast(parseISO(lease.rent_increase_date)) && !isFuture(parseISO(lease.rent_increase_date))) {
+            isAtRisk = true;
+        } else if (!lease.rent_increase_date && lease.lease_start_date) {
+            const start = parseISO(lease.lease_start_date);
+            if (differenceInDays(new Date(), start) > 365) {
+                isAtRisk = true;
+            }
+        }
+
+        if (!isAtRisk) return total;
+
+        // Use rent_increase_amount if provided, otherwise 3% fallback
+        const monthlyIncrease = lease.rent_increase_amount ?? (lease.monthly_rent * 0.03);
+        return total + monthlyIncrease;
+    }, 0);
 }
