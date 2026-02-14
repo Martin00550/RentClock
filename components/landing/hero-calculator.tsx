@@ -6,12 +6,12 @@ import { Input } from "@/components/ui/input";
 import { DollarSign, TrendingUp, AlertTriangle, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import { SignUpTrigger } from "@/components/landing/signup-trigger";
 import { motion, AnimatePresence } from "framer-motion";
+import { RENT_INCREASE_FLOOR, INDUSTRY_STANDARD } from "@/lib/lease-utils";
 
 export function HeroCalculator() {
     const [monthlyRent, setMonthlyRent] = useState("");
     const [cpiRate, setCpiRate] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [potentialLoss, setPotentialLoss] = useState<number | null>(null);
 
     // Fetch live CPI rate on mount
     useEffect(() => {
@@ -34,7 +34,7 @@ export function HeroCalculator() {
     }, []);
 
     // Calculate potential outcomes when rent changes
-    const [stats, setStats] = useState<{ leakage: number; total: number } | null>(null);
+    const [stats, setStats] = useState<{ leakage: number; total: number; effectiveRate: number } | null>(null);
 
     useEffect(() => {
         if (!monthlyRent || !cpiRate) {
@@ -47,19 +47,18 @@ export function HeroCalculator() {
             return;
         }
 
-        const industryStandard = 3;
-        const rentClockStandard = 3.5;
+        const currentRate = cpiRate || RENT_INCREASE_FLOOR;
 
-        const annualIndustry = rent * (industryStandard / 100) * 12;
-        const annualRentClock = rent * (rentClockStandard / 100) * 12;
-        const annualCpi = rent * (cpiRate / 100) * 12;
+        const annualIndustry = rent * (INDUSTRY_STANDARD / 100) * 12;
+        const annualRentClock = rent * (currentRate / 100) * 12;
 
-        const totalPotential = Math.max(annualRentClock, annualCpi);
+        const totalPotential = annualRentClock;
         const annualLeakage = totalPotential - annualIndustry;
 
         setStats({
             leakage: Math.max(0, Math.round(annualLeakage)),
-            total: Math.round(totalPotential)
+            total: Math.round(totalPotential),
+            effectiveRate: currentRate
         });
     }, [monthlyRent, cpiRate]);
 
@@ -166,13 +165,13 @@ export function HeroCalculator() {
                                                 <span className="text-lg font-bold text-amber-600 ml-2">/year</span>
                                             </p>
                                             <p className="text-[10px] text-amber-700 mt-2 leading-relaxed font-semibold">
-                                                RentClock&apos;s 3.5% floor vs. the industry-standard 3% increase.
+                                                RentClock&apos;s {cpiRate?.toFixed(1) || "3.5"}% Live CPI vs. the industry-standard 3% increase.
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="pt-3 border-t border-amber-200/50 flex items-center justify-between text-amber-900/60">
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Total Revenue Protection (0% vs 3.5%):</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Total Revenue Protection (0% vs {cpiRate?.toFixed(1) || RENT_INCREASE_FLOOR}%):</span>
                                         <span className="text-sm font-black">{formatNumber(stats.total)}/yr</span>
                                     </div>
                                 </div>

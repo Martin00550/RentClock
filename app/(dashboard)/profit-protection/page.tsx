@@ -4,7 +4,7 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { redirect } from "next/navigation";
-import { formatCurrency, calculateRevenueImpact } from "@/lib/lease-utils";
+import { formatCurrency, calculateLeakage, RENT_INCREASE_FLOOR } from "@/lib/lease-utils";
 import { CpiCalculator } from "@/components/leases/cpi-calculator";
 import { Lease } from "@/lib/types";
 import { ActionMenu } from "@/components/leases/action-menu";
@@ -30,15 +30,15 @@ export default async function ProfitProtectionPage() {
 
     // Fetch CPI Data
     const { yoyChange } = await fetchCPIStats();
-    const isOutpacing = yoyChange > 0.035;
+    const isOutpacing = yoyChange > (RENT_INCREASE_FLOOR / 100);
     const inflationRate = (yoyChange * 100).toFixed(1);
 
     const typedLeases = (leases as Lease[]) || [];
 
     // Calculate Portfolio Metrics
     const totalPortfolioValue = typedLeases.reduce((sum, lease) => sum + (lease.monthly_rent || 0), 0);
-    const totalRevenueOpportunity = typedLeases.reduce((sum, lease) => sum + calculateRevenueImpact(lease), 0);
-    const leasesWithOpportunity = typedLeases.filter(lease => calculateRevenueImpact(lease) > 0);
+    const totalRevenueOpportunity = typedLeases.reduce((sum, lease) => sum + calculateLeakage(lease, yoyChange), 0);
+    const leasesWithOpportunity = typedLeases.filter(lease => calculateLeakage(lease, yoyChange) > 0);
 
     return (
         <div className="flex flex-col max-w-7xl mx-auto py-8 transition-all" style={{ gap: 'var(--fluid-gap)', paddingLeft: 'var(--fluid-p)', paddingRight: 'var(--fluid-p)' }}>
@@ -64,7 +64,7 @@ export default async function ProfitProtectionPage() {
                             <DollarSign className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                            <span className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em]">Annual Revenue at Risk</span>
+                            <span className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em]">Uncollected Revenue (Leakage)</span>
                             <div className="text-4xl font-black text-white mt-2 tracking-tight">
                                 +{formatCurrency(totalRevenueOpportunity)}
                             </div>
@@ -102,8 +102,8 @@ export default async function ProfitProtectionPage() {
                             </p>
                             <p className="text-sm text-indigo-800/60 mt-2 font-medium">
                                 {isOutpacing
-                                    ? `Inflation (${inflationRate}%) is currently outpacing fixed 3.5% increases.`
-                                    : `Inflation (${inflationRate}%) is currently within the standard 3.5% floor.`
+                                    ? `Inflation (${inflationRate}%) is currently outpacing fixed ${RENT_INCREASE_FLOOR}% increases.`
+                                    : `Inflation (${inflationRate}%) is currently within the standard ${RENT_INCREASE_FLOOR}% floor.`
                                 }
                             </p>
                         </div>
@@ -126,7 +126,6 @@ export default async function ProfitProtectionPage() {
                             </Card>
                         ) : leasesWithOpportunity.length > 0 ? (
                             leasesWithOpportunity.map((lease) => {
-                                const impact = calculateRevenueImpact(lease);
                                 // For Free users, only show the first one clearly (as a "teaser") if you wanted, 
                                 // OR blur everything. Let's blur everything for maximum upgrade pressure.
 
@@ -149,8 +148,8 @@ export default async function ProfitProtectionPage() {
                                                     </div>
                                                     <div className="flex items-center gap-6">
                                                         <div className="text-right">
-                                                            <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest block">Opportunity</span>
-                                                            <span className="text-xl font-black text-[#2d6a4f] mt-1 block">+{formatCurrency(impact)}/yr</span>
+                                                            <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest block">Optimization Opportunity</span>
+                                                            <span className="text-xl font-black text-[#2d6a4f] mt-1 block">+{formatCurrency(calculateLeakage(lease, yoyChange))}/yr</span>
                                                         </div>
                                                         <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-[#1e3a5f] transition-colors">
                                                             <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-white transition-colors" />

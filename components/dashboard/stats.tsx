@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircle, Hash, TrendingUp } from "lucide-react";
-import { calculateRevenueImpact, formatCurrency, getNextRelevantEvent } from "@/lib/lease-utils";
+import { calculateLeakage, formatCurrency, getNextRelevantEvent } from "@/lib/lease-utils";
 import { differenceInDays } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
@@ -78,9 +78,9 @@ export function DashboardStats({ leases, protectedCount }: { leases: Lease[]; pr
         return daysAway <= 30;
     }).length;
 
-    // Calculate "Revenue Protection Potential" (Sum of upcoming increases)
+    // Calculate "Uncollected Revenue" (Sum of leakage across portfolio)
     const yearlyProtection = leases.reduce((sum, lease) => {
-        return sum + calculateRevenueImpact(lease);
+        return sum + calculateLeakage(lease);
     }, 0);
 
     return (
@@ -105,9 +105,9 @@ export function DashboardStats({ leases, protectedCount }: { leases: Lease[]; pr
             </Link>
             <Link href="/profit-protection" className="block" id="dashboard-kpi-revenue">
                 <StatCard
-                    title="Revenue Protection Potential"
+                    title="Uncollected Revenue"
                     value={formatCurrency(yearlyProtection)}
-                    subtextText="Estimated annual gain"
+                    subtextText={yearlyProtection > 0 ? "Annual leakage detected" : "Portfolio optimized"}
                     icon={<TrendingUp className="h-4 w-4" />}
                     variant="upcoming"
                 />

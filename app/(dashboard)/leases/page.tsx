@@ -1,5 +1,6 @@
-import { LeaseTable } from "@/components/leases/lease-table";
+import { fetchCPIStats } from "@/lib/cpi";
 import { ExportLeasesButton } from "@/components/leases/export-leases-button";
+import { LeaseTable } from "@/components/leases/lease-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
@@ -21,6 +22,8 @@ export default async function LeasesPage() {
         .select("*")
         .eq("user_id", userId);
 
+    const { yoyChange } = await fetchCPIStats();
+
     if (error) {
         console.error("Error fetching leases:", error);
     }
@@ -36,7 +39,7 @@ export default async function LeasesPage() {
                     <p className="text-slate-500 text-base md:text-lg font-medium">Manage all your active and upcoming lease agreements.</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                    <ExportLeasesButton leases={typedLeases} />
+                    <ExportLeasesButton leases={typedLeases} cpiRate={yoyChange} />
                     <Link href="/quick-add" className="w-full sm:w-auto" id="leases-add-button">
                         <Button className="w-full sm:w-auto bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-6 h-12 rounded-xl font-bold shadow-lg shadow-slate-200 flex items-center justify-center gap-2 transition-all">
                             <Plus className="h-5 w-5" />

@@ -4,8 +4,9 @@ import { Metadata } from 'next';
 import { Breadcrumbs } from "@/components/landing/breadcrumbs";
 
 export const metadata: Metadata = {
-    title: "RentClock Blog | Commercial Lease Management Tips",
-    description: "Expert advice for commercial landlords on lease tracking, rent escalations, and portfolio management.",
+    title: "RentClock Blog | Commercial Lease Management Tips & Guides",
+    description: "Expert guides for commercial landlords on lease tracking, rent escalations, CPI increases, and portfolio management. Protect your revenue with proven strategies.",
+    keywords: ["commercial lease management", "lease tracking software", "rent escalation clause", "CPI rent increase", "commercial landlord tips", "lease expiration tracking"],
 };
 
 export default function BlogIndexPage() {
@@ -43,6 +44,29 @@ export default function BlogIndexPage() {
                             </h2>
                             <p className="text-slate-600 mb-6 leading-relaxed grow">
                                 Why spreadsheets fail, how to set up a failsafe system, and the 3 dates you simply cannot miss.
+                            </p>
+                            <div className="flex items-center gap-2 text-[#1e3a5f] font-bold text-sm">
+                                Read Article <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                        </div>
+                    </article>
+                </Link>
+
+                {/* ARTICLE CARD 2 */}
+                <Link href="/blog/commercial-rent-escalation-guide" className="group">
+                    <article className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all hover:-translate-y-1 duration-300 h-full flex flex-col">
+                        <div className="h-48 bg-slate-100 flex items-center justify-center p-8">
+                            <div className="text-center">
+                                <span className="text-lg font-black text-slate-300 uppercase tracking-widest">Guide</span>
+                            </div>
+                        </div>
+                        <div className="p-8 flex flex-col grow">
+                            <div className="text-xs font-bold text-[#d4a853] uppercase tracking-wider mb-3">Revenue Protection</div>
+                            <h2 className="text-2xl font-black text-slate-900 mb-4 group-hover:text-[#1e3a5f] transition-colors">
+                                Commercial Rent Escalation Clauses
+                            </h2>
+                            <p className="text-slate-600 mb-6 leading-relaxed grow">
+                                Fixed steps vs CPI vs percentage rent: learn which escalation method protects your revenue best.
                             </p>
                             <div className="flex items-center gap-2 text-[#1e3a5f] font-bold text-sm">
                                 Read Article <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />

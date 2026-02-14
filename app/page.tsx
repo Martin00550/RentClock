@@ -37,35 +37,35 @@ export default function LandingPage() {
                 {/* HERO */}
                 <section className="relative overflow-hidden" style={{ paddingTop: 'calc(var(--fluid-p) * 2)', paddingBottom: 'var(--fluid-p)' }}>
                     <motion.div
-                        className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start px-6"
+                        className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center px-6"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <div className="flex flex-col gap-8">
-                            <div className="inline-flex items-center gap-2 bg-[#d4a853]/10 text-[#1e3a5f] border border-[#d4a853]/30 px-3 py-1.5 rounded-full w-fit">
-                                <CheckCircle2 className="h-4 w-4 text-[#d4a853]" />
-                                <span className="text-xs font-bold uppercase tracking-wider">First 3 Leases Free • No Credit Card</span>
+                        <div className="flex flex-col gap-5">
+                            <div className="inline-flex items-center gap-2 bg-[#d4a853]/10 text-[#1e3a5f] border border-[#d4a853]/30 px-3 py-1 rounded-full w-fit">
+                                <CheckCircle2 className="h-3.5 w-3.5 text-[#d4a853]" />
+                                <span className="text-[11px] font-bold uppercase tracking-wider">First 3 Leases Free • No Credit Card</span>
                             </div>
-                            <h1 className="text-4xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight text-slate-900">
+                            <h1 className="text-4xl lg:text-5xl xl:text-[3.5rem] font-extrabold leading-[1.05] tracking-tight text-slate-900">
                                 A safety net your commercial portfolio is missing
                             </h1>
-                            <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-xl">
+                            <p className="text-base md:text-lg text-slate-600 leading-relaxed max-w-lg -mt-1">
                                 Spreadsheets don&apos;t send reminders. RentClock is the simple <strong>commercial lease tracker</strong> that helps you stay ahead of rent increases and renewal options.
                             </p>
-                            <div className="flex flex-col sm:flex-row items-center gap-6">
+                            <div className="flex flex-col sm:flex-row items-center gap-4 -mt-1">
                                 <SignUpTrigger>
-                                    <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-10 py-5 rounded-3xl font-bold text-xl transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2 w-full sm:w-fit h-auto">
+                                    <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2 w-full sm:w-fit h-auto">
                                         <span>Start Tracking for Free</span>
                                     </Button>
                                 </SignUpTrigger>
                             </div>
 
                             {/* HERO TRUST SIGNALS */}
-                            <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-4 pt-2">
-                                <div className="flex items-center gap-2 text-slate-500 whitespace-nowrap">
-                                    <ShieldCheck className="h-4 w-4 text-[#2d6a4f]" />
-                                    <span className="text-[11px] font-bold uppercase tracking-wider">secure portfolio storage</span>
+                            <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-x-6">
+                                <div className="flex items-center gap-1.5 text-slate-400 whitespace-nowrap">
+                                    <ShieldCheck className="h-3.5 w-3.5 text-[#2d6a4f]" />
+                                    <span className="text-[10px] font-bold uppercase tracking-widest">Secure Portfolio Storage</span>
                                 </div>
                             </div>
                         </div>

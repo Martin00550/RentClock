@@ -5,11 +5,14 @@ import { Download } from "lucide-react";
 import { Lease } from "@/lib/types";
 import { format } from "date-fns";
 
+import { calculateLeakage } from "@/lib/lease-utils";
+
 interface ExportLeasesButtonProps {
     leases: Lease[];
+    cpiRate?: number;
 }
 
-export function ExportLeasesButton({ leases }: ExportLeasesButtonProps) {
+export function ExportLeasesButton({ leases, cpiRate }: ExportLeasesButtonProps) {
     const handleExport = () => {
         if (!leases || leases.length === 0) return;
 
@@ -22,20 +25,25 @@ export function ExportLeasesButton({ leases }: ExportLeasesButtonProps) {
             "Increase Date",
             "Lease Start",
             "Lease End",
-            "Status"
+            "Status",
+            "Revenue Optimization Opportunity (Annual)"
         ];
 
         // Format Rows
-        const rows = leases.map(lease => [
-            `"${lease.tenant_name}"`, // Quote strings to handle commas
-            `"${lease.property_address || ''}"`,
-            `"${lease.monthly_rent || 0}"`,
-            `"${lease.rent_increase_amount || 0}"`,
-            `"${lease.rent_increase_date || ''}"`,
-            `"${lease.lease_start_date || ''}"`,
-            `"${lease.lease_end_date || ''}"`,
-            `"${getParams(lease)}"`
-        ]);
+        const rows = leases.map(lease => {
+            const leakage = calculateLeakage(lease, cpiRate);
+            return [
+                `"${lease.tenant_name}"`, // Quote strings to handle commas
+                `"${lease.property_address || ''}"`,
+                `"${lease.monthly_rent || 0}"`,
+                `"${lease.rent_increase_amount || 0}"`,
+                `"${lease.rent_increase_date || ''}"`,
+                `"${lease.lease_start_date || ''}"`,
+                `"${lease.lease_end_date || ''}"`,
+                `"${getParams(lease)}"`,
+                `"${leakage.toFixed(2)}"`
+            ];
+        });
 
         // Combine
         const csvContent = [

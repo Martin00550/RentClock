@@ -1,5 +1,8 @@
 import { Lease } from "./types";
-import { differenceInDays, parseISO, isPast, isFuture } from "date-fns";
+import { differenceInDays, parseISO } from "date-fns";
+
+export const RENT_INCREASE_FLOOR = 3.5;
+export const INDUSTRY_STANDARD = 3.0;
 
 export function getLeaseStatus(lease: Partial<Lease>): "active" | "warning" | "urgent" {
     if (!lease.lease_end_date && !lease.rent_increase_date) return "active";
@@ -19,15 +22,40 @@ export function getLeaseStatus(lease: Partial<Lease>): "active" | "warning" | "u
     return "active";
 }
 
-export function calculateRevenueImpact(lease: Lease): number {
-    // Annualized rent increase amount
-    if (!lease.rent_increase_amount) {
-        // PREVIOUSLY: Fallback to 3% of monthly rent * 12
-        // FIX: Return 0. Do not assume 3%. Users must enter this data or extracting it from lease.
-        // This ensures the dashboard doesn't lie to the user.
-        return 0;
-    }
-    return lease.rent_increase_amount * 12;
+// Returns the IDEAL annual increase amount based on proper indexing
+export function calculateTargetAnnualIncrease(lease: Lease, liveCpiRate: number = 0): number {
+    const monthlyRent = lease.monthly_rent || 0;
+    const floorRate = RENT_INCREASE_FLOOR / 100;
+    // Use the greater of Floor or CPI
+    const targetRate = Math.max(floorRate, liveCpiRate);
+
+    return monthlyRent * targetRate * 12;
+}
+
+// Returns the ACTUAL/SCHEDULED annual increase amount
+export function calculateActualAnnualIncrease(lease: Lease): number {
+    const actualMonthlyIncrease = lease.rent_increase_amount || 0;
+    return actualMonthlyIncrease * 12;
+}
+
+// Returns the DIFFERENCE (Leakage) - Money left on the table
+export function calculateLeakage(lease: Lease, liveCpiRate: number = 0): number {
+    const target = calculateTargetAnnualIncrease(lease, liveCpiRate);
+    const actual = calculateActualAnnualIncrease(lease);
+
+    // If actual is greater than target (e.g. 10% increase), there is NO leakage.
+    // We do NOT return negative leakage (surplus).
+    return Math.max(0, target - actual);
+}
+
+/**
+ * @deprecated Use calculateTargetAnnualIncrease or calculateLeakage depending on intent.
+ * Kept for backward compatibility during refactor, but updated to behave like "Potential Total New Revenue"
+ */
+export function calculateRevenueImpact(lease: Lease, liveCpiRate?: number): number {
+    const target = calculateTargetAnnualIncrease(lease, liveCpiRate || 0);
+    const actual = calculateActualAnnualIncrease(lease);
+    return Math.max(target, actual);
 }
 
 export function formatCurrency(amount: number): string {
@@ -61,24 +89,19 @@ export function getNextRelevantEvent(lease: Lease): { date: Date; type: "Rent In
         type: events[0].type
     };
 }
-export function calculateAtRiskAmount(leases: Lease[]): number {
+export function calculateAtRiskAmount(leases: Lease[], liveCpiRate?: number): number {
     return leases.reduce((total, lease) => {
-        let isAtRisk = false;
+        // Only count leakage for leases that are actually "At Risk" (e.g. Expired or Upcoming)
+        // OR simply show Total Potential Leakage across the portfolio?
+        // "Uncollected Profit" usually implies the gap across the board.
 
-        // Same logic as dashboard/page.tsx for consistency
-        if (lease.rent_increase_date && isPast(parseISO(lease.rent_increase_date)) && !isFuture(parseISO(lease.rent_increase_date))) {
-            isAtRisk = true;
-        } else if (!lease.rent_increase_date && lease.lease_start_date) {
-            const start = parseISO(lease.lease_start_date);
-            if (differenceInDays(new Date(), start) > 365) {
-                isAtRisk = true;
-            }
-        }
+        // Strict Mode: Only count leakage if the date is passed? 
+        // User Request: "Truthful". Truthful means if I have a lease renewing in 6 months, 
+        // I haven't lost that money YET. But it IS "At Risk" if I don't act.
 
-        if (!isAtRisk) return total;
+        // Let's count ALL leakage as "Revenue Opportunity" / "At Risk"
+        // This aligns with "Profit Protection" - protecting the FUTURE profit.
 
-        // Use rent_increase_amount if provided, otherwise 3% fallback
-        const monthlyIncrease = lease.rent_increase_amount ?? (lease.monthly_rent * 0.03);
-        return total + monthlyIncrease;
+        return total + calculateLeakage(lease, liveCpiRate || 0);
     }, 0);
 }

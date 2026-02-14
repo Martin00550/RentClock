@@ -19,10 +19,11 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { notFound, redirect } from "next/navigation";
 import { Lease } from "@/lib/types";
 import { format, differenceInDays } from "date-fns";
-import { getLeaseStatus, formatCurrency, getNextRelevantEvent, calculateRevenueImpact } from "@/lib/lease-utils";
+import { getLeaseStatus, formatCurrency, getNextRelevantEvent, calculateLeakage } from "@/lib/lease-utils";
 import { NoticeButton } from "@/components/leases/notice-button";
 import { CpiCalculator } from "@/components/leases/cpi-calculator";
 import { LeaseSplitView } from "@/components/leases/lease-split-view";
+import { fetchCPIStats } from "@/lib/cpi";
 import { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -69,7 +70,8 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
             .from("users")
             .select("is_pro")
             .eq("id", userId)
-            .single()
+            .single(),
+        fetchCPIStats()
     ]);
 
     if (error || !data) {
@@ -81,6 +83,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
 
     const isPro = userData?.is_pro || false;
     const lease: Lease = data;
+    const { yoyChange } = await fetchCPIStats();
 
     // SECURE SIGNED URL GENERATION
     const signedPdfUrl = await getSignedLeaseUrl(lease.pdf_url);
@@ -94,7 +97,7 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
     // Status
     const status = getLeaseStatus(lease);
     const leaseAgeYears = ((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365)).toFixed(1);
-    const revenueImpact = calculateRevenueImpact(lease);
+    const leakage = calculateLeakage(lease, yoyChange);
 
     // Intelligent Calculation using shared util
     const nextEvent = getNextRelevantEvent(lease);
@@ -171,8 +174,10 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                                 <DollarSign className="h-6 w-6 text-[#2d6a4f]" />
                             </div>
                             <div>
-                                <span className="text-[10px] text-[#2d6a4f]/60 font-extrabold uppercase tracking-[0.2em]">Estimated Yearly Gains</span>
-                                <div className="text-3xl font-black text-[#2d6a4f] mt-1">+{formatCurrency(revenueImpact)}</div>
+                                <span className="text-[10px] text-[#2d6a4f]/60 font-extrabold uppercase tracking-[0.2em]">Uncollected Revenue</span>
+                                <div className="text-3xl font-black text-[#2d6a4f] mt-1">
+                                    {leakage > 0 ? `+${formatCurrency(leakage)}` : "Optimized"}
+                                </div>
                             </div>
                         </div>
                     </div>

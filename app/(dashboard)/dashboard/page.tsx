@@ -89,7 +89,7 @@ export default async function DashboardPage() {
         }
     }
 
-    const atRiskAmount = calculateAtRiskAmount(leases);
+    const atRiskAmount = calculateAtRiskAmount(leases, yoyChange);
 
     const protectedCount = leases.filter(lease => {
         // Rent Increase Date in past => risk

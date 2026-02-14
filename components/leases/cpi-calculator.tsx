@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TrendingUp, Info, ArrowRight } from "lucide-react";
-import { formatCurrency } from "@/lib/lease-utils";
+import { formatCurrency, RENT_INCREASE_FLOOR } from "@/lib/lease-utils";
 import { CPIDataPoint } from "@/lib/cpi";
 
 export function CpiCalculator({ currentRent }: { currentRent: number }) {
@@ -34,12 +34,14 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
     }, []);
 
     const handleCalculate = () => {
-        // Most CRE leases are "Greater of 3.5% or CPI increase"
-        const increase = Math.max(0.035, yoyChange);
+        // Most CRE leases are "Greater of X% or CPI increase"
+        const floor = RENT_INCREASE_FLOOR / 100;
+        const increase = Math.max(floor, yoyChange);
         setCalculatedRent(baseRent * (1 + increase));
     };
 
-    const displayPercentage = Math.max(0.035, yoyChange) * 100;
+    const displayPercentage = Math.max(RENT_INCREASE_FLOOR / 100, yoyChange) * 100;
+    const cpiPercentage = (yoyChange * 100).toFixed(1);
 
     return (
         <Card id="cpi-calculator-card" className="border-slate-200 bg-white shadow-2xl shadow-slate-200/50 overflow-hidden group transition-all duration-500 hover:shadow-indigo-500/5" style={{ borderRadius: 'var(--fluid-radius)' }}>
@@ -65,6 +67,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                             <div className="flex items-baseline gap-2">
                                 <span className="text-lg font-black text-[#1e3a5f]">{cpiData.value}</span>
                                 <span className="text-[10px] font-bold text-slate-400">({cpiData.periodName} {cpiData.year})</span>
+                                <span className="ml-2 bg-green-50 text-green-700 text-[10px] font-black px-2 py-0.5 rounded-full">+{cpiPercentage}% YoY</span>
                             </div>
                         </div>
                     </div>
@@ -80,7 +83,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                         <Info className="h-4 w-4 text-indigo-600" />
                     </div>
                     <p className="text-xs text-indigo-900/80 leading-relaxed font-semibold">
-                        Most commercial leases include a <span className="text-indigo-900 font-black">&quot;Greater of CPI or 3.5%&quot;</span> clause. Use this tool to ensure you aren&apos;t leaving money on the table.
+                        Most commercial leases include a <span className="text-indigo-900 font-black">&quot;Greater of CPI or {RENT_INCREASE_FLOOR}%&quot;</span> clause. Use this tool to ensure you aren&apos;t leaving money on the table.
                     </p>
                 </div>
 
@@ -101,7 +104,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                     <div className="space-y-3">
                         <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Strategy</Label>
                         <div className="h-14 flex items-center px-4 bg-white border-2 border-slate-100 rounded-2xl text-xs font-black text-slate-400 uppercase tracking-widest shadow-inner cursor-not-allowed">
-                            3.5% Floor + CPI
+                            {RENT_INCREASE_FLOOR}% Floor + CPI
                         </div>
                     </div>
                 </div>
@@ -119,7 +122,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                                     {formatCurrency(calculatedRent)}
                                 </div>
                                 <p className="text-xs text-indigo-100 font-medium">
-                                    The calculation uses the higher of 3.5% or CPI ({cpiData?.value ?? "3.4"}%) for this calculation.
+                                    The calculation uses the higher of {RENT_INCREASE_FLOOR}% or CPI ({cpiPercentage}%) for this calculation.
                                     This matches the &quot;Greater of X% or CPI&quot; clause often found in commercial leases.
                                 </p>
                                 <div className="flex items-center gap-2 mt-2">
