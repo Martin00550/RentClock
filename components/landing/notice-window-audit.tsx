@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format, subDays, differenceInDays, isValid, parseISO } from "date-fns";
+import { format, subDays, differenceInDays, isValid } from "date-fns";
 import { 
     Calendar as CalendarIcon, 
     Clock, 
@@ -418,7 +418,7 @@ export function NoticeWindowAudit() {
 
                     <div className="flex flex-col gap-2 mt-2 text-center">
                         <p className="text-[10px] text-slate-400 font-medium mb-1">
-                            Don't let a missed deadline cost you thousands.
+                            Don&apos;t let a missed deadline cost you thousands.
                         </p>
                         <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-slate-50 rounded-xl border border-slate-100">
                             <CheckCircle2 className="h-4 w-4 text-[#2d6a4f]" />

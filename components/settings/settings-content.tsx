@@ -254,7 +254,7 @@ export function SettingsContent() {
                                                     <div className="flex gap-2">
                                                         <a href={isPro ? googleCalendarUrl : "/billing"} target={isPro ? "_blank" : "_self"} rel="noopener noreferrer">
                                                             <Button variant="outline" size="sm" className="h-8 px-3 rounded-lg font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50 flex items-center gap-1.5">
-                                                                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Google" className="w-4 h-4" />
+                                                                <Image src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Google" width={16} height={16} className="w-4 h-4" />
                                                                 Google
                                                             </Button>
                                                         </a>
