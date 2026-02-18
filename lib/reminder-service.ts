@@ -15,8 +15,10 @@ export async function processLeaseReminders() {
     if (error) throw error;
 
     // Triggers in descending order for "highest matching trigger" logic
-    const triggers = [90, 60, 30, 7, 0];
-    const sortedTriggers = [...triggers].sort((a, b) => b - a);
+    // Triggers in ASCENDING order so we match the MOST URGENT / SPECIFIC trigger first.
+    // Example: If daysUntil is 0, we want to match 0, not 90.
+    const triggers = [0, 7, 30, 60, 90];
+    const sortedTriggers = [...triggers].sort((a, b) => a - b);
 
     const actionableItems = [];
 

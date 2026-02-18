@@ -11,7 +11,7 @@ import {
     XCircle,
     ShieldCheck
 } from "lucide-react";
-import { HeroCalculator } from "@/components/landing/hero-calculator";
+import { NoticeWindowAudit } from "@/components/landing/notice-window-audit";
 import { motion } from "framer-motion";
 import { StepVisual1, StepVisual2, StepVisual3 } from "@/components/landing/step-visuals";
 
@@ -69,8 +69,8 @@ export default function LandingPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="relative group" id="calculator">
-                            <HeroCalculator />
+<div className="relative group" id="audit">
+                            <NoticeWindowAudit />
                         </div>
                     </motion.div>
                 </section>

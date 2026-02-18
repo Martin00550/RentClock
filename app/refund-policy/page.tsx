@@ -1,4 +1,13 @@
 import Link from "next/link";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: "Refund Policy | RentClock",
+    description: "Our 14-day money-back guarantee and cancellation terms.",
+    alternates: {
+        canonical: "/refund-policy",
+    },
+};
 
 export default function RefundPolicyPage() {
     return (

@@ -15,7 +15,10 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Commercial Lease Tracking Software | RentClock",
         description: "The simplest lease tracking software for commercial landlords. Track expirations and rent bumps.",
-    }
+    },
+    alternates: {
+        canonical: "/lease-tracking-software",
+    },
 };
 
 export default function LeaseTrackingSoftwarePage() {

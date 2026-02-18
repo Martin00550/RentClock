@@ -1,4 +1,13 @@
 import Link from "next/link";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: "Privacy Policy | RentClock",
+    description: "How RentClock handles and protects your commercial lease data.",
+    alternates: {
+        canonical: "/privacy",
+    },
+};
 
 export default function PrivacyPage() {
     return (

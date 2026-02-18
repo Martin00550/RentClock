@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { formatCurrency } from "@/lib/lease-utils";
+import { formatCurrency, RENT_INCREASE_FLOOR } from "@/lib/lease-utils";
 import { Lease } from "@/lib/types";
 import { TrendingUp, ArrowUpRight, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface WealthProjectionCardProps {
     leases: Lease[];
@@ -15,6 +16,9 @@ interface WealthProjectionCardProps {
 
 export function WealthProjectionCard({ leases, inflationRate }: WealthProjectionCardProps) {
     const [years, setYears] = useState<5 | 10 | 15>(10);
+
+    // RentClock Strategy: Use the higher of Floor or Live CPI
+    const effectiveRate = Math.max(inflationRate, RENT_INCREASE_FLOOR / 100);
 
     const data = useMemo(() => {
         const totalMonthlyRent = leases.reduce((sum, lease) => sum + (lease.monthly_rent || 0), 0);
@@ -37,11 +41,11 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
 
             cumulativeFlat += annualBase;
             cumulativeProtected += compoundedRent;
-            compoundedRent *= (1 + inflationRate);
+            compoundedRent *= (1 + effectiveRate);
         }
 
         return projection;
-    }, [leases, inflationRate, years]);
+    }, [leases, effectiveRate, years]);
 
     const finalDelta = data[data.length - 1].delta;
     const maxVal = data[data.length - 1].annualProtected;
@@ -118,7 +122,7 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
                                 +{formatCurrency(finalDelta)}
                             </div>
                             <p className="text-xs text-slate-500 mt-2 font-medium">
-                                Cumulative extra revenue captured by indexing to {(inflationRate * 100).toFixed(1)}% inflation.
+                                Cumulative extra revenue captured by indexing to {(effectiveRate * 100).toFixed(1)}% {effectiveRate > inflationRate ? "(Floor Rate)" : "inflation"}.
                             </p>
                         </div>
 
@@ -159,7 +163,7 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
                         </div>
                     </div>
 
-                    <div className="lg:col-span-8 relative w-full aspect-[2/1] md:aspect-[3/1] flex items-center bg-slate-50/50 rounded-3xl border border-slate-100 overflow-hidden">
+                    <div className="lg:col-span-8 relative w-full aspect-2/1 md:aspect-3/1 flex items-center bg-slate-50/50 rounded-3xl border border-slate-100 overflow-hidden">
 
                         {/* CHART CONTAINER */}
                         <div className="absolute inset-0 p-6">
@@ -285,6 +289,3 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
         </Card>
     );
 }
-
-
-import Link from "next/link";

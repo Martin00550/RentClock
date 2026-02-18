@@ -48,9 +48,12 @@ export function HeroCalculator() {
         }
 
         const currentRate = cpiRate || RENT_INCREASE_FLOOR;
+        // RentClock Strategy: Greater of Floor (3.5%) or CPI
+        // This provides "Upside Protection" (CPI) and "Downside Protection" (Floor).
+        const effectiveRate = Math.max(currentRate, RENT_INCREASE_FLOOR);
 
         const annualIndustry = rent * (INDUSTRY_STANDARD / 100) * 12;
-        const annualRentClock = rent * (currentRate / 100) * 12;
+        const annualRentClock = rent * (effectiveRate / 100) * 12;
 
         const totalPotential = annualRentClock;
         const annualLeakage = totalPotential - annualIndustry;
@@ -58,7 +61,7 @@ export function HeroCalculator() {
         setStats({
             leakage: Math.max(0, Math.round(annualLeakage)),
             total: Math.round(totalPotential),
-            effectiveRate: currentRate
+            effectiveRate: effectiveRate
         });
     }, [monthlyRent, cpiRate]);
 
@@ -165,13 +168,13 @@ export function HeroCalculator() {
                                                 <span className="text-lg font-bold text-amber-600 ml-2">/year</span>
                                             </p>
                                             <p className="text-[10px] text-amber-700 mt-2 leading-relaxed font-semibold">
-                                                RentClock&apos;s {cpiRate?.toFixed(1) || "3.5"}% Live CPI vs. the industry-standard 3% increase.
+                                                RentClock&apos;s Protected {stats.effectiveRate.toFixed(1)}% {cpiRate && cpiRate < RENT_INCREASE_FLOOR ? "(Floor Rate)" : "(Live CPI)"} vs. standard 3%.
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="pt-3 border-t border-amber-200/50 flex items-center justify-between text-amber-900/60">
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Total Revenue Protection (0% vs {cpiRate?.toFixed(1) || RENT_INCREASE_FLOOR}%):</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Total Revenue Protection (0% vs {stats.effectiveRate.toFixed(1)}%):</span>
                                         <span className="text-sm font-black">{formatNumber(stats.total)}/yr</span>
                                     </div>
                                 </div>

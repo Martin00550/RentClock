@@ -33,10 +33,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.9,
         },
         {
-            url: `${baseUrl}/#pricing`,
-            lastModified: lastModified,
+            url: `${baseUrl}/blog/commercial-rent-escalation-guide`,
+            lastModified: new Date('2026-02-05'),
             changeFrequency: 'monthly',
-            priority: 0.7,
+            priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/blog/cpi-rent-increase-explained`,
+            lastModified: new Date('2026-02-18'),
+            changeFrequency: 'monthly',
+            priority: 0.8,
         },
         // Legal pages
         {
