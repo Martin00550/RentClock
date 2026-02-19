@@ -2,6 +2,11 @@ import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Use Edge runtime for all routes by default
+  // This is recommended for Cloudflare Pages
+  // experimental: { runtime: 'edge' }, 
+  // Note: Instead of the global experimental flag, 
+  // we will add 'export const runtime = "edge"' to each route.ts for stability.
   images: {
     remotePatterns: [
       {
