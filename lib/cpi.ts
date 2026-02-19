@@ -53,7 +53,7 @@ export async function fetchLatestCPI(): Promise<CPIDataPoint | null> {
 
         // Data is usually returned sorted by year/period descending (newest first)
         return data.Results.series[0].data[0];
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Failed to fetch CPI data:", error);
         return null;
     }
