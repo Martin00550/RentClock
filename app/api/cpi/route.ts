@@ -25,7 +25,7 @@ export async function GET() {
                 updated: new Date().toISOString()
             }
         });
-    } catch (error) {
+    } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
         return NextResponse.json(
             { error: errorMessage },

@@ -141,12 +141,12 @@ export async function POST(req: NextRequest) {
         // Validate with Zod
         let data;
         try {
-            const rawData = JSON.parse(jsonString);
+            const rawData = JSON.parse(jsonString) as Record<string, unknown>;
             const parsed = LeaseSchema.safeParse(rawData);
 
             if (!parsed.success) {
-                if (rawData.tenant_name && rawData.monthly_rent) {
-                    data = rawData;
+                if (rawData.tenant_name && typeof rawData.monthly_rent === 'number') {
+                    data = rawData as unknown as z.infer<typeof LeaseSchema>;
                 } else {
                     throw new Error("AI returned invalid data structure");
                 }
@@ -206,7 +206,7 @@ export async function POST(req: NextRequest) {
                 file_name: fileName,
                 status: "failed",
                 duration_ms: duration,
-                error_message: logError || errorMessage
+                error_message: logError || (error instanceof Error ? error.message : String(error))
             }).then();
         }
 

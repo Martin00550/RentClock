@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
         }
 
         return NextResponse.json({ success: true });
-    } catch (e) {
+    } catch (e: unknown) {
         console.error("Error parsing request:", e);
         return new NextResponse("Invalid request", { status: 400 });
     }

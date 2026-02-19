@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
     return (
-        <div className="min-h-screen bg-slate-50 py-20 px-6">
+        <div className="min-h-screen bg-slate-50 py-20 px-6" id="privacy-root">
             <div className="max-w-[800px] mx-auto">
                 <Link href="/" className="text-sm font-bold text-[#1e3a5f] hover:underline mb-8 inline-block">&larr; Back to Home</Link>
                 <h1 className="text-4xl font-extrabold text-slate-900 mb-8">Privacy Policy</h1>
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
                         <strong>Effective Date:</strong> January 2026
                     </p>
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        <p className="mb-4">By using RentClock, you agree to the collection and use of information in accordance with this policy. </p>RentClock is committed to protecting your privacy. This Privacy Policy explains how RentClock collects, uses, and safeguards your information when you use the service.
+                        By using RentClock, you agree to the collection and use of information in accordance with this policy. RentClock is committed to protecting your privacy. This Privacy Policy explains how RentClock collects, uses, and safeguards your information when you use the service.
                     </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">1. Information RentClock Collects</h2>

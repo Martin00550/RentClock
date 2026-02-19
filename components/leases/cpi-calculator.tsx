@@ -26,7 +26,7 @@ export function CpiCalculator({ currentRent }: { currentRent: number }) {
                 if (json.yoyChange !== undefined) {
                     setYoyChange(json.yoyChange);
                 }
-            } catch (err) {
+            } catch (err: unknown) {
                 console.error("Failed to load CPI", err);
             }
         }

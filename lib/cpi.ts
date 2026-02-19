@@ -100,7 +100,7 @@ export async function fetchCPIStats(): Promise<{
         }
 
         return { latest, yoyChange };
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Failed to fetch CPI stats:", error);
         return { latest: null, yoyChange: 0.034, error: "Fetch failed" };
     }
