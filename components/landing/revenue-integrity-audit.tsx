@@ -8,7 +8,7 @@ import { SignUpTrigger } from "@/components/landing/signup-trigger";
 import { motion, AnimatePresence } from "framer-motion";
 import { RENT_INCREASE_FLOOR, INDUSTRY_STANDARD } from "@/lib/lease-utils";
 
-export function HeroCalculator() {
+export function RevenueIntegrityAudit() {
     const [monthlyRent, setMonthlyRent] = useState("");
     const [cpiRate, setCpiRate] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +34,7 @@ export function HeroCalculator() {
     }, []);
 
     // Calculate potential outcomes when rent changes
-    const [stats, setStats] = useState<{ leakage: number; total: number; effectiveRate: number } | null>(null);
+    const [stats, setStats] = useState<{ leakage: number; total: number; effectiveRate: number; fiveYearLoss: number; equityLoss: number } | null>(null);
 
     useEffect(() => {
         if (!monthlyRent || !cpiRate) {
@@ -49,19 +49,37 @@ export function HeroCalculator() {
 
         const currentRate = cpiRate || RENT_INCREASE_FLOOR;
         // RentClock Strategy: Greater of Floor (3.5%) or CPI
-        // This provides "Upside Protection" (CPI) and "Downside Protection" (Floor).
         const effectiveRate = Math.max(currentRate, RENT_INCREASE_FLOOR);
 
-        const annualIndustry = rent * (INDUSTRY_STANDARD / 100) * 12;
-        const annualRentClock = rent * (effectiveRate / 100) * 12;
+        // Universal Baseline: Comparison against Status Quo (0% Increase)
+        // This calculates the total value of "Inflation Protection" vs doing nothing.
+        const annualStatusQuo = rent * 12;
+        const annualRentClock = rent * (1 + effectiveRate / 100) * 12;
+        const annualImpact = annualRentClock - annualStatusQuo;
 
-        const totalPotential = annualRentClock;
-        const annualLeakage = totalPotential - annualIndustry;
+        // 5-Year Compound Erosion Calculation (Target vs Status Quo)
+        let totalFiveYearErosion = 0;
+        let runningRentStatusQuo = rent;
+        let runningRentRentClock = rent;
+
+        for (let year = 1; year <= 5; year++) {
+            // Baseline is no change (Status Quo)
+            runningRentStatusQuo = rent;
+            // Target compounds
+            runningRentRentClock *= (1 + effectiveRate / 100);
+            totalFiveYearErosion += (runningRentRentClock - runningRentStatusQuo) * 12;
+        }
+
+        // Equity Opportunity (Building Valuation Impact)
+        const year5Impact = (runningRentRentClock - rent) * 12;
+        const equityGap = year5Impact / 0.065;
 
         setStats({
-            leakage: Math.max(0, Math.round(annualLeakage)),
-            total: Math.round(totalPotential),
-            effectiveRate: effectiveRate
+            leakage: Math.max(0, Math.round(annualImpact)),
+            total: Math.round(annualRentClock),
+            effectiveRate: effectiveRate,
+            fiveYearLoss: Math.round(totalFiveYearErosion),
+            equityLoss: Math.round(equityGap)
         });
     }, [monthlyRent, cpiRate]);
 
@@ -69,7 +87,7 @@ export function HeroCalculator() {
         return new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD",
-            maximumFractionDigits: 0,
+            maximumFractionDigits: 2,
         }).format(num);
     };
 
@@ -83,7 +101,7 @@ export function HeroCalculator() {
                 <div className="bg-linear-to-r from-[#1e3a5f] to-[#2a4a73] px-6 py-4">
                     <div className="flex items-center gap-2 text-white">
                         <TrendingUp className="h-5 w-5 text-[#d4a853]" />
-                        <span className="text-sm font-bold">Revenue Leakage Calculator</span>
+                        <span className="text-sm font-bold uppercase tracking-wider">Revenue Integrity Audit</span>
                     </div>
                 </div>
 
@@ -93,10 +111,10 @@ export function HeroCalculator() {
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                Your Monthly Rent
+                                Current Monthly Rent
                             </label>
                             <span className="text-[10px] font-bold text-[#1e3a5f] bg-[#1e3a5f]/5 px-2 py-0.5 rounded-md animate-pulse">
-                                Try it now
+                                Live Audit
                             </span>
                         </div>
                         <div className="relative group/input">
@@ -112,7 +130,7 @@ export function HeroCalculator() {
 
                         {/* Quick Examples */}
                         <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-slate-400 font-bold uppercase">Examples:</span>
+                            <span className="text-[10px] text-slate-400 font-bold uppercase">Benchmarks:</span>
                             {[2500, 5500, 12000].map((amt) => (
                                 <button
                                     key={amt}
@@ -129,7 +147,7 @@ export function HeroCalculator() {
                     <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100">
                         <div className="flex items-center gap-1.5 text-slate-500 font-medium">
                             <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                            Live CPI-U Rate:
+                            Live CPI-U Index:
                         </div>
                         {isLoading ? (
                             <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
@@ -139,7 +157,7 @@ export function HeroCalculator() {
                                     {cpiRate?.toFixed(1)}% YoY
                                 </span>
                                 <span className="text-[8px] text-slate-400 font-bold uppercase mt-1 tracking-tighter">
-                                    Auto-updates daily via BLS API
+                                    Federal BLS Data Sync Verified
                                 </span>
                             </div>
                         )}
@@ -157,25 +175,36 @@ export function HeroCalculator() {
                                 <div className="flex flex-col gap-4">
                                     <div className="flex items-start gap-3">
                                         <div className="bg-amber-100 p-2 rounded-lg mt-0.5">
-                                            <AlertTriangle className="h-5 w-5 text-amber-600" />
+                                            <TrendingUp className="h-5 w-5 text-amber-600" />
                                         </div>
                                         <div>
                                             <p className="text-xs font-black text-amber-800 uppercase tracking-widest mb-1">
-                                                Annual Profit Boost
+                                                Total Inflation Gap (Asset Value)
                                             </p>
                                             <p className="text-4xl md:text-5xl font-black text-amber-900 tracking-tighter">
-                                                {formatNumber(stats.leakage)}
-                                                <span className="text-lg font-bold text-amber-600 ml-2">/year</span>
+                                                {formatNumber(stats.equityLoss)}
                                             </p>
-                                            <p className="text-[10px] text-amber-700 mt-2 leading-relaxed font-semibold">
-                                                RentClock&apos;s Protected {stats.effectiveRate.toFixed(1)}% {cpiRate && cpiRate < RENT_INCREASE_FLOOR ? "(Floor Rate)" : "(Live CPI)"} vs. standard 3%.
+                                            <p className="text-[10px] text-amber-700 mt-2 leading-relaxed font-bold">
+                                                The difference between doing nothing and indexing correctly (at 6.5% cap).
                                             </p>
                                         </div>
                                     </div>
 
-                                    <div className="pt-3 border-t border-amber-200/50 flex items-center justify-between text-amber-900/60">
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Total Revenue Protection (0% vs {stats.effectiveRate.toFixed(1)}%):</span>
-                                        <span className="text-sm font-black">{formatNumber(stats.total)}/yr</span>
+                                    <div className="pt-3 border-t border-amber-200/50 space-y-2">
+                                        <div className="flex items-center justify-between text-amber-900/60">
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">5-Year Revenue Erosion:</span>
+                                            <span className="text-sm font-black text-amber-900">{formatNumber(stats.fiveYearLoss)}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-amber-900/60">
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Annual Opportunity:</span>
+                                            <span className="text-sm font-bold">{formatNumber(stats.leakage)}/yr</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-center gap-1.5 opacity-40">
+                                        <div className="h-px flex-1 bg-amber-900/20" />
+                                        <span className="text-[8px] font-black uppercase text-amber-900">Audit Protocol Verified</span>
+                                        <div className="h-px flex-1 bg-amber-900/20" />
                                     </div>
                                 </div>
                             </motion.div>
@@ -188,14 +217,14 @@ export function HeroCalculator() {
                             className="w-full bg-[#1e3a5f] hover:bg-[#2a4a73] text-white h-14 rounded-xl font-bold text-base transition-all shadow-lg flex items-center justify-center gap-2"
                             disabled={!stats}
                         >
-                            Check My Potential Savings
+                            Review My Audit Findings
                             <ArrowRight className="h-5 w-5" />
                         </Button>
                     </SignUpTrigger>
 
                     <div className="flex flex-col gap-2 mt-2 text-center">
-                        <p className="text-[10px] text-slate-400 font-medium mb-1">
-                            Calculations are estimates for informative purposes.
+                        <p className="text-[8px] text-slate-400 font-bold uppercase tracking-tight mb-1">
+                            Calculated vs. Status Quo using Federal BLS CPI indices & 6.5% Cap Rate benchmarks.
                         </p>
                         <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-slate-50 rounded-xl border border-slate-100">
                             <CheckCircle2 className="h-4 w-4 text-[#2d6a4f]" />

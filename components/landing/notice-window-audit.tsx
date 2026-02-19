@@ -6,12 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format, subDays, differenceInDays, isValid } from "date-fns";
-import { 
-    Calendar as CalendarIcon, 
-    Clock, 
-    AlertTriangle, 
-    ArrowRight, 
-    ShieldCheck, 
+import {
+    Calendar as CalendarIcon,
+    Clock,
+    AlertTriangle,
+    ArrowRight,
+    ShieldCheck,
     CheckCircle2,
     XCircle,
     Bell,
@@ -191,7 +191,7 @@ export function NoticeWindowAudit() {
                                 Required
                             </span>
                         </div>
-                        
+
                         <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                             <PopoverTrigger asChild>
                                 <Button
@@ -273,7 +273,7 @@ export function NoticeWindowAudit() {
                                 {showRentInput ? "Hide" : "Add for revenue impact"}
                             </button>
                         </div>
-                        
+
                         <AnimatePresence>
                             {showRentInput && (
                                 <motion.div
@@ -399,7 +399,7 @@ export function NoticeWindowAudit() {
                         <Button
                             className={cn(
                                 "w-full h-14 rounded-xl font-bold text-base transition-all shadow-lg flex items-center justify-center gap-2",
-                                result 
+                                result
                                     ? "bg-[#1e3a5f] hover:bg-[#2a4a73] text-white"
                                     : "bg-slate-200 text-slate-400 cursor-not-allowed hover:bg-slate-200"
                             )}

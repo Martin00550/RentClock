@@ -78,7 +78,7 @@ export function DashboardStats({ leases, protectedCount }: { leases: Lease[]; pr
         return daysAway <= 30;
     }).length;
 
-    // Calculate "Uncollected Revenue" (Sum of leakage across portfolio)
+    // Calculate "Yield Opportunity" (Sum of leakage across portfolio)
     const yearlyProtection = leases.reduce((sum, lease) => {
         return sum + calculateLeakage(lease);
     }, 0);
@@ -105,9 +105,9 @@ export function DashboardStats({ leases, protectedCount }: { leases: Lease[]; pr
             </Link>
             <Link href="/profit-protection" className="block" id="dashboard-kpi-revenue">
                 <StatCard
-                    title="Uncollected Revenue"
+                    title="Yield Opportunity"
                     value={formatCurrency(yearlyProtection)}
-                    subtextText={yearlyProtection > 0 ? "Annual leakage detected" : "Portfolio optimized"}
+                    subtextText={yearlyProtection > 0 ? "Portfolio yield variance detected" : "Yield integrity secure"}
                     icon={<TrendingUp className="h-4 w-4" />}
                     variant="upcoming"
                 />

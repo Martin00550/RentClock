@@ -11,7 +11,7 @@ import {
     XCircle,
     ShieldCheck
 } from "lucide-react";
-import { NoticeWindowAudit } from "@/components/landing/notice-window-audit";
+import { RevenueIntegrityAudit } from "@/components/landing/revenue-integrity-audit";
 import { motion } from "framer-motion";
 import { StepVisual1, StepVisual2, StepVisual3 } from "@/components/landing/step-visuals";
 
@@ -48,10 +48,10 @@ export default function LandingPage() {
                                 <span className="text-[11px] font-bold uppercase tracking-wider">First 3 Leases Free • No Credit Card</span>
                             </div>
                             <h1 className="text-4xl lg:text-5xl xl:text-[3.5rem] font-extrabold leading-[1.05] tracking-tight text-slate-900">
-                                A safety net your commercial portfolio is missing
+                                Institutional Yield Integrity for your commercial portfolio
                             </h1>
                             <p className="text-base md:text-lg text-slate-600 leading-relaxed max-w-lg -mt-1">
-                                Spreadsheets don&apos;t send reminders. RentClock is the simple <strong>commercial lease tracker</strong> that helps you stay ahead of rent increases and renewal options.
+                                Spreadsheets aren&apos;t audit-proof. RentClock ensures your portfolio maintains <strong>Revenue Integrity</strong> by capturing every indexing adjustment and renewal event automatically.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center gap-4 -mt-1">
                                 <SignUpTrigger>
@@ -69,8 +69,8 @@ export default function LandingPage() {
                                 </div>
                             </div>
                         </div>
-<div className="relative group" id="audit">
-                            <NoticeWindowAudit />
+                        <div className="relative group" id="audit">
+                            <RevenueIntegrityAudit />
                         </div>
                     </motion.div>
                 </section>
@@ -87,7 +87,7 @@ export default function LandingPage() {
                             <h2 className="text-[#d4a853] font-bold uppercase tracking-widest text-sm mb-4">The Cost of Inaction</h2>
                             <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Managing property is a professional duty</h3>
                             <p className="text-lg text-slate-600 leading-relaxed">
-                                Don&apos;t let a busy schedule compromise your returns. Commercial leases are full of traps, and a single missed window can lock you into old rates for years.
+                                Don&apos;t let a busy schedule erode your asset value. Commercial leases without active "Greater-Of" indexing trails the market, creating a permanent gap in your property&apos;s valuation.
                             </p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 'var(--fluid-gap)' }}>
@@ -95,9 +95,9 @@ export default function LandingPage() {
                                 <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-lg flex items-center justify-center mb-6">
                                     <TrendingDown className="h-6 w-6" />
                                 </div>
-                                <h4 className="text-xl font-bold text-slate-900 mb-3">The 3.5% Leak</h4>
+                                <h4 className="text-xl font-bold text-slate-900 mb-3">The Indexing Gap</h4>
                                 <p className="text-slate-600 leading-relaxed">
-                                    It&apos;s not just one month. It&apos;s a permanent reduction in your property&apos;s value. Miss a 3.5% bump on a $5,000/mo lease? That&apos;s $2,100/year you never get back.
+                                    Inflation moves every day, but fixed increases don&apos;t. A single missed or under-indexed adjustment on a $5,000/mo lease can represent a <strong>$51,948.92 variance</strong> in property valuation.
                                 </p>
                             </div>
                             <div className="bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow" style={{ padding: 'var(--fluid-p)', borderRadius: 'var(--fluid-radius)' }}>
@@ -212,8 +212,8 @@ export default function LandingPage() {
                     <div className="max-w-[1000px] mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-[#d4a853] font-black uppercase tracking-[0.2em] text-sm mb-4">The Smart Choice</h2>
-                            <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Why RentClock wins</h3>
-                            <p className="text-lg text-slate-600 font-medium">Stop paying for overpriced hours or relying on fragile spreadsheets.</p>
+                            <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Built for Portfolio Integrity</h3>
+                            <p className="text-lg text-slate-600 font-medium">Protect your target yield with automated audit protocols—no more fragile spreadsheets.</p>
                         </div>
 
                         <div className="overflow-hidden rounded-3xl border border-slate-200 shadow-xl shadow-slate-900/5">
@@ -247,27 +247,27 @@ export default function LandingPage() {
                                             <td className="py-6 px-6 md:px-10 text-rose-600 font-bold">High (Human Error)</td>
                                         </tr>
                                         <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
-                                            <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Revenue Focus</td>
-                                            <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Profit Protection</td>
-                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Billing / Compliance</td>
-                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">None</td>
+                                            <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Yield Protection</td>
+                                            <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Dynamic Indexing</td>
+                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Billing Only</td>
+                                            <td className="py-6 px-6 md:px-10 text-slate-600 font-bold">None</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <div className="mt-10 bg-white border-2 border-[#d4a853]/20 rounded-2xl p-8 max-w-[700px] mx-auto text-center shadow-xl shadow-[#d4a853]/5 relative overflow-hidden group hover:border-[#d4a853]/40 transition-colors">
-                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#d4a853] to-transparent opacity-50" />
+                            <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-[#d4a853] to-transparent opacity-50" />
                             <h4 className="text-[#1e3a5f] font-black uppercase tracking-widest text-xs mb-3 flex items-center justify-center gap-2">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#d4a853]" />
                                 ROI Reality Check
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#d4a853]" />
                             </h4>
                             <p className="text-xl text-slate-700 leading-relaxed font-bold">
-                                Missing just one 3.5% increase on a $3,900/mo lease <br className="hidden md:block" />costs <strong className="text-rose-600 underline decoration-rose-200 underline-offset-4">$1,638</strong> annually.
+                                A 1.5% yield variance on a $5,000/mo lease <br className="hidden md:block" />represents an unrecovered **$77,923.38** in property valuation.
                             </p>
                             <p className="text-slate-500 text-sm mt-3 font-medium">
-                                That single error costs <strong className="text-[#1e3a5f]">3.5x more</strong> than a year of RentClock.
+                                RentClock audits identify these gaps before they become permanent asset erosion.
                             </p>
                         </div>
                     </div>
@@ -352,7 +352,7 @@ export default function LandingPage() {
                             Move beyond static spreadsheets.
                         </h2>
                         <p className="text-lg text-slate-300 mb-10 max-w-xl mx-auto">
-                            Start tracking your first 3 leases today. Help stop revenue leakage.
+                            Start tracking your first 3 leases today. Eliminate your yield variance.
                         </p>
                         <div className="flex flex-col items-center gap-8">
                             <SignUpTrigger>

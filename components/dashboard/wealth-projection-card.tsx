@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { formatCurrency, RENT_INCREASE_FLOOR } from "@/lib/lease-utils";
+import { formatCurrency, RENT_INCREASE_FLOOR, calculateAssetValueGap } from "@/lib/lease-utils";
 import { Lease } from "@/lib/types";
 import { TrendingUp, ArrowUpRight, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -93,9 +93,9 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
                     <div className="space-y-1">
                         <div className="flex items-center gap-2 text-[#d4a853] font-black uppercase tracking-widest text-[10px]">
                             <TrendingUp className="h-3 w-3" />
-                            <span>10-Year Wealth Mapping</span>
+                            <span>{years}-Year Asset Yield Sentinel</span>
                         </div>
-                        <CardTitle className="text-2xl font-black text-slate-900 tracking-tight">Revenue Protection Map</CardTitle>
+                        <CardTitle className="text-2xl font-black text-slate-900 tracking-tight">Yield Protection Map</CardTitle>
                     </div>
                     <div className="flex bg-slate-100 p-1 rounded-xl">
                         {[5, 10, 15].map((y) => (
@@ -117,13 +117,19 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
                 <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
                     <div className="lg:col-span-4 space-y-6">
                         <div className="bg-[#2d6a4f]/5 border border-[#2d6a4f]/10 p-6 rounded-3xl">
-                            <span className="text-[10px] text-[#2d6a4f] font-black uppercase tracking-widest leading-none">Net Gain Potential</span>
+                            <span className="text-[10px] text-[#2d6a4f] font-black uppercase tracking-widest leading-none">Asset Appreciation Gap</span>
                             <div className="text-4xl font-black text-[#2d6a4f] mt-2 tracking-tighter">
-                                +{formatCurrency(finalDelta)}
+                                {formatCurrency(calculateAssetValueGap(data[data.length - 1].annualProtected - data[data.length - 1].annualFlat))}
                             </div>
                             <p className="text-xs text-slate-500 mt-2 font-medium">
-                                Cumulative extra revenue captured by indexing to {(effectiveRate * 100).toFixed(1)}% {effectiveRate > inflationRate ? "(Floor Rate)" : "inflation"}.
+                                Valuation difference at Year {years} based on a 6.5% target cap rate between indexing correctly vs. baseline.
                             </p>
+                            <div className="mt-4 pt-4 border-t border-[#2d6a4f]/10">
+                                <span className="text-[10px] text-[#2d6a4f] font-black uppercase tracking-widest leading-none">Total Yield Gain</span>
+                                <div className="text-2xl font-black text-[#2d6a4f] mt-1 tracking-tighter">
+                                    +{formatCurrency(finalDelta)}
+                                </div>
+                            </div>
                         </div>
 
                         <div className="space-y-4">
@@ -131,7 +137,7 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
                                 <div className="w-3 h-3 rounded-full bg-[#1e3a5f]" />
                                 <div className="flex-1">
                                     <div className="flex justify-between items-baseline">
-                                        <span className="text-sm font-bold text-slate-600">Protected Path</span>
+                                        <span className="text-sm font-bold text-slate-600">Yield-Protected Path</span>
                                         <span className="text-sm font-black text-slate-900">{formatCurrency(data[data.length - 1].annualProtected / 12)}/mo</span>
                                     </div>
                                     <div className="h-1.5 w-full bg-slate-100 rounded-full mt-1.5 overflow-hidden">
@@ -143,7 +149,7 @@ export function WealthProjectionCard({ leases, inflationRate }: WealthProjection
                                 <div className="w-3 h-3 rounded-full bg-slate-300" />
                                 <div className="flex-1">
                                     <div className="flex justify-between items-baseline">
-                                        <span className="text-sm font-bold text-slate-500">Unprotected (Flat)</span>
+                                        <span className="text-sm font-bold text-slate-500">Stale Baseline</span>
                                         <span className="text-sm font-black text-slate-500">{formatCurrency(data[0].annualFlat / 12)}/mo</span>
                                     </div>
                                     <div className="h-1.5 w-full bg-slate-100 rounded-full mt-1.5 overflow-hidden">

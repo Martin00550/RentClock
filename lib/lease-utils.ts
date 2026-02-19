@@ -58,11 +58,16 @@ export function calculateRevenueImpact(lease: Lease, liveCpiRate?: number): numb
     return Math.max(target, actual);
 }
 
+// Returns the asset valuation impact based on a 6.5% Cap Rate benchmark
+export function calculateAssetValueGap(annualImpact: number): number {
+    return annualImpact / 0.065;
+}
+
 export function formatCurrency(amount: number): string {
     return new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-        maximumFractionDigits: 0,
+        maximumFractionDigits: 2,
     }).format(amount);
 }
 

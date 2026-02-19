@@ -135,7 +135,7 @@ export async function processLeaseReminders() {
                                                 </div>
                                                 ${!isExpiry && lease.rent_increase_amount ? `
                                                 <div style="margin-top: 12px;">
-                                                     <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b;">New Revenue</span>
+                                                     <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b;">Yield Protection</span>
                                                      <div style="font-size: 18px; font-weight: 700; color: #2d6a4f;">+$${lease.rent_increase_amount}/mo</div>
                                                 </div>
                                                 ` : ''}
@@ -156,7 +156,7 @@ export async function processLeaseReminders() {
                 if (smsAllowed && lease.users?.phone && lease.users?.is_pro) {
                     const smsBody = isExpiry
                         ? `RentClock: Lease for ${lease.tenant_name} expires in ${triggerLevel} days. Review: ${appUrl}/leases/${lease.id}`
-                        : `RentClock: Rent Increase for ${lease.tenant_name} is due in ${triggerLevel} days. Capture revenue: ${appUrl}/leases/${lease.id}`;
+                        : `RentClock: Rent Increase for ${lease.tenant_name} is due in ${triggerLevel} days. Protect yield: ${appUrl}/leases/${lease.id}`;
 
                     notificationResults.push(
                         sendSms(lease.users.phone, smsBody).then(res => ({ type: 'sms', ...res }))
