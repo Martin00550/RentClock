@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DollarSign, TrendingUp, AlertTriangle, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
+import { DollarSign, TrendingUp, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import { SignUpTrigger } from "@/components/landing/signup-trigger";
 import { motion, AnimatePresence } from "framer-motion";
-import { RENT_INCREASE_FLOOR, INDUSTRY_STANDARD } from "@/lib/lease-utils";
+import { RENT_INCREASE_FLOOR } from "@/lib/lease-utils";
 
 export function RevenueIntegrityAudit() {
     const [monthlyRent, setMonthlyRent] = useState("");

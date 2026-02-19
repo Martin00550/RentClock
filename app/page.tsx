@@ -87,7 +87,7 @@ export default function LandingPage() {
                             <h2 className="text-[#d4a853] font-bold uppercase tracking-widest text-sm mb-4">The Cost of Inaction</h2>
                             <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Managing property is a professional duty</h3>
                             <p className="text-lg text-slate-600 leading-relaxed">
-                                Don&apos;t let a busy schedule erode your asset value. Commercial leases without active "Greater-Of" indexing trails the market, creating a permanent gap in your property&apos;s valuation.
+                                Don&apos;t let a busy schedule erode your asset value. Commercial leases without active &quot;Greater-Of&quot; indexing trails the market, creating a permanent gap in your property&apos;s valuation.
                             </p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 'var(--fluid-gap)' }}>
