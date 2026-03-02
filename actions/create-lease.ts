@@ -26,10 +26,12 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
         return { error: userError || "Failed to fetch user profile" };
     }
 
-    const { count, error: countError } = await supabaseAdmin
-        .from("leases")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", userId);
+    const { count, error: countError } = supabaseAdmin
+        ? await supabaseAdmin
+            .from("leases")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", userId)
+        : { count: 0, error: null };
 
     if (countError) {
         return { error: "Failed to validate lease limits" };
@@ -76,6 +78,8 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
     const leaseData = parsed.data;
 
     // 4. Insert Lease
+    if (!supabaseAdmin) return { error: "Database not available" };
+
     const { error: insertError } = await supabaseAdmin
         .from("leases")
         .insert({

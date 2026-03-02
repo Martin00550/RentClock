@@ -26,10 +26,12 @@ export default async function DashboardPage() {
     }
 
     // Parallel Fetching: Leases + User Profile
-    const [leasesRes, profileRes] = await Promise.all([
-        supabaseAdmin.from("leases").select("*").eq("user_id", userId),
-        supabaseAdmin.from("users").select("referral_code, bonus_leases, is_pro").eq("id", userId).single()
-    ]);
+    const [leasesRes, profileRes] = (supabaseAdmin)
+        ? await Promise.all([
+            supabaseAdmin.from("leases").select("*").eq("user_id", userId),
+            supabaseAdmin.from("users").select("referral_code, bonus_leases, is_pro").eq("id", userId).single()
+        ])
+        : [{ data: [], error: null }, { data: null, error: null }];
 
     const leases = (leasesRes.data as Lease[]) || [];
     const userProfile = profileRes.data;
@@ -42,13 +44,15 @@ export default async function DashboardPage() {
         referralCode = `RC-${randomPart}`;
 
         // Update DB
-        const { error: updateError } = await supabaseAdmin
-            .from("users")
-            .update({ referral_code: referralCode })
-            .eq("id", userId);
+        if (supabaseAdmin) {
+            const { error: updateError } = await supabaseAdmin
+                .from("users")
+                .update({ referral_code: referralCode })
+                .eq("id", userId);
 
-        if (updateError) {
-            console.error("Failed to generate referral code", updateError);
+            if (updateError) {
+                console.error("Failed to generate referral code", updateError);
+            }
         }
     }
 

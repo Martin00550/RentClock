@@ -11,6 +11,8 @@ export async function seedTestLease() {
     const today = new Date();
     const expiryDate = addDays(today, 7); // 7 days from now (Urgent trigger)
 
+    if (!supabase) return { success: false, error: "Database not available" };
+
     const { data, error } = await supabase.from("leases").insert({
         user_id: userId,
         tenant_name: "Test Tenant (AI Scan Demo)",

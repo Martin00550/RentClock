@@ -8,6 +8,10 @@ export async function processLeaseReminders() {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://rentclock.online";
 
     // 1. Fetch leases with user data and tracking flags
+    if (!supabaseAdmin) {
+        return { message: "Database connection not available.", count: 0 };
+    }
+
     const { data: leases, error } = await supabaseAdmin
         .from("leases")
         .select("*, users!inner(email, phone, is_pro, email_notifications_enabled)");
@@ -170,7 +174,7 @@ export async function processLeaseReminders() {
             // Execute notifications and then update lease tracking state
             const eventResults = await Promise.all(notificationResults);
 
-            if (Object.keys(dbUpdates).length > 0) {
+            if (Object.keys(dbUpdates).length > 0 && supabaseAdmin) {
                 await supabaseAdmin
                     .from("leases")
                     .update(dbUpdates)

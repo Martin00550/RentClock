@@ -10,6 +10,10 @@ export async function POST() {
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    if (!supabaseAdmin) {
+        return NextResponse.json({ error: "Database not available" }, { status: 500 });
+    }
+
     // Fetch user data
     const { data: user, error: userError } = await supabaseAdmin
         .from("users")

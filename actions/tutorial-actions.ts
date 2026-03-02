@@ -9,6 +9,8 @@ export async function getCompletedTutorials() {
         const user = await currentUser();
         if (!user) return { seen_tutorials: [], has_onboarded: false, is_pro: false, has_phone: false };
 
+        if (!supabaseAdmin) return { seen_tutorials: [], has_onboarded: false, is_pro: false, has_phone: false };
+
         const { data, error } = await supabaseAdmin
             .from("users")
             .select("seen_tutorials, has_onboarded, is_pro, phone")
@@ -36,6 +38,8 @@ export async function markTutorialComplete(tourId: string) {
     try {
         const user = await currentUser();
         if (!user) return { success: false, error: "Unauthorized" };
+
+        if (!supabaseAdmin) return { success: false, error: "Database not available" };
 
         // 1. Get current list
         const { data: current, error: fetchError } = await supabaseAdmin
@@ -79,6 +83,8 @@ export async function completeOnboardingAction() {
     try {
         const user = await currentUser();
         if (!user) return { success: false, error: "Unauthorized" };
+
+        if (!supabaseAdmin) return { success: false, error: "Database not available" };
 
         const { error } = await supabaseAdmin
             .from("users")

@@ -12,6 +12,10 @@ export async function GET(req: NextRequest) {
     }
 
     // 1. Verify Token & Get User
+    if (!supabaseAdmin) {
+        return new NextResponse("Database connection not available", { status: 500 });
+    }
+
     const { data: user, error: userError } = await supabaseAdmin
         .from("users")
         .select("id, is_pro")

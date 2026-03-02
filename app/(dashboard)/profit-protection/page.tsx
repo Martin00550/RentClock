@@ -19,10 +19,12 @@ export default async function ProfitProtectionPage() {
 
 
 
-    const { data: leases, error } = await supabaseAdmin
-        .from("leases")
-        .select("*")
-        .eq("user_id", userId);
+    const { data: leases, error } = supabaseAdmin
+        ? await supabaseAdmin
+            .from("leases")
+            .select("*")
+            .eq("user_id", userId)
+        : { data: [], error: null };
 
     if (error) {
         console.error("Error fetching leases:", error);

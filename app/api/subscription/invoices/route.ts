@@ -14,6 +14,10 @@ export async function GET() {
 
     try {
         // Get customer ID from database
+        if (!supabaseAdmin) {
+            return NextResponse.json({ invoices: [] });
+        }
+
         const { data: user, error: userError } = await supabaseAdmin
             .from("users")
             .select("paddle_customer_id")

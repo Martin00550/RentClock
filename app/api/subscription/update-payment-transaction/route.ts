@@ -14,6 +14,10 @@ export async function GET() {
 
     try {
         // Get subscription ID from database
+        if (!supabaseAdmin) {
+            return NextResponse.json({ error: "Database not available" }, { status: 500 });
+        }
+
         const { data: user, error: userError } = await supabaseAdmin
             .from("users")
             .select("paddle_subscription_id")

@@ -17,6 +17,14 @@ export interface ProductHealthStats {
 }
 
 export async function getProductHealth(): Promise<ProductHealthStats> {
+    if (!supabaseAdmin) {
+        return {
+            aiSuccessRate: 0,
+            aiTotalScans: 0,
+            stickyUserPercent: 0,
+            topMarkets: []
+        };
+    }
     // 1. AI Reliability (Scan Logs)
     const { data: logs } = await supabaseAdmin
         .from("scan_logs")

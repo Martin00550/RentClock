@@ -2,6 +2,10 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { currentUser } from "@clerk/nextjs/server";
 
 export async function getOrCreateUserProfile(userId: string) {
+    if (!supabaseAdmin) {
+        return { user: null, error: "Database connection not available" };
+    }
+
     // 1. Try to fetch existing
     const { data: userProfile, error: profileError } = await supabaseAdmin
         .from("users")

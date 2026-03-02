@@ -9,6 +9,10 @@ export async function GET() {
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    if (!supabaseAdmin) {
+        return NextResponse.json({ count: 0 });
+    }
+
     const { count, error } = await supabaseAdmin
         .from("leases")
         .select("*", { count: "exact", head: true })

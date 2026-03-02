@@ -28,11 +28,13 @@ import { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
-    const { data: lease } = await supabaseAdmin
-        .from("leases")
-        .select("tenant_name, lease_end_date, property_address")
-        .eq("id", id)
-        .single();
+    const { data: lease } = supabaseAdmin
+        ? await supabaseAdmin
+            .from("leases")
+            .select("tenant_name, lease_end_date, property_address")
+            .eq("id", id)
+            .single()
+        : { data: null };
 
     if (!lease) return { title: "Lease Not Found | RentClock" };
 
@@ -59,20 +61,22 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
         redirect("/sign-in");
     }
 
-    const [{ data, error }, { data: userData }] = await Promise.all([
-        supabaseAdmin
-            .from("leases")
-            .select("*")
-            .eq("id", id)
-            .eq("user_id", userId)
-            .single(),
-        supabaseAdmin
-            .from("users")
-            .select("is_pro")
-            .eq("id", userId)
-            .single(),
-        fetchCPIStats()
-    ]);
+    const [{ data, error }, { data: userData }] = supabaseAdmin
+        ? await Promise.all([
+            supabaseAdmin
+                .from("leases")
+                .select("*")
+                .eq("id", id)
+                .eq("user_id", userId)
+                .single(),
+            supabaseAdmin
+                .from("users")
+                .select("is_pro")
+                .eq("id", userId)
+                .single(),
+            fetchCPIStats()
+        ])
+        : [{ data: null, error: null }, { data: null }, { yoyChange: 0 }];
 
     if (error || !data) {
         if (error && error.code !== "PGRST116") {

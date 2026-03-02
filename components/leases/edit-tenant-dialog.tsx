@@ -78,6 +78,11 @@ export function EditTenantDialog({ lease, isPro = false }: EditTenantDialogProps
             const rentValue = monthlyRent ? parseFloat(monthlyRent.replace(/,/g, "")) : null;
             const increaseValue = rentIncreaseAmount ? parseFloat(rentIncreaseAmount.replace(/,/g, "")) : null;
 
+            if (!supabase) {
+                alert("Database connection not available");
+                return;
+            }
+
             const { error } = await supabase
                 .from("leases")
                 .update({

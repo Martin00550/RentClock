@@ -5,6 +5,9 @@ export async function checkRateLimit(identifier: string, limit: number = 10, win
     const now = new Date();
 
     // 1. Get current count
+    if (!supabaseAdmin) {
+        return { success: true, limit, remaining: limit };
+    }
     const { data, error } = await supabaseAdmin
         .from("rate_limits")
         .select("*")

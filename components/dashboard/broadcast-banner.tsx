@@ -2,6 +2,8 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { AlertTriangle } from "lucide-react";
 
 export async function BroadcastBanner() {
+    if (!supabaseAdmin) return null;
+
     // Server Component Fetch
     const { data } = await supabaseAdmin
         .from("system_settings")

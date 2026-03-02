@@ -33,6 +33,21 @@ export default async function AdminPage() {
     }
 
     // --- PULSE METRICS ---
+    if (!supabaseAdmin) {
+        return (
+            <div className="min-h-screen bg-slate-50 p-8 flex items-center justify-center">
+                <Card className="max-w-md w-full">
+                    <CardHeader>
+                        <CardTitle className="text-slate-800">Database Unavailable</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-slate-500">The connection to Supabase is not established. Please check your environment variables.</p>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
     // 1. Total Users
     const { count: userCount } = await supabaseAdmin
         .from("users")

@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 export async function claimReferral() {
     const { userId } = await auth();
     if (!userId) return { error: "Unauthorized" };
+    if (!supabaseAdmin) return { error: "Database not available" };
 
     const cookieStore = await cookies();
     const refCode = cookieStore.get("rentclock_ref")?.value;

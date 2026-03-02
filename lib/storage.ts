@@ -29,6 +29,8 @@ export async function getSignedLeaseUrl(pathOrUrl: string | null): Promise<strin
         }
 
         // 2. Generate Signed URL
+        if (!supabaseAdmin) return pathOrUrl;
+
         const { data, error } = await supabaseAdmin
             .storage
             .from("leases-pdf")

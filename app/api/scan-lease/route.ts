@@ -5,6 +5,7 @@ import { checkRateLimit } from "@/lib/ratelimit";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { v4 as uuidv4 } from "uuid";
 import { logger } from "@/lib/logger";
+import { auth } from "@clerk/nextjs/server";
 
 const LeaseSchema = z.object({
     tenant_name: z.string().default("Unknown Tenant"),
@@ -26,11 +27,7 @@ const LeaseSchema = z.object({
     })).optional().default([]),
 });
 
-// Force dynamic - essential for handling FormData
-// Force dynamic - essential for handling FormData
 export const dynamic = 'force-dynamic';
-
-import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
     const startTime = Date.now();
@@ -55,7 +52,7 @@ export async function POST(req: NextRequest) {
         }
 
         // --- RATE LIMITING ---
-        const limitCheck = await checkRateLimit(userId, 20, 3600); // Limit by UserID
+        const limitCheck = await checkRateLimit(userId, 20, 3600);
         if (!limitCheck.success) {
             logError = "Hourly scan limit reached";
             return NextResponse.json(
@@ -73,14 +70,12 @@ export async function POST(req: NextRequest) {
         }
         fileName = file.name;
 
-        // Convert file to buffer
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
         const mimeType = file.type;
 
-        // Initialize Gemini
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash-latest"];
+        const modelsToTry = ["gemini-2.0-flash", "gemini-1.5-flash-latest"];
 
         let result = null;
         let usedModel = "";
@@ -138,7 +133,6 @@ export async function POST(req: NextRequest) {
         const textResponse = response.text();
         const jsonString = textResponse.replace(/```json|```/g, "").trim();
 
-        // Validate with Zod
         let data;
         try {
             const rawData = JSON.parse(jsonString) as Record<string, unknown>;
@@ -161,35 +155,40 @@ export async function POST(req: NextRequest) {
         // --- PERSIST DOCUMENT TO STORAGE ---
         const extension = mimeType.split("/")[1] || "pdf";
         const storageFileName = `${userId}/${uuidv4()}.${extension}`;
-
-        const { error: uploadError } = await supabaseAdmin
-            .storage
-            .from("leases-pdf")
-            .upload(storageFileName, buffer, {
-                contentType: mimeType,
-                cacheControl: "3600",
-                upsert: false
-            });
-
-        if (uploadError) {
-            logger.error("Failed to upload lease", { error: uploadError });
-        }
-
-        // Store the path, not the public URL
         const pdfUrl = storageFileName;
+
+        if (supabaseAdmin) {
+            const { error: uploadError } = await supabaseAdmin
+                .storage
+                .from("leases-pdf")
+                .upload(storageFileName, buffer, {
+                    contentType: mimeType,
+                    cacheControl: "3600",
+                    upsert: false
+                });
+
+            if (uploadError) {
+                logger.error("Failed to upload lease", { error: uploadError });
+            }
+        } else {
+            logger.error("Supabase Admin not available for storage upload");
+        }
 
         // --- SUCCESS LOGGING ---
         const duration = Date.now() - startTime;
 
-        // Fire and forget log
-        if (userId) {
-            supabaseAdmin.from("scan_logs").insert({
-                user_id: userId,
-                file_name: fileName,
-                status: "success",
-                duration_ms: duration,
-                token_usage: 0
-            }).then();
+        if (userId && supabaseAdmin) {
+            try {
+                await supabaseAdmin.from("scan_logs").insert({
+                    user_id: userId,
+                    file_name: fileName,
+                    status: "success",
+                    duration_ms: duration,
+                    token_usage: 0
+                });
+            } catch (e) {
+                logger.error("Scan logging failed", { e });
+            }
         }
 
         return NextResponse.json({ success: true, data, used_model: usedModel, pdf_url: pdfUrl });
@@ -198,16 +197,19 @@ export async function POST(req: NextRequest) {
         logger.error("Scan error", { error, userId, fileName: fileName || "unknown" });
         const errorMessage = error instanceof Error ? error.message : "Failed to process lease";
 
-        // --- ERROR LOGGING ---
         const duration = Date.now() - startTime;
-        if (userId) {
-            supabaseAdmin.from("scan_logs").insert({
-                user_id: userId,
-                file_name: fileName,
-                status: "failed",
-                duration_ms: duration,
-                error_message: logError || (error instanceof Error ? error.message : String(error))
-            }).then();
+        if (userId && supabaseAdmin) {
+            try {
+                await supabaseAdmin.from("scan_logs").insert({
+                    user_id: userId,
+                    file_name: fileName,
+                    status: "failed",
+                    duration_ms: duration,
+                    error_message: logError || (error instanceof Error ? error.message : String(error))
+                });
+            } catch (e) {
+                logger.error("Scan error logging failed", { e });
+            }
         }
 
         return NextResponse.json(

@@ -25,6 +25,10 @@ export async function uploadLeaseDocument(leaseId: string, formData: FormData) {
         const extension = mimeType.split("/")[1] || "pdf";
         const fileName = `${userId}/${uuidv4()}.${extension}`;
 
+        if (!supabaseAdmin) {
+            return { error: "Database not available" };
+        }
+
         const { error: uploadError } = await supabaseAdmin
             .storage
             .from("leases-pdf")

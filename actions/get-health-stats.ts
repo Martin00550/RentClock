@@ -23,6 +23,7 @@ export type HealthStats = {
 };
 
 export async function getHealthStats(): Promise<{ stats?: HealthStats; error?: string }> {
+    if (!supabaseAdmin) return { error: "Database not available" };
     try {
         const isAdmin = await verifyAdmin();
         if (!isAdmin) return { error: "Unauthorized" };

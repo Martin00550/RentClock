@@ -7,6 +7,14 @@ export default async function AIImportPage() {
     const { userId } = await auth();
     if (!userId) redirect("/sign-in");
 
+    if (!supabaseAdmin) {
+        return (
+            <div className="mx-auto max-w-5xl">
+                <AddLeaseForm leaseCount={0} isPro={false} bonusLeases={0} />
+            </div>
+        );
+    }
+
     // Fetch lease count and user pro status
     const [leasesRes, userRes] = await Promise.all([
         supabaseAdmin.from("leases").select("id", { count: "exact", head: true }).eq("user_id", userId),

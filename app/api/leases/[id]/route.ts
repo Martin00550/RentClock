@@ -14,6 +14,10 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    if (!supabaseAdmin) {
+        return NextResponse.json({ error: "Database not available" }, { status: 500 });
+    }
+
     // Verify the lease belongs to this user before deleting
     const { data: lease, error: fetchError } = await supabaseAdmin
         .from("leases")

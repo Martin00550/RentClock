@@ -1,18 +1,20 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
-if (!supabaseServiceKey) {
-    throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY");
+if (!supabaseServiceKey || !supabaseUrl) {
+    console.warn("Missing SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_URL. Supabase admin features will be disabled.");
 }
 
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-    auth: {
-        autoRefreshToken: false,
-        persistSession: false
-    }
-});
+export const supabaseAdmin: SupabaseClient | null = (supabaseUrl && supabaseServiceKey)
+    ? createClient(supabaseUrl, supabaseServiceKey, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false
+        }
+    })
+    : null;
 
 export async function updateUserSubscriptionStatus(
     userId: string,
@@ -20,6 +22,11 @@ export async function updateUserSubscriptionStatus(
     paddleCustomerId?: string,
     paddleSubscriptionId?: string
 ) {
+    if (!supabaseAdmin) {
+        console.error("updateUserSubscriptionStatus called but supabaseAdmin is not initialized.");
+        return;
+    }
+
     const { error } = await supabaseAdmin
         .from("users")
         .update({

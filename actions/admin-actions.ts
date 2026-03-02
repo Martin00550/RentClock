@@ -22,6 +22,7 @@ async function verifyAdmin() {
 export async function searchUserByEmail(email: string) {
     const isAdmin = await verifyAdmin();
     if (!isAdmin) return { error: "Unauthorized" };
+    if (!supabaseAdmin) return { error: "Database not available" };
 
     const { data: user, error } = await supabaseAdmin
         .from("users")
@@ -54,6 +55,7 @@ export async function searchUserByEmail(email: string) {
 export async function grantBonusLease(userId: string) {
     const isAdmin = await verifyAdmin();
     if (!isAdmin) return { error: "Unauthorized" };
+    if (!supabaseAdmin) return { error: "Database not available" };
 
     // Fetch current
     const { data: user } = await supabaseAdmin.from("users").select("bonus_leases").eq("id", userId).single();
@@ -73,6 +75,7 @@ export async function grantBonusLease(userId: string) {
 export async function grantProStatus(userId: string) {
     const isAdmin = await verifyAdmin();
     if (!isAdmin) return { error: "Unauthorized" };
+    if (!supabaseAdmin) return { error: "Database not available" };
 
     const { error } = await supabaseAdmin
         .from("users")
@@ -88,6 +91,7 @@ export async function grantProStatus(userId: string) {
 export async function getReferralAudit() {
     const isAdmin = await verifyAdmin();
     if (!isAdmin) return { error: "Unauthorized" };
+    if (!supabaseAdmin) return { error: "Database not available" };
 
     const { data: logs, error } = await supabaseAdmin
         .from("users")
@@ -110,6 +114,7 @@ export async function getReferralAudit() {
 export async function getScanLogs() {
     const isAdmin = await verifyAdmin();
     if (!isAdmin) return { error: "Unauthorized" };
+    if (!supabaseAdmin) return { error: "Database not available" };
 
     const { data: logs, error } = await supabaseAdmin
         .from("scan_logs")
@@ -128,6 +133,7 @@ export async function getScanLogs() {
 export async function auditorCheck() {
     const isAdmin = await verifyAdmin();
     if (!isAdmin) return { error: "Unauthorized" };
+    if (!supabaseAdmin) return { error: "Database not available" };
 
     // Find users who are Pro but have no subscription ID (Manual grants are fine, but we want to know)
     // Or users who have a sub ID but paddle status is not active (if we synced it).
@@ -157,6 +163,7 @@ export async function getBroadcastMessage() {
     // Actually this is for the ADMIN PANEL input.
     const isAdmin = await verifyAdmin();
     if (!isAdmin) return { error: "Unauthorized" };
+    if (!supabaseAdmin) return { error: "Database not available" };
 
     const { data, error } = await supabaseAdmin
         .from("system_settings")
@@ -175,6 +182,7 @@ export async function getBroadcastMessage() {
 export async function updateBroadcastMessage(message: string, isActive: boolean) {
     const isAdmin = await verifyAdmin();
     if (!isAdmin) return { error: "Unauthorized" };
+    if (!supabaseAdmin) return { error: "Database not available" };
 
     const { error } = await supabaseAdmin
         .from("system_settings")
