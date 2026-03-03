@@ -3,6 +3,10 @@
 import { resend } from "@/lib/resend";
 
 export async function sendTestEmail(toEmail?: string) {
+    if (!resend) {
+        return { success: false, error: "Email service not configured (missing RESEND_API_KEY)" };
+    }
+
     try {
         const data = await resend.emails.send({
             from: "RentClock <alerts@rentclock.online>",

@@ -107,7 +107,7 @@ export async function processLeaseReminders() {
                     (triggerLevel === 0);
 
                 // --- EMAIL PAYLOAD ---
-                if (emailAllowed && lease.users?.email) {
+                if (emailAllowed && lease.users?.email && resend) {
                     notificationResults.push(
                         resend.emails.send({
                             from: "RentClock <alerts@rentclock.online>",
