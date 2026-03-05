@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: "Privacy Policy | RentClock",
-    description: "How RentClock handles and protects your commercial lease data.",
+    description: "Learn how RentClock securely handles and protects your commercial lease data. We encrypt your data at rest and in transit, and never sell your information to third parties.",
     alternates: {
         canonical: "/privacy",
     },

@@ -21,5 +21,14 @@ export const logger = {
             data: context,
             level: "info"
         });
+    },
+
+    warn: (message: string, context?: ErrorContext) => {
+        console.warn("⚠️", message, context || "");
+        Sentry.addBreadcrumb({
+            message,
+            data: context,
+            level: "warning"
+        });
     }
 };

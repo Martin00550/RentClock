@@ -4,19 +4,56 @@ import { logger } from "@/lib/logger";
 import { currentUser } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { revalidatePath } from "next/cache";
+import { cache } from "react";
 
 import { APP_CONFIG } from "@/lib/config";
 
 // RE-VERIFY ADMIN ON ACTION (Double Lock)
 const ALLOWED_EMAILS = APP_CONFIG.ADMIN.ALLOWED_EMAILS;
 
-async function verifyAdmin() {
+// Cached admin check to avoid repeated database queries
+const getCachedAdminStatus = cache(async (userId: string): Promise<boolean> => {
+    if (!supabaseAdmin) return false;
+
+    const { data: user, error } = await supabaseAdmin
+        .from("users")
+        .select("is_admin")
+        .eq("id", userId)
+        .single();
+
+    if (error || !user) {
+        logger.error("Failed to fetch admin status", { error, userId });
+        return false;
+    }
+
+    return !!user.is_admin;
+});
+
+async function verifyAdmin(): Promise<boolean> {
     const user = await currentUser();
     if (!user) return false;
 
-    // Check primary email
+    const userId = user.id;
+
+    // PRIMARY CHECK: Verify admin role from database (Option B)
+    const hasAdminRole = await getCachedAdminStatus(userId);
+
+    // SECONDARY CHECK: Also verify email is in allowed list
     const email = user.emailAddresses.find(e => e.id === user.primaryEmailAddressId)?.emailAddress;
-    return !!(email && (ALLOWED_EMAILS as readonly string[]).includes(email));
+    const hasAllowedEmail = !!(email && (ALLOWED_EMAILS as readonly string[]).includes(email));
+
+    // BOTH checks must pass for admin access (fail secure)
+    if (!hasAdminRole) {
+        logger.warn("Admin access denied: user lacks admin role in database", { userId, email });
+        return false;
+    }
+
+    if (!hasAllowedEmail) {
+        logger.warn("Admin access denied: email not in allowed list", { userId, email });
+        return false;
+    }
+
+    return true;
 }
 
 export async function searchUserByEmail(email: string) {

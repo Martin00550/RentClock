@@ -7,17 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@clerk/nextjs";
 import { COUNTRY_CODES } from "@/lib/countries";
-import { Loader2, Smartphone, Calendar, ArrowRight, ShieldCheck } from "lucide-react";
+import { Loader2, Smartphone, Calendar, ArrowRight, ShieldCheck, MapPin } from "lucide-react";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { useTutorial } from "@/components/tutorial/tutorial-provider";
 import { completeOnboardingAction } from "@/actions/tutorial-actions";
+import { STATE_NOTICE_REQUIREMENTS } from "@/lib/state-notices";
 
 export function OnboardingWizard() {
     const { user, isLoaded } = useUser();
     const { startTour, setHasOnboarded } = useTutorial();
     const [open, setOpen] = useState(false);
-    const [step, setStep] = useState(1); // 1 = Phone, 2 = Calendar
+    const [step, setStep] = useState(1); // 1 = Phone, 2 = Calendar, 3 = State
     const [loading, setLoading] = useState(true);
     const [isPro, setIsPro] = useState(false);
 
@@ -30,6 +31,9 @@ export function OnboardingWizard() {
     const [baseUrl, setBaseUrl] = useState("");
 
     const [calendarToken, setCalendarToken] = useState("");
+
+    // State Selection
+    const [selectedState, setSelectedState] = useState("");
 
     useEffect(() => {
         if (!isLoaded || !user) return;
@@ -127,19 +131,25 @@ export function OnboardingWizard() {
                         <div className="mx-auto bg-white/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm shadow-inner border border-white/20">
                             <Smartphone className="h-8 w-8 text-white" />
                         </div>
-                    ) : (
+                    ) : step === 2 ? (
                         <div className="mx-auto bg-white/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm shadow-inner border border-white/20">
                             <Calendar className="h-8 w-8 text-white" />
+                        </div>
+                    ) : (
+                        <div className="mx-auto bg-white/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm shadow-inner border border-white/20">
+                            <MapPin className="h-8 w-8 text-white" />
                         </div>
                     )}
 
                     <DialogTitle className="text-2xl font-black text-white tracking-tight">
-                        {step === 1 ? "Get SMS Alerts" : "Sync Your Calendar"}
+                        {step === 1 ? "Get SMS Alerts" : step === 2 ? "Sync Your Calendar" : "Set Your State"}
                     </DialogTitle>
                     <DialogDescription className="text-slate-300 font-medium mt-2">
                         {step === 1
                             ? "Don't miss critical lease deadlines. RentClock will text you when it's time to act."
-                            : "See upcoming renewals and rent increases directly in your personal calendar."
+                            : step === 2
+                                ? "See upcoming renewals and rent increases directly in your personal calendar."
+                                : "Know your state's notice requirements for commercial leases."
                         }
                     </DialogDescription>
                 </div>
@@ -159,15 +169,15 @@ export function OnboardingWizard() {
                                     Upgrade to Pro
                                 </Button>
                             </Link>
-                            <Button
-                                variant="ghost"
-                                onClick={completeOnboarding}
-                                className="w-full text-slate-400 font-bold"
-                            >
-                                Continue with Free Plan
-                            </Button>
-                        </div>
-                    ) : (
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => setStep(3)}
+                                        className="w-full text-slate-400 font-bold"
+                                    >
+                                        Continue with Free Plan
+                                    </Button>
+                                </div>
+                            ) : (
                         <>
                             {step === 1 && (
                                 <div className="space-y-6">
@@ -239,8 +249,65 @@ export function OnboardingWizard() {
 
                                     <div className="flex flex-col gap-3 pt-2">
                                         <Button
-                                            onClick={completeOnboarding}
+                                            onClick={() => setStep(3)}
                                             className="h-14 w-full bg-[#d4a853] hover:bg-[#c49a45] text-[#1e3a5f] rounded-xl font-black text-lg shadow-xl shadow-[#d4a853]/20 flex items-center justify-center gap-2"
+                                        >
+                                            Continue <ArrowRight className="h-5 w-5" />
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            onClick={() => setStep(3)}
+                                            className="h-12 w-full text-slate-400 hover:text-slate-600 font-bold"
+                                        >
+                                            Skip for now
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {step === 3 && (
+                                <div className="space-y-6">
+                                    <div className="space-y-4">
+                                        <Label className="text-xs font-black text-slate-500 uppercase tracking-wider">Your State (Optional)</Label>
+                                        <select
+                                            value={selectedState}
+                                            onChange={(e) => setSelectedState(e.target.value)}
+                                            className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 font-bold text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
+                                        >
+                                            <option value="">Select your state...</option>
+                                            {STATE_NOTICE_REQUIREMENTS.map((s) => (
+                                                <option key={s.stateCode} value={s.stateCode}>
+                                                    {s.state}
+                                                </option>
+                                            ))}
+                                        </select>
+
+                                        {selectedState && (
+                                            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                                                <p className="text-sm font-bold text-amber-900">
+                                                    {(() => {
+                                                        const req = STATE_NOTICE_REQUIREMENTS.find(r => r.stateCode === selectedState);
+                                                        return req ? `${req.state} Notice Requirements` : '';
+                                                    })()}
+                                                </p>
+                                                <p className="text-xs text-amber-700 mt-1">
+                                                    {(() => {
+                                                        const req = STATE_NOTICE_REQUIREMENTS.find(r => r.stateCode === selectedState);
+                                                        return req ? `${req.commercialNoticeDays} days minimum notice required for commercial leases.${req.specialRequirements ? ' ' + req.specialRequirements : ''}` : '';
+                                                    })()}
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        <p className="text-xs text-slate-400">
+                                            This helps us show you state-specific notice requirements. You can change this later in Settings.
+                                        </p>
+                                    </div>
+
+                                    <div className="flex flex-col gap-3 pt-2">
+                                        <Button
+                                            onClick={completeOnboarding}
+                                            className="h-14 w-full bg-[#1e3a5f] hover:bg-[#2a4a73] text-white rounded-xl font-black text-lg shadow-xl shadow-[#1e3a5f]/20 flex items-center justify-center gap-2"
                                         >
                                             Finish Setup <ArrowRight className="h-5 w-5" />
                                         </Button>
@@ -249,7 +316,7 @@ export function OnboardingWizard() {
                                             onClick={completeOnboarding}
                                             className="h-12 w-full text-slate-400 hover:text-slate-600 font-bold"
                                         >
-                                            I want only email notifications
+                                            Skip for now
                                         </Button>
                                     </div>
                                 </div>

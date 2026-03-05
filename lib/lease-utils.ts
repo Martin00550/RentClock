@@ -48,21 +48,6 @@ export function calculateLeakage(lease: Lease, liveCpiRate: number = 0): number 
     return Math.max(0, target - actual);
 }
 
-/**
- * @deprecated Use calculateTargetAnnualIncrease or calculateLeakage depending on intent.
- * Kept for backward compatibility during refactor, but updated to behave like "Potential Total New Revenue"
- */
-export function calculateRevenueImpact(lease: Lease, liveCpiRate?: number): number {
-    const target = calculateTargetAnnualIncrease(lease, liveCpiRate || 0);
-    const actual = calculateActualAnnualIncrease(lease);
-    return Math.max(target, actual);
-}
-
-// Returns the asset valuation impact based on a 6.5% Cap Rate benchmark
-export function calculateAssetValueGap(annualImpact: number): number {
-    return annualImpact / 0.065;
-}
-
 export function formatCurrency(amount: number): string {
     return new Intl.NumberFormat("en-US", {
         style: "currency",

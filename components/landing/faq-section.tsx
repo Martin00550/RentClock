@@ -14,11 +14,11 @@ export function FaqSection() {
                 <div className="space-y-4">
                     <FaqItem
                         question="Is RentClock a full lease management software?"
-                        answer="Yes. RentClock is a specialized commercial lease tracker and management software designed for simplicity. It handles the core duties of a lease administrator—tracking critical dates, rent steps, and document storage—without the bloat of enterprise systems."
+                        answer="No. Those are built for giant property managers. RentClock is for landlords with 3-50 units who want simple alerts."
                     />
                     <FaqItem
                         question="Where is my data stored and who can see it?"
-                        answer="All lease documents are held in a private, encrypted vault. RentClock uses industry-standard 256-bit encryption for every file. Your data is isolated at the database level, meaning it is never used for training AI models or shared with third parties. You maintain 100% ownership."
+                        answer="Your documents are processed by Google Gemini. Per Google's terms, your data is not used to train their models. You control your data. Request deletion anytime."
                     />
                     <FaqItem
                         question="Can it handle non-standard or hand-annotated leases?"
@@ -26,11 +26,11 @@ export function FaqSection() {
                     />
                     <FaqItem
                         question="What triggers a critical date alert?"
-                        answer="RentClock monitors three core events: scheduled rent increases (CPI or fixed %), lease expirations, and notice periods for renewals. Alerts are delivered via Email and SMS, ensuring you have enough lead time to prepare legal notices."
+                        answer="We alert you 90, 60, 30, 7, and 0 days before dates in your lease—if your lease has these clauses."
                     />
                     <FaqItem
                         question="Is there a setup fee or long-term contract?"
-                        answer="No. RentClock is built on a 'Utility First' model. You can track your first 3 leases for free, with no credit card required. Upgrade to Pro for unlimited leases. No implementation fees, no contracts."
+                        answer="No setup fee. No contract. First 3 leases free. Upgrade to Pro ($39/mo) when you need more."
                     />
                 </div>
             </div>

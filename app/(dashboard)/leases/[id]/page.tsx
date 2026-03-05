@@ -23,6 +23,7 @@ import { getLeaseStatus, formatCurrency, getNextRelevantEvent, calculateLeakage 
 import { NoticeButton } from "@/components/leases/notice-button";
 import { CpiCalculator } from "@/components/leases/cpi-calculator";
 import { LeaseSplitView } from "@/components/leases/lease-split-view";
+import { DocumentVault } from "@/components/leases/document-vault";
 import { fetchCPIStats } from "@/lib/cpi";
 import { Metadata } from "next";
 
@@ -312,6 +313,11 @@ export default async function LeaseDetailsPage({ params }: { params: Promise<{ i
                     {/* SECTION 3: FULL WIDTH CALCULATOR */}
                     <div className="w-full">
                         <CpiCalculator currentRent={lease.monthly_rent} />
+                    </div>
+
+                    {/* SECTION 4: SECURE DOCUMENT VAULT */}
+                    <div className="w-full">
+                        <DocumentVault leaseId={lease.id} />
                     </div>
                 </div>
             </LeaseSplitView>

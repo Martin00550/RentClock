@@ -171,19 +171,52 @@ export async function processLeaseReminders() {
                 dbUpdates[event.fieldToUpdate] = triggerLevel;
             }
 
-            // Execute notifications and then update lease tracking state
-            const eventResults = await Promise.all(notificationResults);
+            // Execute notifications individually with try-catch per notification
+            const eventResults: Array<{ type: string; success: boolean; error?: string }> = [];
 
-            if (Object.keys(dbUpdates).length > 0 && supabaseAdmin) {
+            for (const notificationPromise of notificationResults) {
+                try {
+                    const result = await notificationPromise;
+                    eventResults.push({ type: result.type, success: true });
+                } catch (error) {
+                    const errorMessage = error instanceof Error ? error.message : String(error);
+                    console.error(`[RentClock] Notification failed for lease ${lease.id}:`, errorMessage);
+                    eventResults.push({
+                        type: 'unknown',
+                        success: false,
+                        error: errorMessage
+                    });
+                }
+            }
+
+            // Only update tracking if at least one notification succeeded
+            const hasSuccess = eventResults.some(r => r.success);
+            if (hasSuccess && Object.keys(dbUpdates).length > 0 && supabaseAdmin) {
                 await supabaseAdmin
                     .from("leases")
                     .update(dbUpdates)
                     .eq("id", lease.id);
             }
 
-            return { leaseId: lease.id, results: eventResults };
+            return { leaseId: lease.id, results: eventResults, updates: dbUpdates };
         })
     );
 
-    return { sent: results.length, details: results };
+    // Aggregate results for monitoring
+    const totalNotifications = results.reduce((sum, r) => sum + r.results.length, 0);
+    const successfulNotifications = results.reduce(
+        (sum, r) => sum + r.results.filter(res => res.success).length, 0
+    );
+    const failedNotifications = totalNotifications - successfulNotifications;
+
+    if (failedNotifications > 0) {
+        console.error(`[RentClock] Batch complete: ${successfulNotifications} sent, ${failedNotifications} failed`);
+    }
+
+    return {
+        sent: results.length,
+        successful: successfulNotifications,
+        failed: failedNotifications,
+        details: results
+    };
 }

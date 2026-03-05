@@ -37,6 +37,7 @@ import { useDropzone } from "react-dropzone";
 import { cn } from "@/lib/utils";
 import { useTutorial } from "@/components/tutorial/tutorial-provider";
 import { ConnectPhoneDialog } from "@/components/settings/connect-phone-dialog";
+import { validateNoticePeriod, extractStateFromAddress, STATE_NOTICE_REQUIREMENTS } from "@/lib/state-notices";
 
 interface AddLeaseFormProps {
     leaseCount?: number;
@@ -49,8 +50,12 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false);
     const [tenantName, setTenantName] = useState("");
-    const [monthlyRent, setMonthlyRent] = useState("");
+    const [tenantEmail, setTenantEmail] = useState("");
+    const [tenantPhone, setTenantPhone] = useState("");
+    const [propertyName, setPropertyName] = useState("");
     const [propertyAddress, setPropertyAddress] = useState("");
+    const [state, setState] = useState("");
+    const [monthlyRent, setMonthlyRent] = useState("");
     const [rentIncreaseAmount, setRentIncreaseAmount] = useState("");
     const [leaseStartDate, setLeaseStartDate] = useState<Date>();
     const [startDateInput, setStartDateInput] = useState("");
@@ -59,6 +64,11 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
     const [expiryInput, setExpiryInput] = useState("");
     const [increaseInput, setIncreaseInput] = useState("");
     const [pdfUrl, setPdfUrl] = useState("");
+
+    // Date validation errors
+    const [startDateError, setStartDateError] = useState<string>("");
+    const [expiryDateError, setExpiryDateError] = useState<string>("");
+    const [increaseDateError, setIncreaseDateError] = useState<string>("");
     const [rentSchedule, setRentSchedule] = useState<{ date: string, amount: number }[]>([]);
     const [extractedFields, setExtractedFields] = useState<string[]>([]);
 
@@ -86,6 +96,14 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
         }
         setRentSchedule(projected);
     }, [monthlyRent, rentIncreaseAmount, increaseDate, extractedFields]);
+
+    // Extract state from address when address changes
+    useEffect(() => {
+        const extractedState = extractStateFromAddress(propertyAddress);
+        if (extractedState) {
+            setState(extractedState);
+        }
+    }, [propertyAddress]);
 
     const Sparkle = ({ field }: { field: string }) => {
         if (!extractedFields.includes(field)) return null;
@@ -227,23 +245,52 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
 
         } catch (err: unknown) {
             console.error("❌ Scan failed:", err);
-            const errorMessage = err instanceof Error ? err.message : "Unknown error occurred during scan";
+            let errorMessage = err instanceof Error ? err.message : "Unknown error occurred during scan";
+            
+            // Provide more user-friendly error messages
+            if (errorMessage.includes("invalid JSON") || errorMessage.includes("AI returned")) {
+                errorMessage = "Could not read this document automatically. The PDF may be scanned images, corrupted, or in an unsupported format. Please enter the details manually below.";
+            } else if (errorMessage.includes("Hourly scan limit")) {
+                errorMessage = "You've reached the scan limit (20 per hour). Please try again later or enter details manually.";
+            }
+            
             setScanError(errorMessage);
-        } finally {
-            console.log("🔄 Scan complete, resetting isScanning");
-            setIsScanning(false);
         }
     };
 
     const handleSubmit = async () => {
         if (!user) return;
+
+        // Validate dates before submission
+        if (startDateError || expiryDateError || increaseDateError) {
+            toast.error("Please fix the date errors before saving");
+            return;
+        }
+
+        // Additional validation for required dates
+        if (expiryInput && !expiryDate) {
+            setExpiryDateError("Please enter a valid expiry date");
+            toast.error("Please enter a valid expiry date");
+            return;
+        }
+
+        if (increaseInput && !increaseDate) {
+            setIncreaseDateError("Please enter a valid rent increase date");
+            toast.error("Please enter a valid rent increase date");
+            return;
+        }
+
         setIsSaving(true);
 
         try {
             // Prepare FormData for the Server Action
             const formData = new FormData();
             formData.append("tenant_name", tenantName);
+            formData.append("tenant_email", tenantEmail);
+            formData.append("tenant_phone", tenantPhone);
+            formData.append("property_name", propertyName);
             formData.append("property_address", propertyAddress);
+            formData.append("state", state);
             if (monthlyRent) formData.append("monthly_rent", monthlyRent.replace(/,/g, ""));
             if (rentIncreaseAmount) formData.append("rent_increase_amount", rentIncreaseAmount.replace(/,/g, ""));
 
@@ -284,22 +331,118 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
         }
     };
 
+    const MIN_DATE = new Date(1900, 0, 1);
+    const MAX_DATE = new Date(2100, 11, 31);
+
+    const validateDateStrict = (val: string): { isValid: boolean; date?: Date; error?: string } => {
+        // Check format matches MM/DD/YYYY pattern
+        const dateRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+        const match = val.match(dateRegex);
+
+        if (!match) {
+            if (val.length === 10) {
+                return { isValid: false, error: "Please use MM/DD/YYYY format" };
+            }
+            return { isValid: false };
+        }
+
+        const [, monthStr, dayStr, yearStr] = match;
+        const month = parseInt(monthStr, 10);
+        const day = parseInt(dayStr, 10);
+        const year = parseInt(yearStr, 10);
+
+        // Check month range
+        if (month < 1 || month > 12) {
+            return { isValid: false, error: "Month must be between 01 and 12" };
+        }
+
+        // Check day range (basic check, will be refined by date-fns)
+        if (day < 1 || day > 31) {
+            return { isValid: false, error: "Day must be between 01 and 31" };
+        }
+
+        // Check year range
+        if (year < 1900 || year > 2100) {
+            return { isValid: false, error: "Year must be between 1900 and 2100" };
+        }
+
+        // Parse with date-fns and verify it's a real date
+        const parsed = parse(val, "MM/dd/yyyy", new Date());
+
+        // Verify the parsed date components match input (prevents 02/31/2024 from being accepted)
+        if (!isValid(parsed) ||
+            parsed.getMonth() + 1 !== month ||
+            parsed.getDate() !== day ||
+            parsed.getFullYear() !== year) {
+            return { isValid: false, error: "Please enter a valid date" };
+        }
+
+        // Check date is within reasonable bounds
+        if (parsed < MIN_DATE || parsed > MAX_DATE) {
+            return { isValid: false, error: "Date must be between 01/01/1900 and 12/31/2100" };
+        }
+
+        return { isValid: true, date: parsed };
+    };
+
     const handleDateInput = (
         val: string,
         setDate: (d: Date | undefined) => void,
-        setInput: (s: string) => void
+        setInput: (s: string) => void,
+        setError: (e: string) => void
     ) => {
         setInput(val);
-        // Try parsing different formats
-        const formats = ["MM/dd/yyyy", "MM-dd-yyyy", "yyyy-MM-dd"];
-        for (const fmt of formats) {
-            const parsed = parse(val, fmt, new Date());
-            if (isValid(parsed) && (val.length === 10 || val.length === 8)) {
-                setDate(parsed);
-                return;
+        setError("");
+
+        // Clear date if empty
+        if (!val.trim()) {
+            setDate(undefined);
+            return;
+        }
+
+        // Only validate when fully entered (10 chars for MM/DD/YYYY)
+        if (val.length !== 10) {
+            setDate(undefined);
+            return;
+        }
+
+        const validation = validateDateStrict(val);
+
+        if (!validation.isValid) {
+            setDate(undefined);
+            setError(validation.error || "Please enter a valid date");
+            return;
+        }
+
+        setDate(validation.date);
+    };
+
+    // Validate date relationships
+    useEffect(() => {
+        // Clear previous errors
+        setExpiryDateError("");
+        setIncreaseDateError("");
+
+        // Validate expiry is after start date
+        if (leaseStartDate && expiryDate) {
+            if (expiryDate <= leaseStartDate) {
+                setExpiryDateError("Lease expiry must be after start date");
             }
         }
-    };
+
+        // Validate increase date is within reasonable range of lease period
+        if (increaseDate && leaseStartDate && expiryDate) {
+            // Increase date should be between start and expiry, or within 1 year after start
+            const oneYearAfterStart = addYears(leaseStartDate, 1);
+            if (increaseDate < leaseStartDate) {
+                setIncreaseDateError("Rent increase date must be after lease start date");
+            } else if (increaseDate > expiryDate && increaseDate > oneYearAfterStart) {
+                setIncreaseDateError("Rent increase date should be within the lease period");
+            }
+        } else if (increaseDate && leaseStartDate && increaseDate < leaseStartDate) {
+            setIncreaseDateError("Rent increase date must be after lease start date");
+        }
+    }, [leaseStartDate, expiryDate, increaseDate]);
 
     const limit = 3 + bonusLeases;
     const limitReached = !isPro && leaseCount >= limit;
@@ -310,16 +453,22 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                 <div className="mx-auto w-20 h-20 bg-amber-100 rounded-3xl flex items-center justify-center mb-6">
                     <ShieldCheck className="h-10 w-10 text-amber-600" />
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 tracking-tight">Lease Limit Reached</h2>
+                <h2 className="text-3xl font-black text-slate-900 tracking-tight">You&apos;ve reached the free limit of 3 leases</h2>
                 <p className="text-slate-500 text-lg max-w-md mx-auto leading-relaxed">
-                    You&apos;ve reached the <span className="font-bold text-slate-900">{limit}-lease limit</span> of your expanded Free plan.
+                    You have {leaseCount} leases (Free limit is {limit}).
                     {bonusLeases > 0 && <span className="block text-emerald-600 font-bold text-sm mt-1">(Includes +{bonusLeases} Bonus Slots)</span>}
-                    Upgrade to Pro for unlimited properties, SMS alerts, and calendar sync.
+                    <span className="block mt-3">View your current leases to manage them, or upgrade to Pro for unlimited leases.</span>
                 </p>
                 <div className="flex flex-col gap-3 pt-4">
-                    <Link href="/settings">
+                    <Link href="/leases">
                         <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-10 h-16 rounded-2xl font-black text-lg shadow-xl shadow-slate-900/10 flex items-center gap-3 mx-auto transition-transform hover:scale-[1.02]">
-                            Upgrade to Pro Today
+                            View My Leases
+                            <ArrowRight className="h-5 w-5" />
+                        </Button>
+                    </Link>
+                    <Link href="/settings">
+                        <Button variant="outline" className="border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50 px-8 h-14 rounded-2xl font-bold text-base flex items-center gap-2 mx-auto">
+                            Upgrade to Pro for Unlimited Leases
                             <ArrowRight className="h-5 w-5" />
                         </Button>
                     </Link>
@@ -327,6 +476,9 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                         <Button variant="ghost" className="text-slate-500 font-bold">Return to Dashboard</Button>
                     </Link>
                 </div>
+                <p className="text-slate-400 text-sm text-center pt-2">
+                    Tip: Delete a lease to free up space if you no longer need it.
+                </p>
             </div>
         );
     }
@@ -435,6 +587,32 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                 </div>
                             </div>
                             <div className="space-y-3">
+                                <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Tenant Email</Label>
+                                <div className="relative">
+                                    <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                                    <Input
+                                        type="email"
+                                        placeholder="sarah@company.com"
+                                        className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
+                                        value={tenantEmail}
+                                        onChange={(e) => setTenantEmail(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Tenant Phone</Label>
+                                <div className="relative">
+                                    <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                                    <Input
+                                        type="tel"
+                                        placeholder="(555) 123-4567"
+                                        className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
+                                        value={tenantPhone}
+                                        onChange={(e) => setTenantPhone(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-3">
                                 <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Current Monthly Rent</Label>
                                 <div className="relative">
                                     <DollarSign className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
@@ -454,6 +632,18 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-3">
+                                <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Property Name</Label>
+                                <div className="relative">
+                                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                                    <Input
+                                        placeholder="Sunset Plaza (optional)"
+                                        className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f]"
+                                        value={propertyName}
+                                        onChange={(e) => setPropertyName(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-3">
                                 <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Property Address</Label>
                                 <div className="relative">
                                     <MapPin className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
@@ -469,6 +659,36 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                     <Sparkle field="property_address" />
                                 </div>
                             </div>
+                        </div>
+
+                        {/* State Notice Period Warning */}
+                        {state && (
+                            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                                <div className="flex items-start gap-3">
+                                    <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+                                    <div>
+                                        <p className="text-sm font-bold text-amber-900">
+                                            {(() => {
+                                                const req = STATE_NOTICE_REQUIREMENTS.find(r => r.stateCode === state);
+                                                return req ? `${req.state} Notice Requirements` : 'State Notice Requirements';
+                                            })()}
+                                        </p>
+                                        <p className="text-xs text-amber-700 mt-1">
+                                            {(() => {
+                                                const validation = validateNoticePeriod(state, 60); // Default 60 days
+                                                if (!validation.isValid) {
+                                                    return validation.warning + " Please verify your lease terms and consult local counsel.";
+                                                }
+                                                const req = STATE_NOTICE_REQUIREMENTS.find(r => r.stateCode === state);
+                                                return `${req?.state || state} requires ${validation.minimumDays} days minimum notice for commercial leases.${req?.specialRequirements ? ' ' + req.specialRequirements : ''}`;
+                                            })()}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-3">
                                 <Label className="text-sm font-bold text-slate-600 uppercase tracking-wider">Expected Rent Increase ($)</Label>
                                 <div className="relative">
@@ -494,9 +714,15 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                     <Input
                                         placeholder="MM/DD/YYYY"
                                         value={startDateInput}
-                                        onChange={(e) => handleDateInput(e.target.value, setLeaseStartDate, setStartDateInput)}
-                                        className="h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12"
+                                        onChange={(e) => handleDateInput(e.target.value, setLeaseStartDate, setStartDateInput, setStartDateError)}
+                                        className={cn("h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12", startDateError && "border-red-500 focus-visible:ring-red-500")}
                                     />
+                                    {startDateError && (
+                                        <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                                            <AlertCircle className="h-3 w-3" />
+                                            {startDateError}
+                                        </p>
+                                    )}
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <Button
@@ -513,6 +739,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                                 selected={leaseStartDate}
                                                 onSelect={(d) => {
                                                     setLeaseStartDate(d);
+                                                    setStartDateError("");
                                                     if (d) setStartDateInput(format(d, "MM/dd/yyyy"));
                                                 }}
                                                 initialFocus
@@ -530,9 +757,15 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                     <Input
                                         placeholder="MM/DD/YYYY"
                                         value={expiryInput}
-                                        onChange={(e) => handleDateInput(e.target.value, setExpiryDate, setExpiryInput)}
-                                        className="h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12"
+                                        onChange={(e) => handleDateInput(e.target.value, setExpiryDate, setExpiryInput, setExpiryDateError)}
+                                        className={cn("h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12", expiryDateError && "border-red-500 focus-visible:ring-red-500")}
                                     />
+                                    {expiryDateError && (
+                                        <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                                            <AlertCircle className="h-3 w-3" />
+                                            {expiryDateError}
+                                        </p>
+                                    )}
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <Button
@@ -549,6 +782,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                                 selected={expiryDate}
                                                 onSelect={(d) => {
                                                     setExpiryDate(d);
+                                                    setExpiryDateError("");
                                                     if (d) setExpiryInput(format(d, "MM/dd/yyyy"));
                                                 }}
                                                 initialFocus
@@ -563,9 +797,15 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                     <Input
                                         placeholder="MM/DD/YYYY"
                                         value={increaseInput}
-                                        onChange={(e) => handleDateInput(e.target.value, setIncreaseDate, setIncreaseInput)}
-                                        className="h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12"
+                                        onChange={(e) => handleDateInput(e.target.value, setIncreaseDate, setIncreaseInput, setIncreaseDateError)}
+                                        className={cn("h-12 rounded-xl border-slate-200 focus-visible:ring-[#1e3a5f] pr-12", increaseDateError && "border-red-500 focus-visible:ring-red-500")}
                                     />
+                                    {increaseDateError && (
+                                        <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                                            <AlertCircle className="h-3 w-3" />
+                                            {increaseDateError}
+                                        </p>
+                                    )}
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <Button
@@ -582,6 +822,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                                 selected={increaseDate}
                                                 onSelect={(d) => {
                                                     setIncreaseDate(d);
+                                                    setIncreaseDateError("");
                                                     if (d) setIncreaseInput(format(d, "MM/dd/yyyy"));
                                                 }}
                                                 initialFocus

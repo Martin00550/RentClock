@@ -34,7 +34,7 @@ export function RevenueIntegrityAudit() {
     }, []);
 
     // Calculate potential outcomes when rent changes
-    const [stats, setStats] = useState<{ leakage: number; total: number; effectiveRate: number; fiveYearLoss: number; equityLoss: number } | null>(null);
+    const [stats, setStats] = useState<{ leakage: number; total: number; effectiveRate: number } | null>(null);
 
     useEffect(() => {
         if (!monthlyRent || !cpiRate) {
@@ -57,29 +57,10 @@ export function RevenueIntegrityAudit() {
         const annualRentClock = rent * (1 + effectiveRate / 100) * 12;
         const annualImpact = annualRentClock - annualStatusQuo;
 
-        // 5-Year Compound Erosion Calculation (Target vs Status Quo)
-        let totalFiveYearErosion = 0;
-        let runningRentStatusQuo = rent;
-        let runningRentRentClock = rent;
-
-        for (let year = 1; year <= 5; year++) {
-            // Baseline is no change (Status Quo)
-            runningRentStatusQuo = rent;
-            // Target compounds
-            runningRentRentClock *= (1 + effectiveRate / 100);
-            totalFiveYearErosion += (runningRentRentClock - runningRentStatusQuo) * 12;
-        }
-
-        // Equity Opportunity (Building Valuation Impact)
-        const year5Impact = (runningRentRentClock - rent) * 12;
-        const equityGap = year5Impact / 0.065;
-
         setStats({
             leakage: Math.max(0, Math.round(annualImpact)),
             total: Math.round(annualRentClock),
-            effectiveRate: effectiveRate,
-            fiveYearLoss: Math.round(totalFiveYearErosion),
-            equityLoss: Math.round(equityGap)
+            effectiveRate: effectiveRate
         });
     }, [monthlyRent, cpiRate]);
 
@@ -101,7 +82,7 @@ export function RevenueIntegrityAudit() {
                 <div className="bg-linear-to-r from-[#1e3a5f] to-[#2a4a73] px-6 py-4">
                     <div className="flex items-center gap-2 text-white">
                         <TrendingUp className="h-5 w-5 text-[#d4a853]" />
-                        <span className="text-sm font-bold uppercase tracking-wider">Revenue Integrity Audit</span>
+                        <span className="text-sm font-bold uppercase tracking-wider">Rent Increase Calculator</span>
                     </div>
                 </div>
 
@@ -179,25 +160,21 @@ export function RevenueIntegrityAudit() {
                                         </div>
                                         <div>
                                             <p className="text-xs font-black text-amber-800 uppercase tracking-widest mb-1">
-                                                Total Inflation Gap (Asset Value)
+                                                Annual Opportunity
                                             </p>
                                             <p className="text-4xl md:text-5xl font-black text-amber-900 tracking-tighter">
-                                                {formatNumber(stats.equityLoss)}
+                                                {formatNumber(stats.leakage)}
                                             </p>
                                             <p className="text-[10px] text-amber-700 mt-2 leading-relaxed font-bold">
-                                                The difference between doing nothing and indexing correctly (at 6.5% cap).
+                                                Based on current CPI of {cpiRate?.toFixed(1)}%. Only applies if your lease has a CPI clause. CPI changes monthly.
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="pt-3 border-t border-amber-200/50 space-y-2">
                                         <div className="flex items-center justify-between text-amber-900/60">
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">5-Year Revenue Erosion:</span>
-                                            <span className="text-sm font-black text-amber-900">{formatNumber(stats.fiveYearLoss)}</span>
-                                        </div>
-                                        <div className="flex items-center justify-between text-amber-900/60">
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Annual Opportunity:</span>
-                                            <span className="text-sm font-bold">{formatNumber(stats.leakage)}/yr</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Effective Rate:</span>
+                                            <span className="text-sm font-bold">{stats.effectiveRate.toFixed(1)}%</span>
                                         </div>
                                     </div>
 
@@ -217,14 +194,14 @@ export function RevenueIntegrityAudit() {
                             className="w-full bg-[#1e3a5f] hover:bg-[#2a4a73] text-white h-14 rounded-xl font-bold text-base transition-all shadow-lg flex items-center justify-center gap-2"
                             disabled={!stats}
                         >
-                            Review My Audit Findings
+                            See the Calculation
                             <ArrowRight className="h-5 w-5" />
                         </Button>
                     </SignUpTrigger>
 
                     <div className="flex flex-col gap-2 mt-2 text-center">
                         <p className="text-[8px] text-slate-400 font-bold uppercase tracking-tight mb-1">
-                            Calculated vs. Status Quo using Federal BLS CPI indices & 6.5% Cap Rate benchmarks.
+                            Calculated vs. Status Quo using Federal BLS CPI data.
                         </p>
                         <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-slate-50 rounded-xl border border-slate-100">
                             <CheckCircle2 className="h-4 w-4 text-[#2d6a4f]" />

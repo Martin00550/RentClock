@@ -18,11 +18,38 @@ const LeaseSchema = z.object({
         if (typeof val === "string") return parseFloat(val.replace(/,/g, ""));
         return val;
     }, z.number().nullable().default(null)),
-    lease_start_date: z.string().transform(val => val.split("T")[0]).nullable().default(null),
-    lease_end_date: z.string().transform(val => val.split("T")[0]).nullable().default(null),
-    rent_increase_date: z.string().transform(val => val.split("T")[0]).nullable().default(null),
+    lease_start_date: z.preprocess(
+        (val) => {
+            if (val === null || val === undefined) return null;
+            if (typeof val === "string") return val.split("T")[0];
+            return val;
+        },
+        z.string().nullable().default(null)
+    ),
+    lease_end_date: z.preprocess(
+        (val) => {
+            if (val === null || val === undefined) return null;
+            if (typeof val === "string") return val.split("T")[0];
+            return val;
+        },
+        z.string().nullable().default(null)
+    ),
+    rent_increase_date: z.preprocess(
+        (val) => {
+            if (val === null || val === undefined) return null;
+            if (typeof val === "string") return val.split("T")[0];
+            return val;
+        },
+        z.string().nullable().default(null)
+    ),
     rent_schedule: z.array(z.object({
-        date: z.string().transform(val => val.split("T")[0]),
+        date: z.preprocess(
+            (val) => {
+                if (typeof val === "string") return val.split("T")[0];
+                return val;
+            },
+            z.string()
+        ),
         amount: z.number()
     })).optional().default([]),
 });
@@ -90,24 +117,31 @@ export async function POST(req: NextRequest) {
                 });
 
                 const prompt = `
-                    You are a rigorous data extraction AI for US Commercial Real Estate leases.
-                    Examine the provided lease document and extract the following fields.
-                    Return ONLY valid JSON. 
-                    
-                    Fields to extract:
-                    - tenant_name (string): Full name of the tenant entity.
-                    - property_address (string): Full property address (US Format).
-                    - monthly_rent (number): Current monthly rent amount (numeric only).
-                    - rent_increase_amount (number): The dollar amount of the next scheduled rent increase (if any).
-                    - lease_start_date (string, ISO format YYYY-MM-DD): The commencement date.
-                    - lease_end_date (string, ISO format YYYY-MM-DD): The expiration date.
-                    - rent_increase_date (string, ISO format YYYY-MM-DD): Date of the next scheduled rent increase.
-                    - rent_schedule (array of {date: string, amount: number}): Every scheduled rent change found in the lease (step-ups).
-                    
-                    CRITICAL: 
-                    1. All dates MUST be returned in ISO YYYY-MM-DD format.
-                    2. Currency values MUST be numeric.
-                `;
+You are a rigorous data extraction AI for US Commercial Real Estate leases.
+Examine the provided lease document and extract the following fields.
+
+RETURN FORMAT: Return ONLY a raw JSON object. Do NOT use markdown code blocks. Do NOT wrap in triple backticks. Do NOT add explanatory text before or after the JSON. Return ONLY the JSON object.
+
+Fields to extract:
+- tenant_name (string): Full name of the tenant entity.
+- property_address (string): Full property address (US Format).
+- monthly_rent (number): Current monthly rent amount (numeric only, no $ or commas).
+- rent_increase_amount (number or null): The dollar amount of the next scheduled rent increase (if any). Use null if not found.
+- lease_start_date (string, ISO format YYYY-MM-DD): The commencement date. Use null if not found.
+- lease_end_date (string, ISO format YYYY-MM-DD): The expiration date. Use null if not found.
+- rent_increase_date (string, ISO format YYYY-MM-DD): Date of the next scheduled rent increase. Use null if not found.
+- rent_schedule (array of {date: string, amount: number}): Every scheduled rent change found in the lease (step-ups). Use empty array [] if none found.
+
+EXAMPLE RESPONSE:
+{"tenant_name":"ABC Corp","property_address":"123 Main St, Austin, TX 78701","monthly_rent":2500,"rent_increase_amount":100,"lease_start_date":"2024-01-01","lease_end_date":"2029-12-31","rent_increase_date":"2025-01-01","rent_schedule":[]}
+
+CRITICAL RULES:
+1. Return ONLY valid JSON - no markdown, no text, no code blocks.
+2. All dates MUST be in ISO YYYY-MM-DD format.
+3. Currency values MUST be numbers without $ or commas.
+4. Use null for missing fields, never omit them.
+5. Use empty array [] for rent_schedule if none found.
+`;
 
                 if (isMultimodal) {
                     result = await model.generateContent([
@@ -129,9 +163,52 @@ export async function POST(req: NextRequest) {
             throw lastError || new Error("Failed to generate content");
         }
 
-        const response = await result.response;
-        const textResponse = response.text();
-        const jsonString = textResponse.replace(/```json|```/g, "").trim();
+        let textResponse: string;
+        try {
+            const response = await result.response;
+            textResponse = response.text();
+        } catch (responseError) {
+            logger.error("Failed to get AI response text", { 
+                error: responseError instanceof Error ? responseError.message : String(responseError)
+            });
+            throw new Error("AI response was empty or unreadable. Please try again or enter details manually.");
+        }
+        
+        if (!textResponse || textResponse.trim().length === 0) {
+            throw new Error("AI returned empty response. Please try again or enter details manually.");
+        }
+        
+        // More robust JSON extraction
+        let jsonString = textResponse;
+        
+        // Remove markdown code blocks with various formats
+        jsonString = jsonString.replace(/```json\s*/gi, "");
+        jsonString = jsonString.replace(/```\s*/g, "");
+        jsonString = jsonString.replace(/`{3,}/g, ""); // Any triple backticks
+        
+        // Try to find JSON within the text (in case there's explanatory text)
+        const jsonMatch = jsonString.match(/\{[\s\S]*?\}/);
+        if (jsonMatch) {
+            jsonString = jsonMatch[0];
+        }
+        
+        // Handle case where JSON is wrapped in quotes
+        if (jsonString.startsWith('"') && jsonString.endsWith('"')) {
+            try {
+                jsonString = JSON.parse(jsonString);
+            } catch {
+                // If unwrapping fails, continue with original
+            }
+        }
+        
+        jsonString = jsonString.trim();
+        
+        // Log the cleaned response for debugging
+        logger.info("AI response cleaned", { 
+            originalLength: textResponse.length, 
+            cleanedLength: jsonString.length,
+            preview: jsonString.substring(0, 200)
+        });
 
         let data;
         try {
@@ -139,23 +216,48 @@ export async function POST(req: NextRequest) {
             const parsed = LeaseSchema.safeParse(rawData);
 
             if (!parsed.success) {
-                if (rawData.tenant_name && typeof rawData.monthly_rent === 'number') {
-                    data = rawData as unknown as z.infer<typeof LeaseSchema>;
-                } else {
-                    throw new Error("AI returned invalid data structure");
-                }
+                // Try to extract partial data if full validation fails
+                logger.warn("Schema validation failed, using partial data", { issues: parsed.error.issues });
+                data = {
+                    tenant_name: String(rawData.tenant_name || "Unknown Tenant"),
+                    property_address: String(rawData.property_address || "Unknown Address"),
+                    monthly_rent: typeof rawData.monthly_rent === 'number' ? rawData.monthly_rent : 
+                                  typeof rawData.monthly_rent === 'string' ? parseFloat(rawData.monthly_rent.replace(/,/g, '')) : 0,
+                    rent_increase_amount: typeof rawData.rent_increase_amount === 'number' ? rawData.rent_increase_amount :
+                                          typeof rawData.rent_increase_amount === 'string' ? parseFloat(rawData.rent_increase_amount.replace(/,/g, '')) : null,
+                    lease_start_date: typeof rawData.lease_start_date === 'string' ? rawData.lease_start_date.split('T')[0] : null,
+                    lease_end_date: typeof rawData.lease_end_date === 'string' ? rawData.lease_end_date.split('T')[0] : null,
+                    rent_increase_date: typeof rawData.rent_increase_date === 'string' ? rawData.rent_increase_date.split('T')[0] : null,
+                    rent_schedule: Array.isArray(rawData.rent_schedule) ? rawData.rent_schedule : []
+                };
             } else {
                 data = parsed.data;
             }
-        } catch {
-            logError = "AI returned invalid JSON";
-            throw new Error("AI returned invalid JSON");
+        } catch (parseError) {
+            // Log the actual response for debugging
+            logger.error("JSON parse failed", { 
+                error: parseError instanceof Error ? parseError.message : String(parseError),
+                originalResponse: textResponse.substring(0, 500),
+                cleanedResponse: jsonString.substring(0, 500)
+            });
+            
+            // Try one more time with a more aggressive cleanup
+            try {
+                // Remove all non-printable characters and try again
+                const cleaned = jsonString.replace(/[^\x20-\x7E\s]/g, '');
+                const rawData = JSON.parse(cleaned) as Record<string, unknown>;
+                data = rawData as z.infer<typeof LeaseSchema>;
+                logger.info("JSON parsed after aggressive cleanup");
+            } catch {
+                logError = "AI returned invalid JSON format";
+                throw new Error(`AI returned invalid JSON. The document may be corrupted or unreadable. Please try again or enter details manually.`);
+            }
         }
 
-        // --- PERSIST DOCUMENT TO STORAGE ---
+        // --- PERSIST DOCUMENT TO STORAGE (AFTER VALIDATION) ---
         const extension = mimeType.split("/")[1] || "pdf";
         const storageFileName = `${userId}/${uuidv4()}.${extension}`;
-        const pdfUrl = storageFileName;
+        let pdfUrl: string | null = null;
 
         if (supabaseAdmin) {
             const { error: uploadError } = await supabaseAdmin
@@ -168,7 +270,9 @@ export async function POST(req: NextRequest) {
                 });
 
             if (uploadError) {
-                logger.error("Failed to upload lease", { error: uploadError });
+                logger.error("Failed to upload lease after AI validation", { error: uploadError });
+            } else {
+                pdfUrl = storageFileName;
             }
         } else {
             logger.error("Supabase Admin not available for storage upload");

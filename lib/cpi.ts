@@ -81,7 +81,7 @@ export async function fetchCPIStats(): Promise<{
         const data: CPIResponse = await response.json();
 
         if (data.status !== "REQUEST_SUCCEEDED" || !data.Results?.series?.[0]?.data?.length) {
-            return { latest: null, yoyChange: 0.034, error: "Invalid BLS data" };
+            return { latest: null, yoyChange: 0.035, error: "Invalid BLS data" };
         }
 
         const allData = data.Results.series[0].data;
@@ -92,7 +92,7 @@ export async function fetchCPIStats(): Promise<{
             d.period === latest.period && d.year === String(parseInt(latest.year) - 1)
         );
 
-        let yoyChange = 0.034; // Default fallback
+        let yoyChange = 0.035; // Default fallback
         if (previousYearData) {
             const current = parseFloat(latest.value);
             const previous = parseFloat(previousYearData.value);
@@ -102,7 +102,7 @@ export async function fetchCPIStats(): Promise<{
         return { latest, yoyChange };
     } catch (error: unknown) {
         console.error("Failed to fetch CPI stats:", error);
-        return { latest: null, yoyChange: 0.034, error: "Fetch failed" };
+        return { latest: null, yoyChange: 0.035, error: "Fetch failed" };
     }
 }
 

@@ -39,7 +39,7 @@ export async function GET() {
 
     const { data, error } = await admin!
         .from("users")
-        .select("has_onboarded, calendar_token, is_pro, phone, email_notifications_enabled, paddle_customer_id, paddle_subscription_id, bonus_leases, referral_code, referred_by")
+        .select("has_onboarded, calendar_token, is_pro, phone, email_notifications_enabled, paddle_customer_id, paddle_subscription_id, bonus_leases, referral_code, referred_by, default_state")
         .eq("id", userId)
         .single();
 
@@ -66,7 +66,8 @@ export async function GET() {
         paddle_customer_id: data?.paddle_customer_id || null,
         paddle_subscription_id: data?.paddle_subscription_id || null,
         bonus_leases: data?.bonus_leases || 0,
-        referral_code: data?.referral_code || null
+        referral_code: data?.referral_code || null,
+        default_state: data?.default_state || null
     });
 }
 
@@ -85,20 +86,22 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { has_onboarded, phone, calendar_token, email, email_notifications_enabled } = body;
+        const { has_onboarded, phone, calendar_token, email, email_notifications_enabled, default_state } = body;
 
         const updates: {
             has_onboarded?: boolean;
             phone?: string;
             calendar_token?: string;
             email?: string;
-            email_notifications_enabled?: boolean
+            email_notifications_enabled?: boolean;
+            default_state?: string | null;
         } = {};
         if (typeof has_onboarded === 'boolean') updates.has_onboarded = has_onboarded;
         if (phone !== undefined) updates.phone = phone;
         if (calendar_token) updates.calendar_token = calendar_token;
         if (email) updates.email = email;
         if (typeof email_notifications_enabled === 'boolean') updates.email_notifications_enabled = email_notifications_enabled;
+        if (default_state !== undefined) updates.default_state = default_state;
 
         const { error } = await admin
             .from("users")

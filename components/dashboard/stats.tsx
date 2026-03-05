@@ -105,9 +105,9 @@ export function DashboardStats({ leases, protectedCount }: { leases: Lease[]; pr
             </Link>
             <Link href="/profit-protection" className="block" id="dashboard-kpi-revenue">
                 <StatCard
-                    title="Yield Opportunity"
+                    title="Possible Rent Increases"
                     value={formatCurrency(yearlyProtection)}
-                    subtextText={yearlyProtection > 0 ? "Portfolio yield variance detected" : "Yield integrity secure"}
+                    subtextText={yearlyProtection > 0 ? "Based on current CPI vs. your increases" : "Yield integrity secure"}
                     icon={<TrendingUp className="h-4 w-4" />}
                     variant="upcoming"
                 />

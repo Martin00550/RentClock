@@ -24,8 +24,9 @@ export default clerkMiddleware(async (auth, req) => {
         response.cookies.set("rentclock_ref", refCode, {
             path: "/",
             maxAge: 60 * 60 * 24 * 30, // 30 days
-            httpOnly: false, // Accessible to client if needed, but we use server
-            sameSite: "lax"
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict"
         });
         return response;
     }

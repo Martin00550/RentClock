@@ -15,7 +15,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "RentClock | Commercial Lease Tracker & Management Software",
+  title: "RentClock | Commercial Lease Tracker & Management",
   description: "Track lease expirations, rent increases, and critical dates. The simple lease management software for commercial landlords. Start free.",
   metadataBase: new URL("https://rentclock.online"),
   keywords: ["lease tracker", "commercial lease tracker", "lease management software", "commercial real estate software", "rent increase tracker", "lease administration", "landlord software"],

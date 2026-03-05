@@ -9,7 +9,7 @@ export function SecurityBar({ variant = "full" }: { variant?: "full" | "subtle" 
                 <div className="flex flex-wrap items-center justify-center gap-8 text-slate-400">
                     <div className="flex items-center gap-2">
                         <Lock className="h-4 w-4" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest">Bank-Grade Encryption</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest">256-bit SSL/TLS</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <ShieldCheck className="h-4 w-4" />
@@ -29,7 +29,7 @@ export function SecurityBar({ variant = "full" }: { variant?: "full" | "subtle" 
             <div className="max-w-[1200px] mx-auto px-6">
                 <div className="flex flex-col md:row items-center justify-between gap-10">
                     <div className="flex flex-col gap-2 max-w-sm text-center md:text-left">
-                        <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Enterprise-Grade Security</h4>
+                        <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Industry-Standard Security</h4>
                         <p className="text-xl font-black text-slate-900 leading-tight">
                             Safe as a vault. Built for the most demanding landlords.
                         </p>

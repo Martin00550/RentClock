@@ -97,7 +97,7 @@ export function ImminentCriticalDates({ leases }: { leases: Lease[] }) {
                                             </Badge>
                                             {lease.eventType === "Rent Increase" && (
                                                 <span className="text-[9px] font-black text-[#2d6a4f] uppercase tracking-tighter">
-                                                    ROI Impact: {lease.rent_increase_amount ? formatCurrency(lease.rent_increase_amount) : "High"}
+                                                    Monthly Increase: {lease.rent_increase_amount ? formatCurrency(lease.rent_increase_amount) : "High"}
                                                 </span>
                                             )}
                                         </div>

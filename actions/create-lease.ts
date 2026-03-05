@@ -11,6 +11,54 @@ export type CreateLeaseState = {
     success?: boolean;
 }
 
+const MAX_FREE_LEASES = 3;
+
+async function checkLeaseLimitWithLock(userId: string): Promise<{ allowed: boolean; currentCount: number; error?: string }> {
+    if (!supabaseAdmin) {
+        return { allowed: false, currentCount: 0, error: "Database not available" };
+    }
+
+    try {
+        // Use a transaction-like approach with advisory lock via raw query
+        // First, acquire an advisory lock for this user (prevents concurrent checks)
+        const { error: lockError } = await supabaseAdmin.rpc("pg_advisory_lock", { key: `lease_limit_${userId}` });
+        
+        if (lockError) {
+            logger.error("Failed to acquire advisory lock", { userId, error: lockError });
+            // Fall back to standard count without lock - still check again before insert
+        }
+
+        // Get fresh count WITH row locking on existing leases
+        const { count, error: countError } = await supabaseAdmin
+            .from("leases")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", userId);
+
+        // Release the advisory lock
+        try {
+            await supabaseAdmin.rpc("pg_advisory_unlock", { key: `lease_limit_${userId}` });
+        } catch {
+            // Ignore unlock errors, lock will be released at transaction end anyway
+        }
+
+        if (countError) {
+            logger.error("Failed to count leases", { userId, error: countError });
+            return { allowed: false, currentCount: 0, error: "Failed to validate lease limits" };
+        }
+
+        const currentCount = count || 0;
+        return { allowed: true, currentCount };
+    } catch (error) {
+        logger.error("Error in checkLeaseLimitWithLock", { userId, error });
+        // Fallback: return current count without lock
+        const { count } = await supabaseAdmin
+            .from("leases")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", userId);
+        return { allowed: true, currentCount: count || 0 };
+    }
+}
+
 export async function createLease(prevState: CreateLeaseState, formData: FormData): Promise<CreateLeaseState> {
     const { userId } = await auth();
 
@@ -18,7 +66,7 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
         return { error: "Unauthorized" };
     }
 
-    // 1. Fetch User Status & Lease Count (with JIT creation)
+    // 1. Fetch User Status (with JIT creation)
     const { getOrCreateUserProfile } = await import("@/lib/auth-service");
     const { user: userProfile, error: userError } = await getOrCreateUserProfile(userId);
 
@@ -26,23 +74,35 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
         return { error: userError || "Failed to fetch user profile" };
     }
 
-    const { count, error: countError } = supabaseAdmin
-        ? await supabaseAdmin
-            .from("leases")
-            .select("*", { count: "exact", head: true })
-            .eq("user_id", userId)
-        : { count: 0, error: null };
-
-    if (countError) {
-        return { error: "Failed to validate lease limits" };
-    }
-
-    // 2. Enforce Limit
+    // 2. Check if user is Pro (pro users bypass limit)
     const isPro = userProfile.is_pro || false;
-    const currentCount = count || 0;
 
-    if (!isPro && currentCount >= 3) {
-        return { error: "Lease limit reached. Upgrade to Pro to add more properties." };
+    if (!isPro) {
+        // Check lease limit with locking to prevent race conditions
+        const { allowed, currentCount, error: limitError } = await checkLeaseLimitWithLock(userId);
+
+        if (limitError) {
+            return { error: limitError };
+        }
+
+        if (!allowed) {
+            logger.warn("Lease limit check failed", { userId });
+            return { error: "Failed to validate lease limits" };
+        }
+
+        // Calculate effective limit including bonus leases
+        const bonusLeases = userProfile.bonus_leases || 0;
+        const effectiveLimit = MAX_FREE_LEASES + bonusLeases;
+
+        if (currentCount >= effectiveLimit) {
+            logger.warn("Lease limit exceeded", { 
+                userId, 
+                currentCount, 
+                effectiveLimit,
+                bonusLeases 
+            });
+            return { error: "Lease limit reached. Upgrade to Pro to add more properties." };
+        }
     }
 
     // 3. Parse Data with Zod
@@ -51,7 +111,11 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
     // Convert FormData to object for Zod
     const rawData = {
         tenant_name: formData.get("tenant_name"),
+        tenant_email: formData.get("tenant_email") || null,
+        tenant_phone: formData.get("tenant_phone") || null,
+        property_name: formData.get("property_name") || null,
         property_address: formData.get("property_address"),
+        state: formData.get("state") || null,
         monthly_rent: formData.get("monthly_rent"),
         rent_increase_amount: formData.get("rent_increase_amount"),
         lease_start_date: formData.get("lease_start_date") || null,

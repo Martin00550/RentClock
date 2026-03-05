@@ -29,6 +29,8 @@ import { Badge } from "@/components/ui/badge";
 
 
 import { COUNTRY_CODES } from "@/lib/countries";
+import { STATE_NOTICE_REQUIREMENTS, validateNoticePeriod } from "@/lib/state-notices";
+import { MapPin } from "lucide-react";
 
 export function SettingsContent() {
     const { user } = useUser();
@@ -45,6 +47,10 @@ export function SettingsContent() {
     // Dynamic billing state
     const [isPro, setIsPro] = useState(false);
     const [calendarToken, setCalendarToken] = useState("");
+
+    // State Selection
+    const [selectedState, setSelectedState] = useState("");
+    const [savingState, setSavingState] = useState(false);
 
     useEffect(() => {
         setBaseUrl(window.location.origin);
@@ -82,6 +88,9 @@ export function SettingsContent() {
                     setEmailNotifications(data.email_notifications_enabled);
                 }
 
+                if (data.default_state) {
+                    setSelectedState(data.default_state);
+                }
 
             } catch (error) {
                 console.error("Error loading profile:", error);
@@ -231,58 +240,60 @@ export function SettingsContent() {
                                                 <p className="text-sm md:text-base text-slate-500 font-medium mt-1">Download lease deadlines to your personal calendar.</p>
                                             </div>
 
-                                            <div className="space-y-6 bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100 relative overflow-hidden">
-                                                {!isPro && (
-                                                    <div className="absolute inset-0 bg-white/40 backdrop-blur-xs z-10 flex flex-col items-center justify-center p-4 md:p-6 text-center">
-                                                        <div className="bg-[#1e3a5f] p-2 rounded-xl mb-3 shadow-xl">
-                                                            <Lock className="h-5 w-5 text-white" />
+                                            <div className="space-y-6 bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100">
+                                                {!isPro ? (
+                                                    <div className="flex flex-col items-center justify-center py-8 text-center">
+                                                        <div className="bg-[#1e3a5f] p-3 rounded-2xl mb-4 shadow-xl">
+                                                            <Lock className="h-6 w-6 text-white" />
                                                         </div>
-                                                        <h5 className="text-[12px] md:text-sm font-black text-[#1e3a5f] uppercase tracking-wider mb-1">Premium Benefit</h5>
-                                                        <p className="text-[10px] text-[#1e3a5f] font-bold max-w-[200px] leading-tight mb-4">
-                                                            Unlock automatic calendar syncing for your leases.
+                                                        <h5 className="text-base md:text-lg font-black text-slate-900 mb-2">Calendar alerts are included with Pro</h5>
+                                                        <p className="text-sm text-slate-500 font-medium max-w-[280px] mb-6">
+                                                            Upgrade to sync with your Google or Apple calendar
                                                         </p>
                                                         <Link href="/billing">
-                                                            <Button size="sm" className="h-9 px-6 bg-[#1e3a5f] hover:bg-[#2a4a73] text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-slate-900/20 active:scale-95 transition-all">
-                                                                Unlock Sync
+                                                            <Button className="h-11 px-8 bg-[#1e3a5f] hover:bg-[#2a4a73] text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-slate-900/20 active:scale-95 transition-all">
+                                                                Upgrade to Pro
                                                             </Button>
                                                         </Link>
                                                     </div>
+                                                ) : (
+                                                    <>
+                                                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                                            <Label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Quick Add</Label>
+                                                            <div className="flex gap-2">
+                                                                <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer">
+                                                                    <Button variant="outline" size="sm" className="h-8 px-3 rounded-lg font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50 flex items-center gap-1.5">
+                                                                        <Image src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Google" width={16} height={16} className="w-4 h-4" />
+                                                                        Google
+                                                                    </Button>
+                                                                </a>
+                                                                <a href={calendarUrl + "&download=true"}>
+                                                                    <Button variant="outline" size="sm" className="h-8 px-3 rounded-lg font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50 flex items-center gap-1.5">
+                                                                        <Calendar className="w-4 h-4 text-[#ff3b30]" />
+                                                                        Apple / Outlook
+                                                                    </Button>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="pt-2 text-left w-full">
+                                                            <Label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block">Your Unique Sync Feed</Label>
+                                                            <div className="flex gap-2">
+                                                                <Input
+                                                                    readOnly
+                                                                    value={calendarUrl}
+                                                                    className="h-10 md:h-12 flex-1 rounded-xl bg-white border-slate-200 font-mono text-[10px] md:text-xs text-slate-500 shadow-sm"
+                                                                />
+                                                                <Button
+                                                                    onClick={handleCopy}
+                                                                    className="h-10 md:h-12 px-4 md:px-6 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl font-bold font-display shadow-sm"
+                                                                >
+                                                                    {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    </>
                                                 )}
-
-                                                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                                    <Label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Quick Add</Label>
-                                                    <div className="flex gap-2">
-                                                        <a href={isPro ? googleCalendarUrl : "/billing"} target={isPro ? "_blank" : "_self"} rel="noopener noreferrer">
-                                                            <Button variant="outline" size="sm" className="h-8 px-3 rounded-lg font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50 flex items-center gap-1.5">
-                                                                <Image src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Google" width={16} height={16} className="w-4 h-4" />
-                                                                Google
-                                                            </Button>
-                                                        </a>
-                                                        <a href={isPro ? (calendarUrl + "&download=true") : "/billing"}>
-                                                            <Button variant="outline" size="sm" className="h-8 px-3 rounded-lg font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50 flex items-center gap-1.5">
-                                                                <Calendar className="w-4 h-4 text-[#ff3b30]" />
-                                                                Apple / Outlook
-                                                            </Button>
-                                                        </a>
-                                                    </div>
-                                                </div>
-
-                                                <div className="pt-2 text-left w-full">
-                                                    <Label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block">Your Unique Sync Feed</Label>
-                                                    <div className="flex gap-2">
-                                                        <Input
-                                                            readOnly
-                                                            value={isPro ? calendarUrl : "••••••••••••••••••••••••••••••••"}
-                                                            className="h-10 md:h-12 flex-1 rounded-xl bg-white border-slate-200 font-mono text-[10px] md:text-xs text-slate-500 shadow-sm"
-                                                        />
-                                                        <Button
-                                                            onClick={isPro ? handleCopy : () => { }}
-                                                            className="h-10 md:h-12 px-4 md:px-6 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl font-bold font-display shadow-sm"
-                                                        >
-                                                            {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
-                                                        </Button>
-                                                    </div>
-                                                </div>
 
                                                 <div className="space-y-4 pt-4 border-t border-slate-100">
                                                     <h5 className="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
@@ -501,6 +512,93 @@ export function SettingsContent() {
                                                     By providing your phone number, you agree to receive automated transactional text messages (alerts and reminders) from RentClock. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for more information. View our <Link href="/privacy" className="underline">Privacy Policy</Link> and <Link href="/terms" className="underline">Terms of Service</Link>.
                                                 </p>
 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* STATE SELECTION */}
+                            <Card className="rounded-3xl border-slate-200 bg-white shadow-xl overflow-hidden group">
+                                <CardContent className="p-6 md:p-8">
+                                    <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 md:gap-8">
+                                        <div className="bg-[#1e3a5f] p-5 rounded-[2rem] shadow-2xl shadow-slate-900/20 group-hover:scale-105 transition-transform duration-500 shrink-0">
+                                            <MapPin className="h-10 w-10 text-white" />
+                                        </div>
+                                        <div className="flex-1 w-full space-y-6">
+                                            <div>
+                                                <h4 className="text-xl md:text-2xl font-black text-slate-900 leading-tight tracking-tighter">Default State</h4>
+                                                <p className="text-sm md:text-base text-slate-500 font-medium mt-1">Set your default state for notice requirement alerts.</p>
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <Label className="text-xs font-black text-slate-500 uppercase tracking-wider">Select State (Optional)</Label>
+                                                    <select
+                                                        value={selectedState}
+                                                        onChange={(e) => setSelectedState(e.target.value)}
+                                                        className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 font-bold text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
+                                                    >
+                                                        <option value="">Select your state...</option>
+                                                        {STATE_NOTICE_REQUIREMENTS.map((s) => (
+                                                            <option key={s.stateCode} value={s.stateCode}>
+                                                                {s.state}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+
+                                                {selectedState && (
+                                                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                                                        <p className="text-sm font-bold text-amber-900">
+                                                            {(() => {
+                                                                const req = STATE_NOTICE_REQUIREMENTS.find(r => r.stateCode === selectedState);
+                                                                return req ? `${req.state} Notice Requirements` : '';
+                                                            })()}
+                                                        </p>
+                                                        <p className="text-xs text-amber-700 mt-1">
+                                                            {(() => {
+                                                                const validation = validateNoticePeriod(selectedState, 60);
+                                                                const req = STATE_NOTICE_REQUIREMENTS.find(r => r.stateCode === selectedState);
+                                                                if (!validation.isValid) {
+                                                                    return validation.warning;
+                                                                }
+                                                                return `${req?.state || selectedState} requires ${validation.minimumDays} days minimum notice for commercial leases.${req?.specialRequirements ? ' ' + req.specialRequirements : ''}`;
+                                                            })()}
+                                                        </p>
+                                                        <p className="text-xs text-amber-600 mt-2">
+                                                            Source: {(() => {
+                                                                const req = STATE_NOTICE_REQUIREMENTS.find(r => r.stateCode === selectedState);
+                                                                return req?.source || 'State statutes';
+                                                            })()}
+                                                        </p>
+                                                    </div>
+                                                )}
+
+                                                <Button
+                                                    onClick={async () => {
+                                                        setSavingState(true);
+                                                        try {
+                                                            await fetch("/api/user/profile", {
+                                                                method: "POST",
+                                                                headers: { "Content-Type": "application/json" },
+                                                                body: JSON.stringify({ default_state: selectedState })
+                                                            });
+                                                        } catch (error) {
+                                                            console.error("Error saving state:", error);
+                                                        } finally {
+                                                            setSavingState(false);
+                                                        }
+                                                    }}
+                                                    disabled={savingState}
+                                                    className="w-full h-12 bg-[#1e3a5f] hover:bg-[#2a4a73] text-white rounded-xl font-black text-sm"
+                                                >
+                                                    {savingState ? <Loader2 className="animate-spin h-4 w-4" /> : "Save State Preference"}
+                                                </Button>
+
+                                                <p className="text-xs text-slate-400">
+                                                    This is your default state for new leases. You can override this on a per-lease basis. State notice requirements are for informational purposes only - always consult local counsel for legal advice.
+                                                </p>
                                             </div>
                                         </div>
                                     </div>

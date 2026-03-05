@@ -48,10 +48,10 @@ export default function LandingPage() {
                                 <span className="text-[11px] font-bold uppercase tracking-wider">First 3 Leases Free • No Credit Card</span>
                             </div>
                             <h1 className="text-4xl lg:text-5xl xl:text-[3.5rem] font-extrabold leading-[1.05] tracking-tight text-slate-900">
-                                Institutional Yield Integrity for your commercial portfolio
+                                Catch the Rent Increases You&apos;ve Been Missing
                             </h1>
                             <p className="text-base md:text-lg text-slate-600 leading-relaxed max-w-lg -mt-1">
-                                Spreadsheets aren&apos;t audit-proof. RentClock ensures your portfolio maintains <strong>Revenue Integrity</strong> by capturing every indexing adjustment and renewal event automatically.
+                                You check your spreadsheet. Who checks the dates? RentClock alerts you before rent increases and lease expirations—if your lease allows them.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center gap-4 -mt-1">
                                 <SignUpTrigger>
@@ -65,7 +65,7 @@ export default function LandingPage() {
                             <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-x-6">
                                 <div className="flex items-center gap-1.5 text-slate-400 whitespace-nowrap">
                                     <ShieldCheck className="h-3.5 w-3.5 text-[#2d6a4f]" />
-                                    <span className="text-[10px] font-bold uppercase tracking-widest">Secure Portfolio Storage</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest">Your Data Stays Private</span>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +87,7 @@ export default function LandingPage() {
                             <h2 className="text-[#d4a853] font-bold uppercase tracking-widest text-sm mb-4">The Cost of Inaction</h2>
                             <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Managing property is a professional duty</h3>
                             <p className="text-lg text-slate-600 leading-relaxed">
-                                Don&apos;t let a busy schedule erode your asset value. Commercial leases without active &quot;Greater-Of&quot; indexing trails the market, creating a permanent gap in your property&apos;s valuation.
+                                Don&apos;t let a busy schedule leave money on the table. Commercial leases without active &quot;Greater-Of&quot; indexing fall behind the market, creating an invisible bleed on your cash flow.
                             </p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 'var(--fluid-gap)' }}>
@@ -97,7 +97,7 @@ export default function LandingPage() {
                                 </div>
                                 <h4 className="text-xl font-bold text-slate-900 mb-3">The Indexing Gap</h4>
                                 <p className="text-slate-600 leading-relaxed">
-                                    Inflation moves every day, but fixed increases don&apos;t. A single missed or under-indexed adjustment on a $5,000/mo lease can represent a <strong>$51,948.92 variance</strong> in property valuation.
+                                    Inflation moves every day, but fixed increases don&apos;t.                                     If your lease has a CPI clause and inflation is at current levels, a $5,000/mo lease could see a <strong>$3,150/year increase</strong>. But only if you send the notice on time.
                                 </p>
                             </div>
                             <div className="bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow" style={{ padding: 'var(--fluid-p)', borderRadius: 'var(--fluid-radius)' }}>
@@ -164,7 +164,7 @@ export default function LandingPage() {
                                         </div>
                                         <h4 className="text-2xl font-black text-slate-900 mb-4 tracking-tight relative z-10">Securely Upload Lease</h4>
                                         <p className="text-lg text-slate-600 leading-relaxed font-medium relative z-10">
-                                            Simply drag and drop your PDF. RentClock&apos;s AI extracts key dates, rent steps, and expiration windows for you to review.
+                                            Simply drag and drop your PDF. Google&apos;s AI scans your PDF and highlights dates for your review.
                                             <strong className="text-[#1e3a5f] ml-1">You check and approve every detail.</strong> Fast, private, and automated.
                                         </p>
                                     </div>
@@ -212,8 +212,8 @@ export default function LandingPage() {
                     <div className="max-w-[1000px] mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-[#d4a853] font-black uppercase tracking-[0.2em] text-sm mb-4">The Smart Choice</h2>
-                            <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Built for Portfolio Integrity</h3>
-                            <p className="text-lg text-slate-600 font-medium">Protect your target yield with automated audit protocols—no more fragile spreadsheets.</p>
+                            <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Built for Landlords Who Want Control</h3>
+                            <p className="text-lg text-slate-600 font-medium">Stop babysitting spreadsheets. Get alerts for your lease dates.</p>
                         </div>
 
                         <div className="overflow-hidden rounded-3xl border border-slate-200 shadow-xl shadow-slate-900/5">
@@ -248,7 +248,7 @@ export default function LandingPage() {
                                         </tr>
                                         <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
                                             <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Yield Protection</td>
-                                            <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Dynamic Indexing</td>
+                                            <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Greater of 3.5% or CPI</td>
                                             <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Billing Only</td>
                                             <td className="py-6 px-6 md:px-10 text-slate-600 font-bold">None</td>
                                         </tr>
@@ -264,10 +264,13 @@ export default function LandingPage() {
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#d4a853]" />
                             </h4>
                             <p className="text-xl text-slate-700 leading-relaxed font-bold">
-                                A 1.5% yield variance on a $5,000/mo lease <br className="hidden md:block" />represents an unrecovered **$77,923.38** in property valuation.
+                                A 3.5% CPI adjustment on a $10,000/mo lease <br className="hidden md:block" /> = <span className="text-[#2d8653]">$4,200/year</span> in additional revenue.
                             </p>
                             <p className="text-slate-500 text-sm mt-3 font-medium">
-                                RentClock audits identify these gaps before they become permanent asset erosion.
+                                Most landlords miss these annual increases. Either the lease allows CPI adjustments and you&apos;re leaving money on the table, or the adjustment clause gets buried in paperwork and expires unnoticed.
+                            </p>
+                            <p className="text-slate-500 text-sm mt-2 font-medium">
+                                RentClock automatically tracks CPI thresholds and alerts you when an adjustment is triggered — so every eligible increase becomes actual revenue.
                             </p>
                         </div>
                     </div>
@@ -352,7 +355,7 @@ export default function LandingPage() {
                             Move beyond static spreadsheets.
                         </h2>
                         <p className="text-lg text-slate-300 mb-10 max-w-xl mx-auto">
-                            Start tracking your first 3 leases today. Eliminate your yield variance.
+                            Start tracking your first 3 leases today. Stop missing rent increases.
                         </p>
                         <div className="flex flex-col items-center gap-8">
                             <SignUpTrigger>

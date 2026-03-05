@@ -2,7 +2,11 @@ export interface Lease {
     id: string;
     user_id: string;
     tenant_name: string;
+    tenant_email?: string;
+    tenant_phone?: string;
+    property_name?: string;
     property_address: string;
+    state?: string;
     monthly_rent: number;
     lease_end_date: string;
     rent_increase_date: string;
@@ -61,5 +65,16 @@ export interface ReferralLog {
     id: string;
     email: string;
     referred_by: string;
+    created_at: string;
+}
+
+export interface LeaseDocument {
+    id: string;
+    lease_id: string;
+    user_id: string;
+    file_name: string;
+    file_path: string;
+    file_type: string;
+    file_size: number;
     created_at: string;
 }

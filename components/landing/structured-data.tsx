@@ -36,6 +36,14 @@ export function StructuredData() {
         "name": "RentClock",
         "url": baseUrl,
         "description": "The simple commercial lease tracker and management software.",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": `${baseUrl}/blog?q={search_term_string}`
+            },
+            "query-input": "required name=search_term_string"
+        }
     };
 
     const breadcrumbSchema = {

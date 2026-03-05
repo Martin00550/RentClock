@@ -4,7 +4,6 @@ import { ReferralCTA } from "@/components/dashboard/referral-cta";
 import { ReferralClaimer } from "@/components/dashboard/referral-claimer";
 import { Button } from "@/components/ui/button";
 import { Plus, TrendingUp, ArrowRight, ShieldCheck } from "lucide-react";
-import { WealthProjectionCard } from "@/components/dashboard/wealth-projection-card";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
@@ -142,7 +141,7 @@ export default async function DashboardPage() {
                                 Arm your <span className="text-[#1e3a5f]">Safety Net</span>.
                             </h2>
                             <p className="text-slate-500 font-medium text-base md:text-lg">
-                                Add your first lease to start tracking revenue risks and critical dates automatically.
+                                Add your first lease to start alerting you before rent increases and lease expirations—so you never miss a date.
                             </p>
                         </div>
                         <Link href="/quick-add" className="w-full md:w-auto">
@@ -168,7 +167,7 @@ export default async function DashboardPage() {
                                 <span className="text-[#d4a853] font-black uppercase tracking-[0.2em] text-[10px] md:text-xs">Safety Net Warning</span>
                             </div>
                             <h2 className="text-2xl md:text-3xl font-black tracking-tight leading-tight">
-                                You have <span className="text-white border-b-4 border-[#d4a853]/50">{formatCurrency(atRiskAmount)} in potential rent increases</span> at risk.
+                                You have <span className="text-white border-b-4 border-[#d4a853]/50">{formatCurrency(atRiskAmount)} in available rent increases</span> identified in your leases.
                             </h2>
                             <p className="text-white/90 font-medium text-base md:text-lg">
                                 Inflation has risen by {inflationRate}% this year. Check which leases are eligible for a rent adjustment.
@@ -176,7 +175,7 @@ export default async function DashboardPage() {
                         </div>
                         <Link href="/profit-protection" className="w-full md:w-auto">
                             <Button className="w-full md:w-auto h-14 md:h-16 px-8 rounded-2xl bg-[#d4a853] text-[#1e3a5f] font-black text-base md:text-lg hover:bg-white hover:text-[#1e3a5f] transition-all shadow-lg shadow-black/20 group-hover:shadow-[#d4a853]/30 border-2 border-[#d4a853]">
-                                View {formatCurrency(atRiskAmount)} in Missed Revenue <ArrowRight className="ml-2 h-5 w-5" />
+                                See Available Increases <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>
                     </div>
@@ -208,12 +207,6 @@ export default async function DashboardPage() {
                             </Button>
                         </Link>
                     </div>
-                </div>
-            )}
-
-            {leases.length > 0 && (
-                <div id="wealth-projection-section">
-                    <WealthProjectionCard leases={leases} inflationRate={yoyChange} />
                 </div>
             )}
 

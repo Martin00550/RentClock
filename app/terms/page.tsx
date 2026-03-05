@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: "Terms of Service | RentClock",
-    description: "Terms and conditions for using the RentClock lease management platform.",
+    description: "Read the terms and conditions for using the RentClock commercial lease management platform. Learn about our service, disclaimers, user responsibilities, and SMS messaging policies.",
     alternates: {
         canonical: "/terms",
     },
