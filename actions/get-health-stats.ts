@@ -64,7 +64,8 @@ export async function getHealthStats(): Promise<{ stats?: HealthStats; error?: s
 
         const { data: activeLeases } = await supabaseAdmin
             .from("leases")
-            .select("user_id");
+            .select("user_id")
+            .limit(1000);
 
         if (activeLeases) {
             const userCounts: Record<string, number> = {};

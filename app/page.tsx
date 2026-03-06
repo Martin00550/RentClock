@@ -48,10 +48,10 @@ export default function LandingPage() {
                                 <span className="text-[11px] font-bold uppercase tracking-wider">First 3 Leases Free • No Credit Card</span>
                             </div>
                             <h1 className="text-4xl lg:text-5xl xl:text-[3.5rem] font-extrabold leading-[1.05] tracking-tight text-slate-900">
-                                Catch the Rent Increases You&apos;ve Been Missing
+                                Track Your Rent Increases
                             </h1>
                             <p className="text-base md:text-lg text-slate-600 leading-relaxed max-w-lg -mt-1">
-                                You check your spreadsheet. Who checks the dates? RentClock alerts you before rent increases and lease expirations—if your lease allows them.
+                                Track your leases. Get reminders before rent increases and expirations.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center gap-4 -mt-1">
                                 <SignUpTrigger>
@@ -87,7 +87,7 @@ export default function LandingPage() {
                             <h2 className="text-[#d4a853] font-bold uppercase tracking-widest text-sm mb-4">The Cost of Inaction</h2>
                             <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">Managing property is a professional duty</h3>
                             <p className="text-lg text-slate-600 leading-relaxed">
-                                Don&apos;t let a busy schedule leave money on the table. Commercial leases without active &quot;Greater-Of&quot; indexing fall behind the market, creating an invisible bleed on your cash flow.
+                                A busy schedule can mean missed rent increases. Commercial leases without active &quot;Greater-Of&quot; indexing may fall behind the market.
                             </p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 'var(--fluid-gap)' }}>
@@ -165,7 +165,7 @@ export default function LandingPage() {
                                         <h4 className="text-2xl font-black text-slate-900 mb-4 tracking-tight relative z-10">Securely Upload Lease</h4>
                                         <p className="text-lg text-slate-600 leading-relaxed font-medium relative z-10">
                                             Simply drag and drop your PDF. Google&apos;s AI scans your PDF and highlights dates for your review.
-                                            <strong className="text-[#1e3a5f] ml-1">You check and approve every detail.</strong> Fast, private, and automated.
+                                            <strong className="text-[#1e3a5f] ml-1">You check and approve every detail.</strong> Helps you automate.
                                         </p>
                                     </div>
                                 </div>
@@ -198,8 +198,8 @@ export default function LandingPage() {
                                         </div>
                                         <h4 className="text-2xl font-black text-slate-900 mb-4 tracking-tight relative z-10">Stay Informed</h4>
                                         <p className="text-lg text-slate-600 leading-relaxed font-medium relative z-10">
-                                            Get <strong className="text-[#1e3a5f]">email and SMS</strong> alerts 90, 60, 30, 7, and 0 days out. Your critical dates sync directly to Outlook or Google Calendar.
-                                            <strong className="text-[#1e3a5f] ml-1">Whether you&apos;re at the office or on the golf course</strong>, we help prevent missed revenue opportunities.
+Get <strong className="text-[#1e3a5f]">email and SMS</strong> alerts 90, 60, 30, 7, and 0 days out. Your critical dates sync directly to Outlook or Google Calendar.
+                                            Whether you&apos;re at the office or on the golf course, we send alerts for rent increases.
                                         </p>
                                     </div>
                                 </div>
@@ -247,8 +247,8 @@ export default function LandingPage() {
                                             <td className="py-6 px-6 md:px-10 text-rose-600 font-bold">High (Human Error)</td>
                                         </tr>
                                         <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
-                                            <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Yield Protection</td>
-                                            <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Greater of 3.5% or CPI</td>
+                                            <td className="py-6 px-6 md:px-10 font-bold text-slate-700">Rent Escalation Alerts</td>
+                                            <td className="py-6 px-6 md:px-10 font-black text-[#1e3a5f] bg-[#1e3a5f]/5 border-x border-[#1e3a5f]/10">Yes (if lease has CPI clause)</td>
                                             <td className="py-6 px-6 md:px-10 text-slate-600 font-medium">Billing Only</td>
                                             <td className="py-6 px-6 md:px-10 text-slate-600 font-bold">None</td>
                                         </tr>
@@ -264,13 +264,13 @@ export default function LandingPage() {
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#d4a853]" />
                             </h4>
                             <p className="text-xl text-slate-700 leading-relaxed font-bold">
-                                A 3.5% CPI adjustment on a $10,000/mo lease <br className="hidden md:block" /> = <span className="text-[#2d8653]">$4,200/year</span> in additional revenue.
+                                A 3.5% CPI adjustment on a $10,000/mo lease <br className="hidden md:block" /> = <span className="text-[#2d8653]">$4,200/year</span> (if your lease has a CPI clause).
                             </p>
                             <p className="text-slate-500 text-sm mt-3 font-medium">
                                 Most landlords miss these annual increases. Either the lease allows CPI adjustments and you&apos;re leaving money on the table, or the adjustment clause gets buried in paperwork and expires unnoticed.
                             </p>
                             <p className="text-slate-500 text-sm mt-2 font-medium">
-                                RentClock automatically tracks CPI thresholds and alerts you when an adjustment is triggered — so every eligible increase becomes actual revenue.
+                                RentClock tracks CPI thresholds and alerts you when an adjustment is triggered—so you&apos;re notified about rent increases.
                             </p>
                         </div>
                     </div>
@@ -355,7 +355,7 @@ export default function LandingPage() {
                             Move beyond static spreadsheets.
                         </h2>
                         <p className="text-lg text-slate-300 mb-10 max-w-xl mx-auto">
-                            Start tracking your first 3 leases today. Stop missing rent increases.
+                            Start tracking your first 3 leases today. Track rent increases.
                         </p>
                         <div className="flex flex-col items-center gap-8">
                             <SignUpTrigger>

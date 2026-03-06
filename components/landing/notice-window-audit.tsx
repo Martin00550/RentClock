@@ -51,7 +51,7 @@ const URGENCY_CONFIG: Record<UrgencyState, {
         headline: "Your Notice Window is Open",
         subheadline: (days) => `You have ${days} days to capture market rates`,
         ctaText: "Prepare Your Notice",
-        impactText: () => "You're on track to maximize your rental income.",
+        impactText: () => "You're on track to capture your rental income potential.",
     },
     warning: {
         gradient: "from-amber-50 to-amber-100/50 border-amber-200",

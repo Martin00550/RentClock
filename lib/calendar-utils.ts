@@ -26,6 +26,10 @@ export function generateGoogleCalendarUrl(event: CalendarEvent): string {
 }
 
 export function downloadIcsFile(event: CalendarEvent) {
+    if (typeof window === "undefined" || typeof document === "undefined") {
+        return;
+    }
+
     const start = format(event.startDate, "yyyyMMdd'T'HHmmss");
     const end = event.endDate
         ? format(event.endDate, "yyyyMMdd'T'HHmmss")

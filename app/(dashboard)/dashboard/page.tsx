@@ -115,7 +115,7 @@ export default async function DashboardPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="space-y-1">
                     <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Portfolio Safety Net</h1>
-                    <p className="text-slate-500 text-base md:text-lg font-medium">Protecting your properties from the invisible bleed.</p>
+                    <p className="text-slate-500 text-base md:text-lg font-medium">Track your lease dates and rent increases.</p>
                 </div>
                 <Link href="/quick-add" className="w-full md:w-auto" id="dashboard-quick-add">
                     <Button className="w-full md:w-auto bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-8 h-12 md:h-14 rounded-2xl font-bold font-display text-base md:text-lg shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3 transition-all">
@@ -141,7 +141,7 @@ export default async function DashboardPage() {
                                 Arm your <span className="text-[#1e3a5f]">Safety Net</span>.
                             </h2>
                             <p className="text-slate-500 font-medium text-base md:text-lg">
-                                Add your first lease to start alerting you before rent increases and lease expirations—so you never miss a date.
+                                Add your first lease to start alerting you before rent increases and lease expirations—so you remember important dates.
                             </p>
                         </div>
                         <Link href="/quick-add" className="w-full md:w-auto">
@@ -195,10 +195,10 @@ export default async function DashboardPage() {
                                 <span className="text-emerald-100 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs">Safety Net Active</span>
                             </div>
                             <h2 className="text-2xl md:text-3xl font-black tracking-tight leading-tight">
-                                Portfolio <span className="text-white border-b-4 border-emerald-400/30">Protected</span>.
+                                Your <span className="text-white border-b-4 border-emerald-400/30">Safety Net is Armed</span>.
                             </h2>
                             <p className="text-white/90 font-medium text-base md:text-lg">
-                                All leases are tracking with market rates. We&apos;ll notify you when the next opportunity arises.
+                                Your leases are being monitored for upcoming rent increases and important dates. We&apos;ll alert you when it&apos;s time to take action.
                             </p>
                         </div>
                         <Link href="/profit-protection" className="w-full md:w-auto">

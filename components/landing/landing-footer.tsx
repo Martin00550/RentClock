@@ -12,7 +12,7 @@ export function LandingFooter() {
                         <h2 className="text-2xl font-black tracking-tighter text-slate-900">RentClock</h2>
                     </div>
                     <p className="text-slate-500 max-w-sm">
-                        RentClock helps you protect your investment income with modern technology and extreme simplicity.
+                        RentClock helps you track your leases with modern technology and extreme simplicity.
                     </p>
                 </div>
                 <div>

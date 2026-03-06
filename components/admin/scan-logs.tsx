@@ -14,6 +14,9 @@ export function AdminScanLogs() {
         getScanLogs().then(res => {
             if (res.logs) setLogs(res.logs);
             setLoading(false);
+        }).catch(err => {
+            console.error("Failed to load scan logs:", err);
+            setLoading(false);
         });
     }, []);
 

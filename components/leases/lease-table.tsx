@@ -38,7 +38,7 @@ export function LeaseTable({ leases }: { leases: Lease[] }) {
                 <div className="bg-[#1e3a5f]/5 p-6 rounded-[2rem] mb-6 group-hover:scale-110 transition-transform duration-500">
                     <ShieldCheck className="h-12 w-12 text-[#1e3a5f]" />
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Your Portfolio is Unprotected</h3>
+                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Add Your First Lease to Set Up Your Safety Net</h3>
                 <div className="text-slate-500 mt-3 mb-8 max-w-sm font-medium leading-relaxed">
                     <p className="text-slate-600 mb-6">You haven&apos;t added any leases yet.</p> Start your <span className="text-[#1e3a5f] font-bold">Safety Net</span> today by uploading your first document.
                     <br /><span className="text-[10px] uppercase font-black tracking-widest text-slate-400 mt-2 block">First 3 Leases are Free Forever</span>

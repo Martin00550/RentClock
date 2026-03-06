@@ -14,6 +14,9 @@ export function ProductHealth() {
         getHealthStats().then(res => {
             if (res.stats) setStats(res.stats);
             setLoading(false);
+        }).catch(err => {
+            console.error("Failed to load health stats:", err);
+            setLoading(false);
         });
     }, []);
 

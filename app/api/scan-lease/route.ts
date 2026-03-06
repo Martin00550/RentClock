@@ -124,16 +124,21 @@ RETURN FORMAT: Return ONLY a raw JSON object. Do NOT use markdown code blocks. D
 
 Fields to extract:
 - tenant_name (string): Full name of the tenant entity.
+- tenant_email (string or null): Tenant email address if found.
+- tenant_phone (string or null): Tenant phone number if found.
+- property_name (string or null): Name of the property/building if found.
 - property_address (string): Full property address (US Format).
+- state (string or null): US state abbreviation (e.g., TX, CA, NY).
 - monthly_rent (number): Current monthly rent amount (numeric only, no $ or commas).
 - rent_increase_amount (number or null): The dollar amount of the next scheduled rent increase (if any). Use null if not found.
 - lease_start_date (string, ISO format YYYY-MM-DD): The commencement date. Use null if not found.
 - lease_end_date (string, ISO format YYYY-MM-DD): The expiration date. Use null if not found.
 - rent_increase_date (string, ISO format YYYY-MM-DD): Date of the next scheduled rent increase. Use null if not found.
+- notice_period_days (number or null): Number of days notice required for rent increase (common values: 30, 60, 90). Use null if not found.
 - rent_schedule (array of {date: string, amount: number}): Every scheduled rent change found in the lease (step-ups). Use empty array [] if none found.
 
 EXAMPLE RESPONSE:
-{"tenant_name":"ABC Corp","property_address":"123 Main St, Austin, TX 78701","monthly_rent":2500,"rent_increase_amount":100,"lease_start_date":"2024-01-01","lease_end_date":"2029-12-31","rent_increase_date":"2025-01-01","rent_schedule":[]}
+{"tenant_name":"ABC Corp","tenant_email":"john@abccorp.com","tenant_phone":"555-123-4567","property_name":"Main Street Plaza","property_address":"123 Main St, Austin, TX 78701","state":"TX","monthly_rent":2500,"rent_increase_amount":100,"lease_start_date":"2024-01-01","lease_end_date":"2029-12-31","rent_increase_date":"2025-01-01","notice_period_days":60,"rent_schedule":[]}
 
 CRITICAL RULES:
 1. Return ONLY valid JSON - no markdown, no text, no code blocks.
@@ -141,6 +146,7 @@ CRITICAL RULES:
 3. Currency values MUST be numbers without $ or commas.
 4. Use null for missing fields, never omit them.
 5. Use empty array [] for rent_schedule if none found.
+6. State MUST be a 2-letter US state abbreviation.
 `;
 
                 if (isMultimodal) {

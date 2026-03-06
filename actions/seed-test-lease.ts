@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { addDays, startOfDay } from "date-fns";
 
 export async function seedTestLease() {
@@ -11,9 +11,9 @@ export async function seedTestLease() {
     const today = new Date();
     const expiryDate = addDays(today, 7); // 7 days from now (Urgent trigger)
 
-    if (!supabase) return { success: false, error: "Database not available" };
+    if (!supabaseAdmin) return { success: false, error: "Database not available" };
 
-    const { data, error } = await supabase.from("leases").insert({
+    const { data, error } = await supabaseAdmin.from("leases").insert({
         user_id: userId,
         tenant_name: "Test Tenant (AI Scan Demo)",
         property_address: "123 Test St, Tech City, TC 90210",

@@ -13,33 +13,16 @@ export type CreateLeaseState = {
 
 const MAX_FREE_LEASES = 3;
 
-async function checkLeaseLimitWithLock(userId: string): Promise<{ allowed: boolean; currentCount: number; error?: string }> {
+async function checkLeaseLimit(userId: string): Promise<{ allowed: boolean; currentCount: number; error?: string }> {
     if (!supabaseAdmin) {
         return { allowed: false, currentCount: 0, error: "Database not available" };
     }
 
     try {
-        // Use a transaction-like approach with advisory lock via raw query
-        // First, acquire an advisory lock for this user (prevents concurrent checks)
-        const { error: lockError } = await supabaseAdmin.rpc("pg_advisory_lock", { key: `lease_limit_${userId}` });
-        
-        if (lockError) {
-            logger.error("Failed to acquire advisory lock", { userId, error: lockError });
-            // Fall back to standard count without lock - still check again before insert
-        }
-
-        // Get fresh count WITH row locking on existing leases
         const { count, error: countError } = await supabaseAdmin
             .from("leases")
             .select("*", { count: "exact", head: true })
             .eq("user_id", userId);
-
-        // Release the advisory lock
-        try {
-            await supabaseAdmin.rpc("pg_advisory_unlock", { key: `lease_limit_${userId}` });
-        } catch {
-            // Ignore unlock errors, lock will be released at transaction end anyway
-        }
 
         if (countError) {
             logger.error("Failed to count leases", { userId, error: countError });
@@ -49,8 +32,7 @@ async function checkLeaseLimitWithLock(userId: string): Promise<{ allowed: boole
         const currentCount = count || 0;
         return { allowed: true, currentCount };
     } catch (error) {
-        logger.error("Error in checkLeaseLimitWithLock", { userId, error });
-        // Fallback: return current count without lock
+        logger.error("Error in checkLeaseLimit", { userId, error });
         const { count } = await supabaseAdmin
             .from("leases")
             .select("*", { count: "exact", head: true })
@@ -79,7 +61,7 @@ export async function createLease(prevState: CreateLeaseState, formData: FormDat
 
     if (!isPro) {
         // Check lease limit with locking to prevent race conditions
-        const { allowed, currentCount, error: limitError } = await checkLeaseLimitWithLock(userId);
+        const { allowed, currentCount, error: limitError } = await checkLeaseLimit(userId);
 
         if (limitError) {
             return { error: limitError };

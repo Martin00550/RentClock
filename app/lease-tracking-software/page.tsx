@@ -10,7 +10,7 @@ import { Breadcrumbs } from "@/components/landing/breadcrumbs";
 
 export const metadata: Metadata = {
     title: "Commercial Lease Tracking Software | RentClock",
-    description: "The simplest lease tracking software for commercial landlords. Stop missing critical dates and CPI rent increases. Start for free.",
+    description: "The simplest lease tracking software for commercial landlords. Track critical dates and rent increases. Start for free.",
     keywords: ["lease tracking software", "commercial lease tracker", "lease management system", "lease reminder app"],
     openGraph: {
         title: "Commercial Lease Tracking Software | RentClock",
@@ -69,7 +69,7 @@ export default function LeaseTrackingSoftwarePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900">Automated Date Tracking</h3>
                                 <p className="text-slate-600 leading-relaxed">
-                                    Never calculate a notice window manually again. Our <strong>lease tracker</strong> automatically calculates 90/60/30/7/0 day alerts for every renewal and expiration.
+                                    Stop calculating notice windows manually. Our <strong>lease tracker</strong> automatically calculates 90/60/30/7/0 day alerts for every renewal and expiration.
                                 </p>
                             </div>
                             <div className="space-y-4">
@@ -78,7 +78,7 @@ export default function LeaseTrackingSoftwarePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900">Rent Escalation Alerts</h3>
                                 <p className="text-slate-600 leading-relaxed">
-                                    Missed CPI adjustments cost landlords thousands. RentClock is the only <strong>commercial lease software</strong> built specifically to protect your revenue steps.
+                                    Missed CPI adjustments cost landlords thousands. RentClock is a <strong>commercial lease software</strong> built specifically to help you track rent increase dates.
                                 </p>
                             </div>
                             <div className="space-y-4">

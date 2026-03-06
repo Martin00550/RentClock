@@ -22,7 +22,7 @@ export const HOME_STEPS: DriveStep[] = [
         element: "#dashboard-kpi-revenue",
         popover: {
             title: "Track Your Revenue",
-            description: "See exactly how much revenue you're protecting. This updates as you secure your leases.",
+            description: "See potential rent increases. This updates as you add leases.",
             side: "bottom",
         }
     },
@@ -30,7 +30,7 @@ export const HOME_STEPS: DriveStep[] = [
         element: "#dashboard-critical-dates",
         popover: {
             title: "Safety Net",
-            description: "Never miss a rent increase again. We front-load your most important deadlines right here.",
+            description: "Track rent increases. We show your most important deadlines right here.",
             side: "top",
         }
     },
@@ -38,7 +38,7 @@ export const HOME_STEPS: DriveStep[] = [
         element: "#sidebar-profit",
         popover: {
             title: "Profit Protection",
-            description: "This is our 'Money Feature'. Click here later to audit your portfolio for inflation leakage.",
+            description: "This is our 'Profit Protection Feature'. Click here later to audit your portfolio for inflation leakage.",
             side: "top",
         }
     }
@@ -76,7 +76,7 @@ export const PROFIT_STEPS: DriveStep[] = [
         element: "#cpi-calculator-card",
         popover: {
             title: "CPI Calculator",
-            description: "Stop guessing inflation rates. We pull live government data to tell you exactly how much to increase rent.",
+            description: "Estimate rent increases. We pull live government CPI data to help you estimate how much to increase rent.",
             side: "bottom",
         }
     },
@@ -84,7 +84,7 @@ export const PROFIT_STEPS: DriveStep[] = [
         element: "#profit-revenue-risk",
         popover: {
             title: "Revenue Leakage",
-            description: "This is the money you are losing *right now* by not adjusting rent to market. We'll help you capture it.",
+            description: "This is the potential rent increases available by adjusting rent to market. We'll help you capture it.",
             side: "bottom",
         }
     }
@@ -117,7 +117,7 @@ export const BILLING_STEPS: DriveStep[] = [
         element: "#billing-usage-gauge",
         popover: {
             title: "Usage Monitor",
-            description: "Track your lease limits here. Upgrade to Pro for unlimited lease protection.",
+            description: "Track your lease limits here. Upgrade to Pro for unlimited leases.",
             side: "bottom",
         }
     }

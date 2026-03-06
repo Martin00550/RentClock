@@ -308,7 +308,7 @@ export default function CPIRentIncreaseGuide() {
 
                     <div className="my-12 p-8 bg-[#1e3a5f]/5 border border-[#1e3a5f]/20 rounded-2xl">
                         <h3 className="text-2xl font-bold text-slate-900 mb-4">Track CPI Adjustments Automatically</h3>
-                        <p className="text-slate-700 mb-6">RentClock automatically monitors CPI release dates from the Bureau of Labor Statistics and alerts you when it&apos;s time to calculate adjustments. Never miss a deadline again.</p>
+                        <p className="text-slate-700 mb-6">RentClock automatically monitors CPI release dates from the Bureau of Labor Statistics and alerts you when it&apos;s time to calculate adjustments. Track deadlines easily.</p>
                         <SignUpTrigger>
                             <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-8 py-6 rounded-xl font-bold text-lg shadow-lg h-auto w-full md:w-auto">
                                 Start Tracking CPI Adjustments Free

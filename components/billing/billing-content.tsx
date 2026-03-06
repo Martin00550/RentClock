@@ -223,7 +223,7 @@ export function BillingContent() {
                                 <CardContent className="p-10 space-y-10">
                                     <div className="space-y-2">
                                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#d4a853]/80">Active Subscription</span>
-                                        <h4 className="text-4xl font-black tracking-tighter">{isPro ? "Pro" : "Free Forever"}</h4>
+                                        <h4 className="text-4xl font-black tracking-tighter">{isPro ? "Pro" : "Starter"}</h4>
                                     </div>
                                     <div className="flex items-baseline gap-2">
                                         <span className="text-6xl font-black tracking-tighter">{isPro ? "$39" : "$0"}</span>

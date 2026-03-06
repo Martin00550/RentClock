@@ -22,7 +22,7 @@ export function FaqSection() {
                     />
                     <FaqItem
                         question="Can it handle non-standard or hand-annotated leases?"
-                        answer="Yes. Our extraction engine is designed for the messy reality of commercial real estate. It can process high-resolution scans, hand-annotated PDFs, and complex addendums to find the 'True Date' for your increases."
+                        answer="Yes. Our extraction engine is designed for the messy reality of commercial real estate. It can process high-resolution scans, hand-annotated PDFs, and complex addendums to help identify rent increase dates."
                     />
                     <FaqItem
                         question="What triggers a critical date alert?"

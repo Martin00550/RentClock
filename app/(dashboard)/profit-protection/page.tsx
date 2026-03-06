@@ -49,11 +49,11 @@ export default async function ProfitProtectionPage() {
                     <div className="bg-[#d4a853]/10 p-2 rounded-xl">
                         <TrendingUp className="h-6 w-6 text-[#d4a853]" />
                     </div>
-                    <span className="text-[10px] text-[#d4a853] font-bold uppercase tracking-[0.2em]">Revenue Protection</span>
+                    <span className="text-[10px] text-[#d4a853] font-bold uppercase tracking-[0.2em]">Profit Tracking</span>
                 </div>
                 <h1 className="text-3xl font-black text-slate-900 tracking-tight">Portfolio Safety Net</h1>
                 <p className="text-slate-500 text-lg max-w-2xl">
-                    Analyze your entire portfolio against inflation. Identify revenue leakage and execute rent adjustments.
+                    Analyze your entire portfolio against inflation. Identify rent increase opportunities and execute adjustments.
                 </p>
             </div>
 
@@ -66,10 +66,13 @@ export default async function ProfitProtectionPage() {
                             <DollarSign className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                            <span className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em]">Uncollected Revenue (Leakage)</span>
+                            <span className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em]">Potential Rent Increases</span>
                             <div className="text-4xl font-black text-white mt-2 tracking-tight">
                                 +{formatCurrency(totalRevenueOpportunity)}
                             </div>
+                            <p className="text-[10px] text-white/50 mt-2 font-medium">
+                                Potential amounts - actual increases depend on your lease terms
+                            </p>
                         </div>
                     </CardContent>
                 </Card>
@@ -118,13 +121,13 @@ export default async function ProfitProtectionPage() {
                 <div className="lg:col-span-7 flex flex-col gap-6">
                     <h3 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
                         <AlertCircle className="h-5 w-5 text-amber-500" />
-                        Revenue Leakage Detected
+                        Potential Rent Increases Found
                     </h3>
                     <div className="flex flex-col gap-4 relative">
 
                         {typedLeases.length === 0 ? (
                             <Card className="rounded-3xl border-slate-200 p-8 text-center bg-slate-50/50">
-                                <p className="text-slate-500 mb-6">Our automated system monitors this 24/7. &quot;Set it and forget it&quot; peace of mind.</p>
+                                <p className="text-slate-500 mb-6">Our system monitors your leases. Add a lease to see potential rent increases.</p>
                             </Card>
                         ) : leasesWithOpportunity.length > 0 ? (
                             leasesWithOpportunity.map((lease) => {
@@ -141,7 +144,7 @@ export default async function ProfitProtectionPage() {
                                                 <CardContent className="p-6 flex items-center justify-between">
                                                     <div className="flex items-center gap-4">
                                                         <div className="h-12 w-12 rounded-2xl bg-[#1e3a5f]/5 flex items-center justify-center text-xl font-black text-[#1e3a5f]">
-                                                            {lease.tenant_name.charAt(0)}
+                                                            {lease.tenant_name?.[0] || "?"}
                                                         </div>
                                                         <div>
                                                             <h4 className="font-bold text-slate-900 text-lg group-hover:text-[#1e3a5f] transition-colors">{lease.tenant_name}</h4>
@@ -169,7 +172,7 @@ export default async function ProfitProtectionPage() {
                                     <TrendingUp className="h-6 w-6 text-green-600" />
                                 </div>
                                 <h4 className="text-lg font-bold text-slate-900">Portfolio Optimized</h4>
-                                <p className="text-slate-500 font-medium mt-2">Great job! No revenue leakage detected across your active leases.</p>
+                                <p className="text-slate-500 font-medium mt-2">Great job! No rent increase opportunities found across your active leases.</p>
                             </Card>
                         )}
                     </div>

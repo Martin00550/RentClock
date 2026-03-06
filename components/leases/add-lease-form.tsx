@@ -210,7 +210,11 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
             console.log("✅ Scan successful, populating form...");
             // Populate form with AI data
             if (data.tenant_name) setTenantName(data.tenant_name);
+            if (data.tenant_email) setTenantEmail(data.tenant_email);
+            if (data.tenant_phone) setTenantPhone(data.tenant_phone);
+            if (data.property_name) setPropertyName(data.property_name);
             if (data.property_address) setPropertyAddress(data.property_address);
+            if (data.state) setState(data.state);
             if (data.monthly_rent) setMonthlyRent(data.monthly_rent.toString());
             if (data.rent_increase_amount) setRentIncreaseAmount(data.rent_increase_amount.toString());
             if (data.rent_schedule) setRentSchedule(data.rent_schedule);
@@ -537,7 +541,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                                 <div className="h-full bg-[#1e3a5f] w-full animate-pulse transition-all duration-500"></div>
                             </div>
-                            <p className="text-[10px] text-slate-400 font-medium italic">RentClock is finding the dates for your final approval. This prevents revenue leakage.</p>
+                            <p className="text-[10px] text-slate-400 font-medium italic">RentClock is finding the dates for your final approval. This helps you track important dates.</p>
                         </div>
                     )}
 
@@ -841,7 +845,7 @@ export function AddLeaseForm({ leaseCount = 0, isPro = false, bonusLeases = 0 }:
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-slate-900 leading-none">Critical Date Reminders</h4>
-                                        <p className="text-[10px] text-slate-500 font-medium mt-1 uppercase tracking-wider">Never miss a renewal window again</p>
+                                        <p className="text-[10px] text-slate-500 font-medium mt-1 uppercase tracking-wider">Track renewal windows</p>
                                     </div>
                                 </div>
                             </div>

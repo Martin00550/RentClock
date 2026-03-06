@@ -27,11 +27,11 @@ export function SecurityBar({ variant = "full" }: { variant?: "full" | "subtle" 
     return (
         <section className="bg-slate-50 border-y border-slate-200 py-12">
             <div className="max-w-[1200px] mx-auto px-6">
-                <div className="flex flex-col md:row items-center justify-between gap-10">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-10">
                     <div className="flex flex-col gap-2 max-w-sm text-center md:text-left">
                         <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Industry-Standard Security</h4>
                         <p className="text-xl font-black text-slate-900 leading-tight">
-                            Safe as a vault. Built for the most demanding landlords.
+                            Secure your lease data. Built for property managers.
                         </p>
                     </div>
 

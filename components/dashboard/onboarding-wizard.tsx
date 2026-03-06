@@ -146,7 +146,7 @@ export function OnboardingWizard() {
                     </DialogTitle>
                     <DialogDescription className="text-slate-300 font-medium mt-2">
                         {step === 1
-                            ? "Don't miss critical lease deadlines. RentClock will text you when it's time to act."
+                            ? "Get notified about critical lease deadlines. RentClock will text you when it's time to act."
                             : step === 2
                                 ? "See upcoming renewals and rent increases directly in your personal calendar."
                                 : "Know your state's notice requirements for commercial leases."
@@ -162,7 +162,7 @@ export function OnboardingWizard() {
                             </div>
                             <h3 className="text-xl font-black text-slate-900 tracking-tight">Pro Features Locked</h3>
                             <p className="text-slate-500 font-medium">
-                                SMS Alerts and Calendar Sync are part of RentClock Pro. Upgrade now to secure your properties with 24/7 monitoring.
+                                SMS Alerts and Calendar Sync are part of RentClock Pro. Upgrade now to get SMS alerts and calendar sync.
                             </p>
                             <Link href="/settings">
                                 <Button className="h-14 w-full bg-[#1e3a5f] hover:bg-[#2a4a73] text-white rounded-xl font-black text-lg shadow-xl shadow-[#1e3a5f]/20">

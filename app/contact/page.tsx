@@ -16,20 +16,32 @@ import {
     Loader2
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { submitContactForm } from "@/actions/submit-contact";
 
 export default function ContactPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setError(null);
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        const formData = new FormData(e.currentTarget);
+        const name = formData.get("name") as string;
+        const email = formData.get("email") as string;
+        const message = formData.get("message") as string;
+
+        const result = await submitContactForm({ name, email, message });
 
         setIsSubmitting(false);
-        setIsSubmitted(true);
+
+        if (result.success) {
+            setIsSubmitted(true);
+        } else {
+            setError(result.error || "Failed to submit. Please try again.");
+        }
     };
 
     return (
@@ -62,10 +74,10 @@ export default function ContactPage() {
                                 Support & Inquiries
                             </div>
                             <h1 className="text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight">
-                                RentClock is here to protect your yield.
+                                RentClock helps you track your leases and rent increases.
                             </h1>
                             <p className="text-xl text-slate-600 mt-6 leading-relaxed max-w-lg">
-                                Whether you&apos;re a single-property owner or managing a strip mall, the RentClock team is ready to help you secure your revenue.
+                                Whether you&apos;re a single-property owner or managing a strip mall, the RentClock team is ready to help you track your leases.
                             </p>
                         </div>
 
@@ -133,6 +145,7 @@ export default function ContactPage() {
                                         <Label className="text-sm font-bold text-slate-600 uppercase tracking-widest">Your Name</Label>
                                         <Input
                                             required
+                                            name="name"
                                             placeholder="Steve"
                                             className="h-14 rounded-2xl border-slate-200 focus:ring-[#1e3a5f] focus:border-[#1e3a5f] bg-slate-50 font-medium"
                                         />
@@ -141,6 +154,7 @@ export default function ContactPage() {
                                         <Label className="text-sm font-bold text-slate-600 uppercase tracking-widest">Email Address</Label>
                                         <Input
                                             required
+                                            name="email"
                                             type="email"
                                             placeholder="steve@realestate.com"
                                             className="h-14 rounded-2xl border-slate-200 focus:ring-[#1e3a5f] focus:border-[#1e3a5f] bg-slate-50 font-medium"
@@ -152,10 +166,15 @@ export default function ContactPage() {
                                     <Label className="text-sm font-bold text-slate-600 uppercase tracking-widest">How can RentClock help?</Label>
                                     <Textarea
                                         required
+                                        name="message"
                                         placeholder="I have a question about bulk lease uploads..."
                                         className="min-h-[160px] rounded-2xl border-slate-200 focus:ring-[#1e3a5f] focus:border-[#1e3a5f] bg-slate-50 font-medium p-4 resize-none"
                                     />
                                 </div>
+
+                                {error && (
+                                    <p className="text-red-500 text-sm font-medium">{error}</p>
+                                )}
 
                                 <Button
                                     disabled={isSubmitting}
@@ -164,18 +183,15 @@ export default function ContactPage() {
                                     {isSubmitting ? (
                                         <>
                                             <Loader2 className="h-6 w-6 animate-spin" />
-                                            Encrypting & Sending...
+                                            Sending...
                                         </>
                                     ) : (
                                         <>
                                             <Send className="h-5 w-5" />
-                                            Send Secure Message
+                                            Send Message
                                         </>
                                     )}
                                 </Button>
-                                <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                                    Fast 24-hour response time guaranteed
-                                </p>
                             </form>
                         )}
                     </motion.div>

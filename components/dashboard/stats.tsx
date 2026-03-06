@@ -87,7 +87,7 @@ export function DashboardStats({ leases, protectedCount }: { leases: Lease[]; pr
         <div className="grid " style={{ gap: 'var(--fluid-gap)', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
             <Link href="/leases" className="block">
                 <StatCard
-                    title="Protected Leases"
+                    title="Leases with Safety Net"
                     value={protectedCount}
                     subtextText={`Out of ${totalLeases} total`}
                     subtextTrend="up"
@@ -98,7 +98,7 @@ export function DashboardStats({ leases, protectedCount }: { leases: Lease[]; pr
                 <StatCard
                     title="Immediate Attention"
                     value={urgentCount}
-                    subtextText={urgentCount > 0 ? "Action needed to secure profit" : "All revenue secure"}
+                    subtextText={urgentCount > 0 ? "Action needed" : "All leases tracked"}
                     icon={<AlertCircle className="h-4 w-4" />}
                     variant={urgentCount > 0 ? "urgent" : "default"}
                 />
@@ -107,7 +107,7 @@ export function DashboardStats({ leases, protectedCount }: { leases: Lease[]; pr
                 <StatCard
                     title="Possible Rent Increases"
                     value={formatCurrency(yearlyProtection)}
-                    subtextText={yearlyProtection > 0 ? "Based on current CPI vs. your increases" : "Yield integrity secure"}
+                    subtextText={yearlyProtection > 0 ? "Based on current CPI vs. your increases" : "Profit protection enabled"}
                     icon={<TrendingUp className="h-4 w-4" />}
                     variant="upcoming"
                 />

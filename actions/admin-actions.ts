@@ -180,7 +180,8 @@ export async function auditorCheck() {
     const { data: users, error } = await supabaseAdmin
         .from("users")
         .select("id, email, created_at, paddle_subscription_id, is_pro")
-        .eq("is_pro", true);
+        .eq("is_pro", true)
+        .limit(1000);
 
     if (error) {
         logger.error("Auditor check error", { error });

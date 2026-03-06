@@ -21,6 +21,8 @@ export function AdminMegaphone() {
                 setMessage(res.message);
                 setIsActive(res.isActive);
             }
+        }).catch(err => {
+            console.error("Failed to load broadcast message:", err);
         });
     }, []);
 

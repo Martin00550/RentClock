@@ -184,7 +184,7 @@ export default function RentEscalationGuide() {
 
                     <div className="my-12 p-8 bg-[#1e3a5f]/5 border border-[#1e3a5f]/20 rounded-2xl">
                         <h3 className="text-2xl font-bold text-slate-900 mb-4">Never Miss an Escalation Again</h3>
-                        <p className="text-slate-700 mb-6">RentClock automatically tracks rent escalation dates and sends you alerts before each increase takes effect. Whether you use fixed steps or CPI adjustments, you&apos;ll never leave money on the table.</p>
+                        <p className="text-slate-700 mb-6">RentClock automatically tracks rent escalation dates and sends you alerts before each increase takes effect. Whether you use fixed steps or CPI adjustments, you can track your rent increases.</p>
                         <SignUpTrigger>
                             <Button className="bg-[#1e3a5f] hover:bg-[#2a4a73] text-white px-8 py-6 rounded-xl font-bold text-lg shadow-lg h-auto w-full md:w-auto">
                                 Track Your Escalations Free

@@ -24,12 +24,12 @@ export async function getSignedLeaseUrl(pathOrUrl: string | null): Promise<strin
                 // If we can't parse it, it might be an external link? 
                 // For now, return as-is if it assumes public access, OR fail safe.
                 // Better to try signing it if we can extract the path.
-                return pathOrUrl;
+                return null;
             }
         }
 
         // 2. Generate Signed URL
-        if (!supabaseAdmin) return pathOrUrl;
+        if (!supabaseAdmin) return null;
 
         const { data, error } = await supabaseAdmin
             .storage

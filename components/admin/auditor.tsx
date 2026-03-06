@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { auditorCheck } from "@/actions/admin-actions";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ReceiptText, AlertTriangle } from "lucide-react";
+import { ReceiptText, AlertTriangle, CheckCircle } from "lucide-react";
 
 import { UserProfile } from "@/lib/types";
 
@@ -53,5 +53,3 @@ export function AdminAuditor() {
         </Card>
     );
 }
-
-import { CheckCircle } from "lucide-react";

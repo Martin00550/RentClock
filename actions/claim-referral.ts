@@ -46,16 +46,26 @@ export async function claimReferral() {
 
         // 4. Update Referrer (+1 Bonus Lease)
         const newBonus = (referrer.bonus_leases || 0) + 1;
-        await supabaseAdmin
+        const { error: bonusError } = await supabaseAdmin
             .from("users")
             .update({ bonus_leases: newBonus })
             .eq("id", referrer.id);
 
+        if (bonusError) {
+            console.error("Failed to add bonus lease:", bonusError);
+            return { error: "Failed to process referral" };
+        }
+
         // 5. Update Current User (Set referred_by)
-        await supabaseAdmin
+        const { error: referredError } = await supabaseAdmin
             .from("users")
             .update({ referred_by: referrer.id })
             .eq("id", userId);
+
+        if (referredError) {
+            console.error("Failed to mark user as referred:", referredError);
+            return { error: "Failed to process referral" };
+        }
 
         // 6. Clear Cookie
         // Note: You can't delete cookies in a Server Action called from a Client Component easily 
