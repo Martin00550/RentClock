@@ -194,7 +194,7 @@ export function RevenueIntegrityAudit() {
                             className="w-full bg-[#1e3a5f] hover:bg-[#2a4a73] text-white h-14 rounded-xl font-bold text-base transition-all shadow-lg flex items-center justify-center gap-2"
                             disabled={!stats}
                         >
-                            See the Calculation
+                            Start Tracking Free
                             <ArrowRight className="h-5 w-5" />
                         </Button>
                     </SignUpTrigger>

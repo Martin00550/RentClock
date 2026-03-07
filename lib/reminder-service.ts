@@ -14,9 +14,32 @@ export async function processLeaseReminders() {
 
     const { data: leases, error } = await supabaseAdmin
         .from("leases")
-        .select("*, users!inner(email, phone, is_pro, email_notifications_enabled)");
+        .select("*, users!inner(id, email, phone, is_pro, email_notifications_enabled)");
 
     if (error) throw error;
+
+    // Build email lookup map (for users without synced email)
+    const userEmailMap: Record<string, string> = {};
+    
+    // Pre-fetch emails for users who don't have them synced to DB
+    const uniqueUserIds = [...new Set((leases || []).map(l => l.user_id).filter(Boolean))];
+    for (const userId of uniqueUserIds) {
+        const userData = (leases || []).find(l => l.user_id === userId)?.users;
+        if (!userData?.email && userId) {
+            try {
+                const { data: user } = await supabaseAdmin
+                    .from("users")
+                    .select("email")
+                    .eq("id", userId)
+                    .single();
+                if (user?.email) {
+                    userEmailMap[userId] = user.email;
+                }
+            } catch {
+                // Skip if fails
+            }
+        }
+    }
 
     // Triggers in descending order for "highest matching trigger" logic
     // Triggers in ASCENDING order so we match the MOST URGENT / SPECIFIC trigger first.
@@ -107,11 +130,12 @@ export async function processLeaseReminders() {
                     (triggerLevel === 0);
 
                 // --- EMAIL PAYLOAD ---
-                if (emailAllowed && lease.users?.email && resend) {
+                const userEmail = lease.users?.email || userEmailMap[lease.user_id];
+                if (emailAllowed && userEmail && resend) {
                     notificationResults.push(
                         resend.emails.send({
                             from: "RentClock <alerts@rentclock.online>",
-                            to: [lease.users.email],
+                            to: [userEmail],
                             subject: `🚨 ${eventLabel}: ${lease.tenant_name} (${triggerLevel} days left)`,
                             html: `
                                 <div style="font-family: 'Inter', sans-serif; background-color: #f8fafc; padding: 40px; color: #1e293b;">

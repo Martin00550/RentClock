@@ -40,13 +40,28 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
     const [hasOnboarded, setHasOnboarded] = useState(true); // Default true to not block unless confirmed false
     const [hasPhone, setHasPhone] = useState(false);
 
-    // LOAD STATE (Server First, no local storage fallback needed for persistent auth)
+    // LOAD STATE (Server First, with localStorage fallback)
     useEffect(() => {
         if (!isLoaded || !isSignedIn) return;
 
+        // Check localStorage first as backup
+        const localCompleted = localStorage.getItem("rentclock_completed_tours");
+        const localSeen = localCompleted ? JSON.parse(localCompleted) : [];
+        if (localSeen.length > 0) {
+            setCompletedTours(localSeen);
+        }
+
         const loadState = async () => {
             const data = await getCompletedTutorials();
-            setCompletedTours(data.seen_tutorials);
+            
+            // Merge server data with localStorage, preferring server
+            const mergedTutorials = data.seen_tutorials && data.seen_tutorials.length > 0 
+                ? data.seen_tutorials 
+                : localSeen;
+            
+            setCompletedTours(mergedTutorials);
+            localStorage.setItem("rentclock_completed_tours", JSON.stringify(mergedTutorials));
+            
             setIsPro(data.is_pro);
             // Only update if explicit boolean, careful with undefined
             if (typeof data.has_onboarded === 'boolean') {
@@ -63,14 +78,15 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
 
     const markAsComplete = useCallback(async (tourId: string) => {
         // Optimistic update
-        setCompletedTours(prev => {
-            if (prev.includes(tourId)) return prev;
-            return [...prev, tourId];
-        });
+        const newCompleted = [...completedTours, tourId];
+        setCompletedTours(newCompleted);
+        
+        // Also save to localStorage as backup
+        localStorage.setItem("rentclock_completed_tours", JSON.stringify(newCompleted));
 
         // Server update
         await markTutorialComplete(tourId);
-    }, []);
+    }, [completedTours]);
 
     const startTour = useCallback((tourId: string, steps: DriveStep[] = []) => {
         // If steps not provided, lookup based on ID

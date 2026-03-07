@@ -39,6 +39,13 @@ export function OnboardingWizard() {
         if (!isLoaded || !user) return;
         setBaseUrl(window.location.origin);
 
+        // Check localStorage first as backup
+        const localOnboarded = localStorage.getItem("rentclock_onboarded");
+        if (localOnboarded === "true") {
+            setLoading(false);
+            return;
+        }
+
         const checkOnboardingStatus = async () => {
             if (!user) return;
             try {
@@ -53,6 +60,8 @@ export function OnboardingWizard() {
                 // NOTE: TutorialProvider is also checking this and BLOCKING tutorials
                 if (!data.has_onboarded && data.is_pro) {
                     setOpen(true);
+                } else if (data.has_onboarded) {
+                    localStorage.setItem("rentclock_onboarded", "true");
                 }
             } catch (error) {
                 console.error("Error checking onboarding status:", error);
@@ -68,18 +77,27 @@ export function OnboardingWizard() {
         setOpen(false);
         if (!user) return;
 
-        // 1. Tell Backend
         // 1. Tell Backend via Server Action
         try {
             await completeOnboardingAction();
+            
+            // 2. Also call the profile API to ensure it's saved
+            await fetch("/api/user/profile", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ has_onboarded: true })
+            });
         } catch (error) {
             console.error("Error completing onboarding:", error);
         }
 
-        // 2. Tell Frontend (TutorialProvider) to unblock status
+        // 3. Tell Frontend (TutorialProvider) to unblock status
         setHasOnboarded(true);
+        
+        // 4. Also save to localStorage as backup
+        localStorage.setItem("rentclock_onboarded", "true");
 
-        // 3. Explicitly start the Home Tour immediately
+        // 5. Explicitly start the Home Tour immediately
         // Small delay for dialog close animation
         setTimeout(() => {
             startTour("home");
